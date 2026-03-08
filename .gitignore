@@ -1,0 +1,21 @@
+# Dependencias
+node_modules/
+
+# Entornos Virtuales
+.venv/
+venv/
+env/
+
+# Archivos de Sistema Operativo
+.DS_Store
+Thumbs.db
+
+# Logs y Archivos Temporales
+*.log
+.temp/
+.tmp/
+
+# Archivos propios del framework de agente
+MASTER_CONTEXT.md
+ISSUES_LOG.md
+CLAUDE.md

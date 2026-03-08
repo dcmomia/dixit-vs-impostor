@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dixit vs Impostor - Game Master</title>
+    <!-- FIX HTML: Eliminada la referencia fantasma/doble a style-final.css si la hubiera -->
+    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;800&family=Macondo&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="app-container">
+        <!-- Las pantallas se cargarán dinámicamente aquí -->
+        <main id="main-content">
+            <!-- PANTALLA MENÚ PRINCIPAL -->
+            <section id="screen-main-menu" class="screen main-menu-screen active">
+                <div class="main-menu-actions">
+                    <button id="btn-menu-new" class="btn-menu btn-menu-primary">NUEVA PARTIDA</button>
+                    <button id="btn-menu-scores" class="btn-menu btn-menu-secondary">MARCADORES</button>
+                    <button id="btn-menu-rules" class="btn-menu btn-menu-secondary">REGLAS</button>
+                </div>
+            </section>
+
+            <!-- PANTALLA SETUP -->
+            <section id="screen-setup" class="screen">
+                <header>
+                    <h2 class="glow-text small">Nueva Partida</h2>
+                    <p class="subtitle">Añade a los jugadores</p>
+                </header>
+
+                <div class="glass-card footer-fixed">
+                    <div class="player-input-container">
+                        <input type="text" id="player-name" placeholder="Nombre del jugador..." autocomplete="off">
+                        <button id="add-player" class="btn-icon">＋</button>
+                    </div>
+
+                    <ul id="player-list" class="scrollable-list">
+                        <!-- Nombres de jugadores aquí -->
+                    </ul>
+
+                    <button id="btn-start-game" class="btn-primary" disabled>Comenzar Partida</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal de Confirmación Personalizado -->
+    <div id="modal-container" class="hidden">
+        <div class="modal glass-card">
+            <p id="modal-message">¿Estás seguro?</p>
+            <div class="modal-actions">
+                <button id="modal-btn-confirm" class="btn-primary">Confirmar</button>
+                <button id="modal-btn-cancel" class="btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
