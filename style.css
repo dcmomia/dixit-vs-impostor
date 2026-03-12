@@ -1875,8 +1875,7 @@ body:has(#screen-setup.active) #app-container {
     position: fixed !important;
     inset: 0 !important;
     padding: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden !important; /* BLOQUEADO: No se permite scroll en el menú de inicio */
     z-index: 10;
     max-width: 100% !important;
 }
