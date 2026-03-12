@@ -10,43 +10,96 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;800&family=Macondo&family=Press+Start+2P&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;800&family=Macondo&family=Raleway:wght@400;700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
         rel="stylesheet">
 </head>
 
-<body>
+    <!-- Navegación Global (Fuera del contenedor para evitar clips en móvil) -->
+    <nav id="global-nav" class="global-nav">
+        <button id="btn-global-back" class="btn-nav btn-nav-back" title="Atrás"></button>
+        <button id="btn-global-home" class="btn-nav btn-nav-home" title="Menú Principal"></button>
+    </nav>
+
     <div id="app-container">
         <!-- Las pantallas se cargarán dinámicamente aquí -->
+
         <main id="main-content">
-            <!-- PANTALLA MENÚ PRINCIPAL -->
-            <section id="screen-main-menu" class="screen main-menu-screen active">
-                <div class="main-menu-actions">
-                    <button id="btn-menu-new" class="btn-menu btn-menu-primary">NUEVA PARTIDA</button>
-                    <button id="btn-menu-scores" class="btn-menu btn-menu-secondary">MARCADORES</button>
-                    <button id="btn-menu-rules" class="btn-menu btn-menu-secondary">REGLAS</button>
-                </div>
-            </section>
+            <div id="static-content">
+                <!-- PANTALLA MENÚ PRINCIPAL -->
+                <section id="screen-main-menu" class="screen main-menu-screen active">
+                    <img src="assets/IMG/UI/logo_dixit.png" alt="Dixit VS Impostor" class="main-logo"
+                        onerror="this.style.display='none'">
 
-            <!-- PANTALLA SETUP -->
-            <section id="screen-setup" class="screen">
-                <header>
-                    <h2 class="glow-text small">Nueva Partida</h2>
-                    <p class="subtitle">Añade a los jugadores</p>
-                </header>
-
-                <div class="glass-card footer-fixed">
-                    <div class="player-input-container">
-                        <input type="text" id="player-name" placeholder="Nombre del jugador..." autocomplete="off">
-                        <button id="add-player" class="btn-icon">＋</button>
+                    <div class="main-menu-actions">
+                        <button id="btn-menu-new" class="btn-book">NUEVA PARTIDA</button>
+                        <div class="secondary-actions">
+                            <button id="btn-menu-scores" class="btn-organic btn-stone">MARCADORES</button>
+                            <button id="btn-menu-rules" class="btn-organic btn-petal">REGLAS</button>
+                        </div>
                     </div>
 
-                    <ul id="player-list" class="scrollable-list">
-                        <!-- Nombres de jugadores aquí -->
-                    </ul>
+                </section>
 
-                    <button id="btn-start-game" class="btn-primary" disabled>Comenzar Partida</button>
-                </div>
-            </section>
+                <!-- El botón de ajustes se mueve aquí para ser global -->
+                <button id="btn-menu-settings" class="btn-settings" title="Ajustes"></button>
+
+                <!-- PANTALLA SETUP -->
+                <section id="screen-setup" class="screen">
+
+                    <!-- ZONA 1: HEADER FIJO (siempre visible) -->
+                    <div class="setup-header">
+                        <h2 class="glow-text small">Nueva Partida</h2>
+                        <p class="subtitle">INVOCA A LOS JUGADORES</p>
+                    </div>
+
+                    <div class="preset-section vortex-container">
+
+                        <div id="preset-players-grid" class="preset-grid magic-vortex">
+                            <!-- Chips generados por app.js -->
+                        </div>
+                    </div>
+
+                    <!-- ZONA 2B: PERGAMINO CENTRAL FIJO (con scroll solo en lista de jug. nuevos) -->
+                    <div class="setup-scroll-body layout-compact">
+                        <div class="glass-card setup-parchment compact-card">
+
+                            <div class="player-input-divider">
+                                <span>O INVOCAR NUEVO</span>
+                            </div>
+
+                            <div class="player-input-container">
+                                <input type="text" id="player-name" placeholder="¿Quién se une al sueño?" autocomplete="off"
+                                    class="dreamy-input">
+                                <button id="add-player" class="btn-lacre" aria-label="Invocar Jugador">
+                                    <svg viewBox="0 0 100 100" class="svg-lacre">
+                                        <circle cx="50" cy="50" r="45" fill="#1a2530" stroke="#d4af37" stroke-width="4" />
+                                        <path d="M50 25 V75 M25 50 H75" stroke="#f5ebe0" stroke-width="8"
+                                            stroke-linecap="round" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Lista de jugadores con scroll SOLO aquí -->
+                            <div class="player-list-wrapper">
+                                <ul id="player-list">
+                                    <!-- Jugadores generados por app.js -->
+                                </ul>
+                                <div class="scroll-fade-overlay"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ZONA 3: FOOTER FIJO CON BOTÓN (siempre visible) -->
+                    <div class="setup-footer">
+                        <button id="btn-start-game" class="btn-primary" disabled>Comenzar Partida</button>
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- Contenedor para Inyección Dinámica SPA -->
+            <div id="dynamic-content"></div>
         </main>
     </div>
 
@@ -61,7 +114,7 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=3"></script>
 </body>
 
 </html>

@@ -23,13 +23,68 @@ const state = {
     ]
 };
 
+// Jugadores recurrentes (plantilla predefinida)
+const PRESET_PLAYERS = ['DC', 'JAVI', 'AG', 'ELI', 'JUAN', 'JUANI', 'IRENE', 'TINA', 'DIEGO J', 'SANTI', 'TRINI'];
+
+/**
+ * Genera el HTML para el avatar de un jugador intentando cargar su imagen si existe.
+ * Si la imagen (nombre.png) no se encuentra (404), el atributo onerror la reemplaza dinámicamente
+ * por su emoji de fallback asignado en state.playerAvatars
+ */
+function getAvatarHTML(name, sizeClass = '') {
+    const fallbackEmoji = state.playerAvatars[name] || '👤';
+    // FIX: Eliminar espacios para coincidir con el sistema de archivos (diego j -> diegoj)
+    const slug = name.toLowerCase().replace(/\s+/g, '');
+    const imagePath = `assets/players/${slug}.png`;
+
+    return `<div class="avatar-box ${sizeClass}">
+                <img src="${imagePath}" alt="${name}" onerror="this.outerHTML='<span class=\\'avatar-emoji ${sizeClass}\\'>${fallbackEmoji}</span>'">
+            </div>`;
+}
+
+function getSetupAvatarHTML(name) {
+    const fallbackEmoji = state.playerAvatars[name] || '🐰';
+    const slug = name.toLowerCase().replace(/\s+/g, '');
+    const imagePath = `assets/players/${slug}.png`;
+
+    return `
+        <div class="avatar-frame">
+            <img src="${imagePath}" alt="${name}" onerror="this.outerHTML='<div class=\\'avatar-fallback-container\\'><span class=\\'avatar-fallback-emoji\\'>${fallbackEmoji}</span></div>'">
+            <div class="star-dust"></div>
+        </div>
+    `;
+}
+
+function getHeroAvatarHTML(name) {
+    const fallbackEmoji = state.playerAvatars[name] || '👤';
+    const slug = name.toLowerCase().replace(/\s+/g, '');
+    const imagePath = `assets/players/${slug}.png`;
+
+    return `<div class="hero-avatar">
+                <img src="${imagePath}" alt="Avatar de ${name}" onerror="this.outerHTML='<span class=\\'hero-avatar-emoji\\'>${fallbackEmoji}</span>'">
+            </div>`;
+}
+
+/**
+ * Deriva la ruta de imagen de carta a partir del nombre del jugador.
+ * Convierte "DIEGO J" → "diegoj", "JAVI" → "javi", etc.
+ */
+function getCardImagePath(name, type = 'Inocente') {
+    const filename = name.toLowerCase().replace(/\s+/g, '');
+    return type === 'Impostor'
+        ? `assets/IMG/Impostor/${filename}_impostor.png`
+        : `assets/IMG/Inocente/${filename}.png`;
+}
+
 // Selectores
 const UI = {
     mainContent: document.getElementById('main-content'),
+    dynamicContent: document.getElementById('dynamic-content'),
     // Main Menu
     btnMenuNew: document.getElementById('btn-menu-new'),
     btnMenuScores: document.getElementById('btn-menu-scores'),
     btnMenuRules: document.getElementById('btn-menu-rules'),
+    btnMenuSettings: document.getElementById('btn-menu-settings'),
     // Setup Screen
     setupScreen: document.getElementById('screen-setup'),
     playerNameInput: document.getElementById('player-name'),
@@ -41,28 +96,75 @@ const UI = {
 // ── Navegación principal ───────────────────────────────────────────────────
 // Pantallas ESTÁTICAS (existen en el HTML como <section>)
 const STATIC_SCREENS = ['screen-main-menu', 'screen-setup'];
+let currentTimerInterval = null;
+let navigationHistory = []; // Rastreo para botón atrás
+let isStartingRound = false;
+let panicInterval = null;
 
-function navigateTo(screenId, data = {}) {
+function goBack() {
+    if (navigationHistory.length > 1) {
+        navigationHistory.pop(); // Sacar la actual
+        const previousScreen = navigationHistory.pop(); // Obtener la anterior
+        navigateTo(previousScreen, {}, false); // Navegar sin registrar de nuevo
+    } else {
+        navigateTo('main-menu');
+    }
+}
+
+function navigateTo(screenId, data = {}, recordHistory = true) {
+    if (currentTimerInterval) clearInterval(currentTimerInterval);
+    if (panicInterval) clearInterval(panicInterval);
+
+    // Registrar historia si no es un "goBack"
+    if (recordHistory) {
+        if (navigationHistory[navigationHistory.length - 1] !== screenId) {
+            navigationHistory.push(screenId);
+        }
+    }
+
+    // Visibilidad de controles de navegación globales
+    const globalNav = document.getElementById('global-nav');
+    if (globalNav) {
+        globalNav.style.display = (screenId === 'screen-main-menu' || screenId === 'main-menu') ? 'none' : 'flex';
+    }
+
     // Si la pantalla objetivo es estática, mostrar/ocultar secciones
-    if (STATIC_SCREENS.includes(screenId)) {
+    if (STATIC_SCREENS.includes(screenId) || screenId === 'main-menu') {
+        const targetId = screenId === 'main-menu' ? 'screen-main-menu' : screenId;
         // Ocultar menú y setup
         STATIC_SCREENS.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.remove('active');
         });
-        // Limpiar contenido dinámico que pudiera estar en #main-content
-        const dynamic = document.getElementById('screen-dynamic');
-        if (dynamic) dynamic.remove();
 
-        const target = document.getElementById(screenId);
+        // Limpiar contenido dinámico
+        if (UI.dynamicContent) UI.dynamicContent.innerHTML = '';
+
+        const target = document.getElementById(targetId);
         if (target) target.classList.add('active');
 
         // Restaurar sección setup en main-content si fue reemplazada
         if (screenId === 'screen-setup') {
+            renderPresetPlayers();
             renderPlayerList();
             // Sync start button state
             const startBtn = document.getElementById('btn-start-game');
-            if (startBtn) startBtn.disabled = state.players.length < state.minPlayers;
+            if (startBtn) {
+                startBtn.disabled = state.players.length < state.minPlayers;
+                startBtn.classList.add('btn-flash-effect');
+                // Usamos onclick para asegurar un solo listener y evitar el clonado de nodos
+                if (!startBtn.onclick) {
+                    startBtn.onclick = () => {
+                        if (!startBtn.disabled) {
+                            startBtn.classList.add('flash-active');
+                            setTimeout(() => {
+                                startBtn.classList.remove('flash-active');
+                                navigateTo('screen-categories');
+                            }, 600);
+                        }
+                    };
+                }
+            }
             // Focus en el input de jugador
             setTimeout(() => {
                 const input = document.getElementById('player-name');
@@ -83,22 +185,81 @@ function navigateTo(screenId, data = {}) {
 // ── Inicialización ──────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
-});
+    requestWakeLock(); // Activar bloqueo de suspensión
 
-function setupEventListeners() {
-    // Menú Principal
-    UI.btnMenuNew.addEventListener('click', () => {
-        navigateTo('screen-setup');
-    });
-
-    UI.btnMenuScores.addEventListener('click', () => {
-        if (Object.keys(state.scores).length === 0) {
-            showConfirm("Aún no hay marcadores. ¡Juega una partida primero!", () => { });
-            document.getElementById('modal-btn-cancel').classList.add('hidden');
-        } else {
-            showScoreScreen();
+    // Skill pwa-offline-setup: Reconectar WakeLock si minimizan la app
+    document.addEventListener('visibilitychange', async () => {
+        if (document.visibilityState === 'visible') {
+            await requestWakeLock();
         }
     });
+});
+
+// Skill dixit-magical-ui: Mantener pantalla encendida
+let wakeLock = null;
+async function requestWakeLock() {
+    try {
+        if ('wakeLock' in navigator) {
+            wakeLock = await navigator.wakeLock.request('screen');
+            console.log('✨ Pantalla bloqueada para el sueño místico...');
+        }
+    } catch (err) {
+        console.warn('No se pudo activar el Wake Lock:', err);
+    }
+}
+
+function setupEventListeners() {
+    // Auxiliar para Efecto Ripple (Gota de Agua)
+    function createLiquidRipple(event, button) {
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple-liquid');
+        button.appendChild(ripple);
+
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = `${size}px`;
+
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+
+        setTimeout(() => ripple.remove(), 800);
+    }
+
+    // Menú Principal
+    UI.btnMenuNew.addEventListener('click', (e) => {
+        createLiquidRipple(e, UI.btnMenuNew);
+        
+        // Generar semillas de diente de león
+        const container = document.createElement('div');
+        container.className = 'dandelion-container';
+        document.body.appendChild(container);
+
+        const rect = UI.btnMenuNew.getBoundingClientRect();
+        // Ajuste: El centro del botón SVG para que las semillas salgan del núcleo
+        const startX = rect.left + rect.width / 2;
+        const startY = rect.top + rect.height / 2;
+
+        for (let i = 1; i <= 4; i++) {
+            const seed = document.createElement('div');
+            seed.className = 'dandelion-seed';
+            seed.style.left = `${startX}px`;
+            seed.style.top = `${startY}px`;
+            seed.style.animation = `seed-fly-${i} 1s cubic-bezier(0.25, 0.1, 0.25, 1) forwards`;
+            container.appendChild(seed);
+        }
+
+        // Retrasar navegación para el efecto visual
+        setTimeout(() => {
+            navigateTo('screen-setup');
+            setTimeout(() => {
+                container.remove();
+            }, 500);
+        }, 600);
+    });
+
 
     UI.btnMenuRules.addEventListener('click', () => {
         const rules = "🎮 CÓMO JUGAR\n\n1. El GM asigna en secreto una palabra a cada jugador.\n2. El IMPOSTOR recibe una palabra diferente o nada.\n3. Jugad cartas de Dixit sin revelar la palabra.\n4. Votad: ¿quién es el Impostor?\n5. Si el Impostor no es descubierto → gana. Si es descubierto, puede salvar puntos adivinando la palabra secreta.";
@@ -106,20 +267,23 @@ function setupEventListeners() {
         document.getElementById('modal-btn-cancel').classList.add('hidden');
     });
 
+    UI.btnMenuSettings.addEventListener('click', () => {
+        showConfirm("⚙️ AJUSTES\n\nConfiguración de música, efectos y personalización próximamente en la versión estable.", () => { });
+        document.getElementById('modal-btn-cancel').classList.add('hidden');
+    });
+
     // Setup
-    UI.addPlayerBtn.addEventListener('click', addPlayer);
+    UI.addPlayerBtn.addEventListener('click', (e) => addPlayer(e));
     UI.playerNameInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') addPlayer();
+        if (e.key === 'Enter') addPlayer(e);
     });
-    UI.startGameBtn.addEventListener('click', () => {
-        navigateTo('screen-categories');
-    });
+    // btn-start-game listener extraído para evitar dual-fire con navigateTo()
 }
 
 function showScreen(screenId, data = {}) {
     // Renderizado dinámico de pantallas
     if (screenId === 'screen-categories') {
-        UI.mainContent.innerHTML = `
+        UI.dynamicContent.innerHTML = `
             <section id="screen-categories" class="screen active">
                 <header>
                     <h2 class="glow-text small">Categorías</h2>
@@ -132,29 +296,73 @@ function showScreen(screenId, data = {}) {
                 
                 <div id="category-error" class="error-toast hidden"></div>
                 
-                <button id="btn-random-category" class="btn-secondary">Aleatorio 🎲</button>
+                <button id="btn-random-category" class="btn-secondary">Sorteo del Destino</button>
             </section>
         `;
         document.getElementById('btn-random-category').addEventListener('click', pickRandomCategory);
     } else if (screenId === 'screen-reveal') {
         const player = data.player;
-        const avatar = state.playerAvatars[player] || '👤';
-        UI.mainContent.innerHTML = `
-            <section id="screen-reveal" class="screen active">
-                <header>
-                    <p class="subtitle" style="margin-bottom: 0.2rem;">Pasa el móvil a:</p>
-                    <h2 class="glow-text" style="font-size: 3.5rem; margin-top: 0;">${avatar} ${escapeHTML(player)}</h2>
-                </header>
-                
-                <div class="reveal-container glass-card" id="reveal-card">
-                    <p id="reveal-instruction">Mantén pulsado para ver tu palabra</p>
-                    <div id="role-info" class="hidden">
-                        <span class="role-label">Tu palabra es:</span>
-                        <h3 id="secret-word-display" class="glow-text">---</h3>
-                    </div>
-                    <button id="btn-reveal" class="btn-primary glow">MANTÉN PULSADO</button>
-                    <button id="btn-next-player" class="btn-secondary hidden">LISTO, PASAR</button>
+        const playerRole = state.roles[data.index];
+        const isImpostor = playerRole.isImpostor;
+        const frontImgPath = getCardImagePath(player, 'Inocente');
+        const backImgPath = getCardImagePath(player, 'Impostor');
+        const fallbackEmoji = state.playerAvatars[player] || '👤';
+
+        UI.dynamicContent.innerHTML = `
+            <section id="screen-reveal" class="screen active reveal-screen">
+
+                <div class="reveal-header">
+                    <p class="reveal-subtitle">REVELACIÓN DE ROLES</p>
+                    <h2 class="reveal-player-name">${escapeHTML(player)}</h2>
                 </div>
+
+                <!-- Escena 3D de la carta -->
+                <div class="reveal-card-scene">
+                    <div class="reveal-card" id="reveal-card">
+
+                        <!-- CARA FRONTAL: imagen inocente -->
+                        <div class="reveal-card__face reveal-card__front">
+                            <img
+                                src="${frontImgPath}"
+                                alt="Carta de ${escapeHTML(player)}"
+                                class="card-img"
+                                id="card-front-img"
+                                onerror="this.style.display='none'; document.getElementById('card-front-fallback').style.display='flex';"
+                            >
+                            <div class="card-fallback" id="card-front-fallback" style="display:none">
+                                <span class="card-fallback-emoji">${fallbackEmoji}</span>
+                            </div>
+                            <!-- Overlay que muestra la palabra al hacer hold (solo inocentes) -->
+                            <div class="reveal-word-overlay hidden" id="word-overlay">
+                                <span class="reveal-word-text" id="word-text"></span>
+                            </div>
+                        </div>
+
+                        <!-- CARA TRASERA: imagen impostor (solo visible tras el flip) -->
+                        <div class="reveal-card__face reveal-card__back">
+                            <img
+                                src="${backImgPath}"
+                                alt="Impostor"
+                                class="card-img"
+                                onerror="this.style.display='none';"
+                            >
+                            <div class="impostor-overlay">
+                                <span class="impostor-label">ERES EL<br>IMPOSTOR</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Instrucción contextual -->
+                <p class="reveal-instruction" id="reveal-instruction">Mantén pulsado para ver tu rol</p>
+
+                <!-- Botones oníricos -->
+                <div class="reveal-actions">
+                    <button id="btn-reveal" class="btn-dreamy btn-dreamy--hold">MANTÉN PULSADO</button>
+                    <button id="btn-next-player" class="btn-dreamy btn-dreamy--ready hidden">LISTO</button>
+                </div>
+
             </section>
         `;
         setupRevealLogic(player, data.index);
@@ -163,21 +371,24 @@ function showScreen(screenId, data = {}) {
 
 function renderCategories() {
     const grid = document.getElementById('category-grid');
+    if (!grid) return;
     grid.innerHTML = '';
 
     state.categories.forEach(cat => {
         const card = document.createElement('div');
-        card.className = 'category-card glass-card';
-        card.innerHTML = `
-            <div class="cat-icon">${cat.icon}</div>
-            <div class="cat-name">${cat.name}</div>
-        `;
+        card.className = 'category-card';
+        // Usamos setAttribute para el style para mayor seguridad
+        card.style.backgroundImage = `url('assets/IMG/UI/cat_${cat.id}.png')`;
+        card.setAttribute('aria-label', cat.name);
         card.onclick = () => selectCategory(cat.id);
         grid.appendChild(card);
     });
 }
 
 async function selectCategory(catId) {
+    if (isStartingRound) return;
+    isStartingRound = true;
+
     state.selectedCategory = catId;
     const errorToast = document.getElementById('category-error');
 
@@ -194,11 +405,13 @@ async function selectCategory(catId) {
                 errorToast.textContent = "Error: Verifica que words.json existe en /data. Usa un servidor local (Live Server).";
                 errorToast.classList.remove('hidden');
             }
+            isStartingRound = false;
             return;
         }
     }
 
     startRoleAssignment();
+    isStartingRound = false;
 }
 
 function startRoleAssignment() {
@@ -260,100 +473,234 @@ function getRandomSecure(max) {
 }
 
 function setupRevealLogic(playerName, index) {
-    const btn = document.getElementById('btn-reveal');
+    const btnHold = document.getElementById('btn-reveal');
     const btnNext = document.getElementById('btn-next-player');
     const instruction = document.getElementById('reveal-instruction');
-    const roleInfo = document.getElementById('role-info');
-    const wordDisplay = document.getElementById('secret-word-display');
+    const card = document.getElementById('reveal-card');
+    const wordOverlay = document.getElementById('word-overlay');
+    const wordText = document.getElementById('word-text');
     const playerRole = state.roles[index];
 
-    let hasRevealed = false; // Flag para controlar UX
+    let hasRevealed = false;
 
+    // ── Revelar ────────────────────────────────────────────────────────────
     const reveal = () => {
-        instruction.classList.add('hidden');
-        roleInfo.classList.remove('hidden');
-        wordDisplay.textContent = playerRole.word;
-        if (playerRole.isImpostor) wordDisplay.classList.add('impostor-text');
-        else wordDisplay.classList.remove('impostor-text');
+        if (playerRole.isImpostor) {
+            // Impostor: flip de la carta
+            card.classList.add('is-flipped');
+        } else {
+            // Inocente: overlay de palabra sobre la imagen
+            if (wordOverlay && wordText) {
+                wordText.textContent = playerRole.word;
+                wordOverlay.classList.remove('hidden');
+            }
+        }
     };
 
+    // ── Ocultar ────────────────────────────────────────────────────────────
     const hide = () => {
-        // FIX UX: Ocultamiento absoluto y borrado de seguridad del DOM
-        roleInfo.classList.add('hidden');
-        wordDisplay.textContent = '---';
-        hasRevealed = true;
+        card.classList.remove('is-flipped');
+        if (wordOverlay) wordOverlay.classList.add('hidden');
 
-        // FIX UX: El botón MANTÉN PULSADO no desaparece, permitiendo reintentos.
-        btnNext.classList.remove('hidden');
-        btnNext.style.marginTop = "2rem"; // Separar visualmente los botones
-        instruction.textContent = "Palabra vista. Puedes volver a pulsar o continuar.";
-        instruction.classList.remove('hidden');
+        if (!hasRevealed) {
+            hasRevealed = true;
+            btnNext.classList.remove('hidden');
+            if (instruction) {
+                instruction.textContent = ''; // Limpiado el texto confuso
+            }
+        }
     };
 
-    // Eventos Mouse/Touch
-    btn.onmousedown = btn.ontouchstart = (e) => { e.preventDefault(); reveal(); };
-    btn.onmouseup = btn.ontouchend = (e) => { e.preventDefault(); hide(); };
+    // ── Pointer Events (mobile safe) ───────────────────────────────────────
+    btnHold.onpointerdown = (e) => {
+        if (e.cancelable) e.preventDefault();
+        reveal();
+    };
+    btnHold.onpointerup = btnHold.onpointercancel = btnHold.onpointerleave = (e) => {
+        if (e.cancelable) e.preventDefault();
+        hide();
+    };
 
-    // btnNext asume la responsabilidad del avance explícito
+    // ── Avanzar al siguiente jugador ───────────────────────────────────────
     btnNext.onclick = () => {
         const nextIndex = index + 1;
         if (nextIndex < state.players.length) {
             showScreen('screen-reveal', { player: state.players[nextIndex], index: nextIndex });
         } else {
-            showTableScreen();
+            showTimerScreen();
         }
     };
 }
 
-function showTableScreen() {
-    UI.mainContent.innerHTML = `
-        <section id="screen-table" class="screen active">
+function showTimerScreen() {
+    // Elegir aleatoriamente quién empieza a hablar (cualquier jugador, incl. el impostor)
+    const startIndex = getRandomSecure(state.players.length);
+    const startPlayer = state.players[startIndex];
+
+    // Estado del temporizador (90 segundos por defecto)
+    let timeLeft = 90;
+
+    const formatTime = (secs) => {
+        const m = Math.floor(secs / 60);
+        const s = secs % 60;
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    };
+
+    UI.dynamicContent.innerHTML = `
+        <section id="screen-timer" class="screen active">
             <header>
-                <h2 class="glow-text small">Fase de Mesa</h2>
-                <p class="subtitle">¡A jugar!</p>
+                <h2 class="glow-text small">Elección de Carta</h2>
+                <p class="subtitle">Buscad vuestra carta física en la mano.</p>
             </header>
             
-            <div class="glass-card table-info">
-                <p>Jugad vuestras cartas y debatid.</p>
-                <p class="muted" style="margin-top: 1rem;">GM Info: Game running con ${state.players.length} jugadores.</p>
+            <div class="glass-card table-info" style="text-align: center; margin-top: 1rem; padding: 1.5rem;">
+                <p style="margin-bottom: 0.5rem; color: var(--text-muted);">El primero en defender su carta será:</p>
+                <div class="hero-avatar-container">
+                    ${getHeroAvatarHTML(startPlayer)}
+                    <div class="hero-name">${escapeHTML(startPlayer)}</div>
+                </div>
             </div>
             
-            <div class="resolution-buttons">
-                <button id="btn-impostor-won" class="btn-primary">Impostor Invicto 🏆</button>
-                <button id="btn-impostor-found" class="btn-secondary">Impostor Descubierto 🔍</button>
+            <div class="timer-container" style="text-align: center; margin: 2rem 0;">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <button id="btn-time-sub" class="btn-score-mod" style="width: 50px; height: 50px; font-size: 1.2rem;">-15s</button>
+                    <div id="countdown-display" class="timer-display">${formatTime(timeLeft)}</div>
+                    <button id="btn-time-add" class="btn-score-mod" style="width: 50px; height: 50px; font-size: 1.2rem;">+15s</button>
+                </div>
+                
+                <div class="time-presets" style="display: flex; justify-content: center; gap: 0.5rem;">
+                    <button class="btn-preset btn-secondary" data-time="60">1:00</button>
+                    <button class="btn-preset btn-secondary" data-time="90">1:30</button>
+                    <button class="btn-preset btn-secondary" data-time="120">2:00</button>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button id="btn-all-ready" class="btn-primary glow" style="padding: 1rem 2rem; font-size: 1.2rem; width: 100%;">¡Cartas en la mesa!</button>
             </div>
         </section>
     `;
 
-    document.getElementById('btn-impostor-won').addEventListener('click', () => {
-        handleRoundEnd({ impostorFound: false });
-        showScoreScreen();
+    const display = document.getElementById('countdown-display');
+
+    const updateDisplay = () => {
+        if (timeLeft < 0) timeLeft = 0;
+        display.textContent = formatTime(timeLeft);
+        if (timeLeft <= 10 && timeLeft > 0) {
+            display.style.color = "var(--accent)";
+            display.style.transform = "scale(1.1)";
+            setTimeout(() => display.style.transform = "scale(1)", 200);
+        } else if (timeLeft === 0) {
+            display.style.color = "var(--primary)";
+        } else {
+            display.style.color = "var(--text)";
+        }
+    };
+
+    if (currentTimerInterval) clearInterval(currentTimerInterval);
+    currentTimerInterval = setInterval(() => {
+        if (timeLeft > 0) {
+            timeLeft--;
+            updateDisplay();
+        }
+    }, 1000);
+
+    // Set listeners
+    document.getElementById('btn-time-add').onclick = () => { timeLeft += 15; updateDisplay(); };
+    document.getElementById('btn-time-sub').onclick = () => { timeLeft -= 15; updateDisplay(); };
+
+    document.querySelectorAll('.btn-preset').forEach(btn => {
+        btn.onclick = (e) => {
+            timeLeft = parseInt(e.target.dataset.time, 10);
+            updateDisplay();
+        };
     });
 
-    document.getElementById('btn-impostor-found').addEventListener('click', () => {
+    document.getElementById('btn-all-ready').onclick = () => {
+        if (currentTimerInterval) clearInterval(currentTimerInterval);
+        showRevealPanicScreen();
+    };
+}
+
+function showRevealPanicScreen() {
+    UI.dynamicContent.innerHTML = `
+        <section id="screen-panic" class="screen active" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+            
+            <!-- FASE 1: ESPERA -->
+            <div id="panic-phase-1" class="btn-dreamy btn-dreamy--hold pulse-card" style="text-align: center; padding: 4rem 2rem; margin: auto 0; font-size: 1.5rem;">
+                <h2 class="glow-text">👆 Tap to Reveal</h2>
+                <p class="subtitle" style="margin-top: 1rem; font-size: 1.2rem;">Pulsa aquí para revelar la palabra secreta a toda la mesa...</p>
+            </div>
+
+            <!-- FASE 2 y 3: PANICO Y DEBATE -->
+            <div id="panic-phase-2" class="hidden" style="text-align: center; margin: auto 0;">
+                <p class="subtitle" style="font-size: 1.5rem;">La palabra secreta es:</p>
+                <h2 class="glow-text" style="font-size: 4rem; word-break: break-word; line-height: 1.1; margin: 1rem 0;">${escapeHTML(state.secretWord)}</h2>
+                
+                <div id="panic-countdown" class="panic-number">5</div>
+                
+                <div id="panic-debate-ui" class="hidden" style="margin-top: 2rem;">
+                    <h3 class="highlight slide-up" style="font-size: 2.5rem; margin-bottom: 2rem;">¡A defender!</h3>
+                    <button id="btn-to-vote" class="btn-primary" style="width: 100%; padding: 1rem;">Finalizar Debate y Votar 🗳️</button>
+                </div>
+            </div>
+            
+        </section>
+    `;
+
+    document.getElementById('panic-phase-1').onclick = () => {
+        document.getElementById('panic-phase-1').classList.add('hidden');
+        document.getElementById('panic-phase-2').classList.remove('hidden');
+
+        const countdownEl = document.getElementById('panic-countdown');
+        let panicTime = 5;
+
+        countdownEl.classList.add('heartbeat'); // anim inicial
+
+        if (panicInterval) clearInterval(panicInterval);
+        panicInterval = setInterval(() => {
+            panicTime--;
+            if (panicTime > 0) {
+                countdownEl.textContent = panicTime;
+                // Re-trigger anim
+                countdownEl.classList.remove('heartbeat');
+                void countdownEl.offsetWidth;
+                countdownEl.classList.add('heartbeat');
+            } else {
+                clearInterval(panicInterval);
+                countdownEl.classList.add('hidden');
+                document.getElementById('panic-debate-ui').classList.remove('hidden');
+            }
+        }, 1000);
+    };
+
+    document.getElementById('btn-to-vote').onclick = () => {
         showVotingScreen();
-    });
+    };
 }
 
 function showVotingScreen() {
     // Lista de jugadores que no son el impostor
     const voters = state.players.filter(p => p !== state.impostorName);
 
-    UI.mainContent.innerHTML = `
+    UI.dynamicContent.innerHTML = `
         <section id="screen-voting" class="screen active">
             <header>
                 <h2 class="glow-text small">Votación</h2>
                 <p class="subtitle">¿Quiénes acertaron al impostor?</p>
             </header>
             
-            <div class="glass-card voting-list">
+            <div class="voting-list">
                 ${voters.map(name => `
-                    <div class="voting-item">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <span style="font-size:1.5rem">${state.playerAvatars[name] || '👤'}</span>
-                            <span style="font-family:'Fredoka', cursive; font-size:1.2rem">${escapeHTML(name)}</span>
+                    <div class="voting-row" role="checkbox" aria-checked="false" tabindex="0" data-name="${escapeHTML(name)}">
+                        <div class="player-info">
+                            ${getAvatarHTML(name)}
+                            <span class="player-name">${escapeHTML(name)}</span>
                         </div>
-                        <input type="checkbox" class="vote-check" data-name="${escapeHTML(name)}">
+                        <div class="vote-indicator">
+                            <span class="magic-spark">✨</span>
+                        </div>
+                        <input type="checkbox" class="vote-check-hidden" data-name="${escapeHTML(name)}">
                     </div>
                 `).join('')}
             </div>
@@ -362,8 +709,27 @@ function showVotingScreen() {
         </section>
     `;
 
+    // Lógica de interacción para las filas
+    const rows = document.querySelectorAll('.voting-row');
+    rows.forEach(row => {
+        const toggle = () => {
+            const isVoted = row.classList.toggle('is-voted');
+            row.setAttribute('aria-checked', isVoted);
+            const checkbox = row.querySelector('.vote-check-hidden');
+            if (checkbox) checkbox.checked = isVoted;
+        };
+
+        row.onclick = toggle;
+        row.onkeydown = (e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                toggle();
+            }
+        };
+    });
+
     document.getElementById('btn-confirm-votes').onclick = () => {
-        const checks = document.querySelectorAll('.vote-check');
+        const checks = document.querySelectorAll('.vote-check-hidden');
         const correctVoters = [];
         checks.forEach(c => {
             if (c.checked) correctVoters.push(c.dataset.name);
@@ -371,74 +737,18 @@ function showVotingScreen() {
 
         state.lastCorrectVoters = correctVoters;
 
-        // El impostor siempre tiene opción a salvación si ha sido descubierto
-        showSalvacionScreen();
+        // El impostor no tiene salvación en las nuevas reglas, directos a la asignación de puntos
+        handleRoundEnd({
+            impostorFound: true,
+            correctVoters: state.lastCorrectVoters
+        });
+        showScoreScreen();
     };
 }
 
-function showSalvacionScreen() {
-    const words = state.gameData[state.selectedCategory];
-    const decoys = words.filter(w => w !== state.secretWord)
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 5);
-    const options = [...decoys, state.secretWord].sort(() => 0.5 - Math.random());
+// Fase de salvación eliminada
 
-    UI.mainContent.innerHTML = `
-        <section id="screen-salvacion" class="screen active">
-            <header>
-                <h2 class="glow-text small">Salvación</h2>
-                <p class="subtitle">${escapeHTML(state.impostorName)}, ¿cuál es la palabra?</p>
-            </header>
-            
-            <p id="salvacion-msg" class="subtitle hidden"></p>
-
-            <div class="options-grid" id="salvacion-grid">
-                ${options.map(opt => `
-                    <button class="btn-option glass-card">${escapeHTML(opt)}</button>
-                `).join('')}
-            </div>
-            
-            <button id="btn-to-scores" class="btn-primary hidden">Ver Marcadores</button>
-        </section>
-    `;
-
-    // Asignar eventos manualmente para evitar problemas de window scope
-    const buttons = document.querySelectorAll('.btn-option');
-    buttons.forEach(btn => {
-        btn.onclick = () => handleSalvacion(btn.textContent, buttons);
-    });
-
-    document.getElementById('btn-to-scores').onclick = () => showScoreScreen();
-}
-
-function handleSalvacion(choice, buttons) {
-    const msg = document.getElementById('salvacion-msg');
-    const btnScores = document.getElementById('btn-to-scores');
-
-    buttons.forEach(b => b.disabled = true);
-
-    const guessed = (choice === state.secretWord);
-
-    if (guessed) {
-        msg.textContent = "¡TE HAS SALVADO! +2 Puntos";
-        msg.style.color = "var(--primary)";
-    } else {
-        msg.textContent = `FALLASTE. Era: ${state.secretWord}`;
-        msg.style.color = "var(--accent)";
-    }
-
-    handleRoundEnd({
-        impostorFound: true,
-        correctVoters: state.lastCorrectVoters,
-        impostorGuessedWord: guessed
-    });
-
-    msg.classList.remove('hidden');
-    btnScores.classList.remove('hidden');
-    document.getElementById('salvacion-grid').classList.add('faded');
-}
-
-function handleRoundEnd({ impostorFound, correctVoters = [], impostorGuessedWord = false }) {
+function handleRoundEnd({ impostorFound, correctVoters = [] }) {
     // Inicializar scores y limpiar deltas de ronda anterior
     state.roundScores = {};
     state.roundReasons = {};
@@ -453,41 +763,64 @@ function handleRoundEnd({ impostorFound, correctVoters = [], impostorGuessedWord
     const innocentCount = totalPlayers - 1; // Todos menos el impostor
     const numAcertantes = correctVoters.length;
 
-    if (!impostorFound) {
-        // Impostor Invicto = 3pts
-        state.scores[state.impostorName] += 3;
-        state.roundScores[state.impostorName] = 3;
-        state.roundReasons[state.impostorName] = "👻 Invicto";
-
-        // Inocentes que fallaron = 0pts
+    if (!impostorFound || numAcertantes === 0) {
+        // Nadie acierta (Impostor invicto)
+        state.scores[state.impostorName] += 6;
+        state.roundScores[state.impostorName] = 6;
+        state.roundReasons[state.impostorName] = "👻 Invicto (Nadie acierta)";
     } else {
-        // Impostor Descubierto = 1pt base (si NO es unánime) o 0pt
-        if (numAcertantes < innocentCount) {
-            state.scores[state.impostorName] += 1;
-            state.roundScores[state.impostorName] += 1;
-            state.roundReasons[state.impostorName] = "🤡 Descubierto";
-        } else {
-            state.roundReasons[state.impostorName] = "💀 Pillado por TODOS";
-        }
-
-        if (impostorGuessedWord) {
-            state.scores[state.impostorName] += 2; // +2 extra por salvarse
-            state.roundScores[state.impostorName] += 2;
-            state.roundReasons[state.impostorName] += " + 🛟 Salvado";
-        }
-
-        // Puntos para jugadores inocentes
         if (numAcertantes === 1) {
-            // Acierto Super-Aislado
-            state.scores[correctVoters[0]] += 3;
-            state.roundScores[correctVoters[0]] = 3;
-            state.roundReasons[correctVoters[0]] = "🎯 Rencor Único";
-        } else if (numAcertantes > 1) {
-            // Acierto Parcial o Unánime
+            // Solo 1 acierta: Impostor +4, Acertante +6
+            state.scores[state.impostorName] += 4;
+            state.roundScores[state.impostorName] = 4;
+            state.roundReasons[state.impostorName] = "🤡 Descubierto por 1";
+
+            state.scores[correctVoters[0]] += 6;
+            state.roundScores[correctVoters[0]] = 6;
+            state.roundReasons[correctVoters[0]] = "🎯 Único Acertante";
+        } else if (numAcertantes < innocentCount / 2) {
+            // Minoría acierta: Impostor +2, Acertantes +4
+            state.scores[state.impostorName] += 2;
+            state.roundScores[state.impostorName] = 2;
+            state.roundReasons[state.impostorName] = "🤡 Descubierto por minoría";
+
+            correctVoters.forEach(name => {
+                state.scores[name] += 4;
+                state.roundScores[name] = 4;
+                state.roundReasons[name] = "✔️ Acierto (Minoría)";
+            });
+        } else if (numAcertantes === innocentCount / 2) {
+            // Empate (50%): Impostor +1, Acertantes +3
+            state.scores[state.impostorName] += 1;
+            state.roundScores[state.impostorName] = 1;
+            state.roundReasons[state.impostorName] = "⚖️ Descubierto por la mitad";
+
+            correctVoters.forEach(name => {
+                state.scores[name] += 3;
+                state.roundScores[name] = 3;
+                state.roundReasons[name] = "✔️ Acierto (Empate)";
+            });
+        } else if (numAcertantes > innocentCount / 2 && numAcertantes < innocentCount) {
+            // Mayoría acierta: Impostor 0, Acertantes +2
+            state.scores[state.impostorName] += 0;
+            state.roundScores[state.impostorName] = 0;
+            state.roundReasons[state.impostorName] = "🚨 Descubierto por mayoría";
+
             correctVoters.forEach(name => {
                 state.scores[name] += 2;
                 state.roundScores[name] = 2;
-                state.roundReasons[name] = "✔️ Acierto";
+                state.roundReasons[name] = "✔️ Acierto (Mayoría)";
+            });
+        } else if (numAcertantes === innocentCount) {
+            // Todos aciertan: Impostor -1, Acertantes +2
+            state.scores[state.impostorName] -= 1;
+            state.roundScores[state.impostorName] = -1;
+            state.roundReasons[state.impostorName] = "💀 Pillado por TODOS";
+
+            correctVoters.forEach(name => {
+                state.scores[name] += 2;
+                state.roundScores[name] = 2;
+                state.roundReasons[name] = "✔️ Acierto Unánime";
             });
         }
     }
@@ -498,7 +831,7 @@ function showScoreScreen() {
     const sortedPlayers = [...state.players].sort((a, b) => (state.scores[b] || 0) - (state.scores[a] || 0));
 
     // FIX: Añadido id="screen-score" y clase score-screen con botones de sumar y restar
-    UI.mainContent.innerHTML = `
+    UI.dynamicContent.innerHTML = `
         <section id="screen-score" class="screen score-screen active">
             <h2>Marcadores 🏆</h2>
             <div class="score-list glass-card">
@@ -506,20 +839,21 @@ function showScoreScreen() {
         const delta = state.roundScores[name] || 0;
         const reason = state.roundReasons[name] || "";
         const deltaHTML = delta > 0 ? `<div class="round-delta"><span class="delta-pts">+${delta}</span> <span class="delta-reason">${reason}</span></div>` : (reason ? `<div class="round-delta"><span class="delta-pts muted">+0</span> <span class="delta-reason muted">${reason}</span></div>` : '');
+        const slugId = name.toLowerCase().replace(/\s+/g, '-');
 
         return `
                     <div class="score-item ${index === 0 && state.scores[name] > 0 ? 'winner' : ''}">
                         <span class="rank">${index + 1}</span>
                         <div class="name">
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:1.4rem">${state.playerAvatars[name] || '👤'}</span>
+                                ${getAvatarHTML(name)}
                                 <span>${escapeHTML(name)}</span>
                             </div>
                             ${deltaHTML}
                         </div>
                         <div class="score-edit-group">
                             <button class="btn-score-mod" data-action="minus" data-player="${escapeHTML(name)}">-</button>
-                            <span class="score-display" id="score-val-${escapeHTML(name)}">${state.scores[name] || 0}</span>
+                            <span class="score-display" id="score-val-${slugId}">${state.scores[name] || 0}</span>
                             <button class="btn-score-mod" data-action="plus" data-player="${escapeHTML(name)}">+</button>
                         </div>
                     </div>
@@ -538,13 +872,14 @@ function showScoreScreen() {
         btn.addEventListener('click', (e) => {
             const player = e.target.dataset.player;
             const action = e.target.dataset.action;
+            const playerSlug = player.toLowerCase().replace(/\s+/g, '-');
             let currentScore = state.scores[player] || 0;
 
             if (action === 'plus') currentScore++;
             else if (action === 'minus') currentScore--;
 
             state.scores[player] = currentScore;
-            document.getElementById('score-val-' + player).textContent = currentScore;
+            document.getElementById('score-val-' + playerSlug).textContent = currentScore;
 
             // Re-render opcional completo para reordenar
             // showScoreScreen();
@@ -564,8 +899,16 @@ function showScoreScreen() {
 
     document.getElementById('btn-exit-game').onclick = () => {
         showConfirm("¿Volver al menú principal? Se perderá el progreso de esta ronda.", () => {
-            // Limpiamos el contenido dinámico del main-content
-            UI.mainContent.innerHTML = '';
+            // Limpiamos el contenido dinámico 
+            UI.dynamicContent.innerHTML = '';
+            // Reset state partial
+            state.gameData = null;
+            state.scores = {};
+            state.players = [];
+            state.playerAvatars = {};
+            state.avatarPool = ['🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🦄', '🐶', '🐱', '🐹', '🐭'];
+
+            // Reactivate setup screen to be sure
             navigateTo('screen-main-menu');
         });
     };
@@ -598,22 +941,72 @@ function pickRandomCategory() {
     selectCategory(random.id);
 }
 
-function addPlayer() {
+function addPlayer(e) {
     const name = UI.playerNameInput.value.trim();
     if (name && !state.players.includes(name)) {
         state.players.push(name);
 
-        // Asignar avatar aleatorio único (sin repetir)
-        let chosenAvatar = '👤';
+        // Asignar emoji aleatorio único (sin repetir) como fallback
+        let fallbackEmoji = '👤';
         if (state.avatarPool.length > 0) {
             const poolIndex = Math.floor(Math.random() * state.avatarPool.length);
-            chosenAvatar = state.avatarPool.splice(poolIndex, 1)[0];
+            fallbackEmoji = state.avatarPool.splice(poolIndex, 1)[0];
         }
-        state.playerAvatars[name] = chosenAvatar;
+        state.playerAvatars[name] = fallbackEmoji;
 
+        createStarDust(e); // El evento e vendrá del listener
         UI.playerNameInput.value = '';
         renderPlayerList();
         checkMinPlayers();
+    }
+}
+
+function createStarDust(e) {
+    // Reutilizar la logica que limite las particulas al app-container para no desbordar body
+    const container = document.getElementById('app-container') || document.body;
+    let containerRect = { left: 0, top: 0 };
+    if(container.id === 'app-container') {
+        containerRect = container.getBoundingClientRect();
+    }
+    
+    const x = e.clientX || e.pageX;
+    const y = e.clientY || e.pageY;
+    
+    const localX = x - containerRect.left;
+    const localY = y - containerRect.top;
+
+    for (let i = 0; i < 12; i++) {
+        const star = document.createElement('div');
+        star.className = 'star-dust';
+        star.innerHTML = '✨';
+        star.style.left = `${localX}px`;
+        star.style.top = `${localY}px`;
+
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = 2 + Math.random() * 5;
+        const vx = Math.cos(angle) * velocity;
+        const vy = Math.sin(angle) * velocity;
+
+        container.appendChild(star);
+
+        let posX = x;
+        let posY = y;
+        let opacity = 1;
+
+        const anim = setInterval(() => {
+            posX += vx;
+            posY += vy;
+            opacity -= 0.05;
+            star.style.left = `${posX}px`;
+            star.style.top = `${posY}px`;
+            star.style.opacity = opacity;
+            star.style.transform = `scale(${opacity})`;
+
+            if (opacity <= 0) {
+                clearInterval(anim);
+                star.remove();
+            }
+        }, 16);
     }
 }
 
@@ -628,44 +1021,105 @@ function removePlayer(name) {
     delete state.playerAvatars[name];
 
     renderPlayerList();
+    renderPresetPlayers();
     checkMinPlayers();
+}
+
+function renderPresetPlayers() {
+    const grid = document.getElementById('preset-players-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    PRESET_PLAYERS.forEach(name => {
+        const isActive = state.players.includes(name);
+        const chip = document.createElement('button');
+        chip.className = 'preset-totem' + (isActive ? ' active' : '');
+        chip.innerHTML = `<span class="totem-text">${name}</span>`;
+        chip.setAttribute('role', 'button');
+        chip.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        chip.title = isActive ? 'Quitar de la partida' : 'Añadir a la partida';
+        chip.setAttribute('data-name', name);
+
+        chip.addEventListener('click', (e) => {
+            if (state.players.includes(name)) {
+                removePlayer(name);
+            } else {
+                createStardust(e.clientX, e.clientY);
+                state.players.push(name);
+                let fallbackEmoji = '👤';
+                if (state.avatarPool.length > 0) {
+                    const poolIndex = Math.floor(Math.random() * state.avatarPool.length);
+                    fallbackEmoji = state.avatarPool.splice(poolIndex, 1)[0];
+                }
+                state.playerAvatars[name] = fallbackEmoji;
+                renderPlayerList();
+                renderPresetPlayers();
+                checkMinPlayers();
+            }
+        });
+
+        grid.appendChild(chip);
+    });
 }
 
 function renderPlayerList() {
     UI.playerList.innerHTML = '';
-    state.players.forEach(name => {
+    state.players.forEach((name, index) => {
         const li = document.createElement('li');
-        li.className = 'player-item';
+        li.className = `player-card avatar-color-${(index % 6) + 1}`;
+        li.setAttribute('role', 'listitem');
+        li.setAttribute('aria-label', `Jugador: ${name}`);
 
-        const infoDiv = document.createElement('div');
-        infoDiv.style.display = 'flex';
-        infoDiv.style.alignItems = 'center';
-        infoDiv.style.gap = '10px';
+        li.innerHTML = `
+            <div class="card-img-container">
+                ${getSetupAvatarHTML(name)}
+            </div>
+            <button class="remove-player-btn" title="Eliminar Jugador" aria-label="Eliminar a ${name}">
+                <svg viewBox="0 0 100 100" class="svg-wax-seal">
+                    <path d="M50 5 C25 5, 5 25, 5 50 C5 75, 25 95, 50 95 C75 95, 95 75, 95 50 C95 25, 75 5" fill="#a01d1d" />
+                    <circle cx="50" cy="50" r="35" fill="#8b1a1a" stroke="#6b1414" stroke-width="2" />
+                    <path d="M35 35 L65 65 M65 35 L35 65" stroke="rgba(255,255,255,0.3)" stroke-width="8" stroke-linecap="round" />
+                </svg>
+            </button>
+            <div class="card-name-band">
+                <span>${escapeHTML(name.charAt(0).toUpperCase() + name.slice(1))}</span>
+            </div>
+            <div class="active-glow-star" aria-hidden="true">⭐</div>
+        `;
 
-        const avatarSpan = document.createElement('span');
-        avatarSpan.textContent = state.playerAvatars[name] || '👤';
-        avatarSpan.style.fontSize = '1.3rem';
-
-        const nameSpan = document.createElement('span');
-        nameSpan.textContent = name;
-
-        infoDiv.appendChild(avatarSpan);
-        infoDiv.appendChild(nameSpan);
-
-        const btnDelete = document.createElement('button');
-        btnDelete.className = 'btn-delete';
-        btnDelete.textContent = '✕';
-        btnDelete.addEventListener('click', () => removePlayer(name));
-
-        li.appendChild(infoDiv);
-        li.appendChild(btnDelete);
+        li.querySelector('.remove-player-btn').addEventListener('click', () => {
+            removePlayer(name);
+            renderPresetPlayers(); // Actualizar chips al eliminar
+        });
         UI.playerList.appendChild(li);
     });
 }
 
 function checkMinPlayers() {
-    UI.startGameBtn.disabled = state.players.length < state.minPlayers;
+    const isEnough = state.players.length >= state.minPlayers;
+    const isIndicative = state.players.length >= 2;
+
+    UI.startGameBtn.disabled = !isEnough;
+
+    if (isIndicative) {
+        UI.startGameBtn.classList.add('can-start');
+    } else {
+        UI.startGameBtn.classList.remove('can-start');
+    }
 }
+
+// ── Inicialización y Eventos Globales (Fase 0) ──────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar historial con la pantalla de inicio
+    navigationHistory = ['screen-main-menu'];
+
+    // Listeners de navegación global
+    const btnBack = document.getElementById('btn-global-back');
+    const btnHome = document.getElementById('btn-global-home');
+
+    if (btnBack) btnBack.addEventListener('click', goBack);
+    if (btnHome) btnHome.addEventListener('click', () => navigateTo('main-menu'));
+});
 
 // Utilidad XSS
 function escapeHTML(str) {
@@ -678,4 +1132,42 @@ function escapeHTML(str) {
             '"': '&quot;'
         }[tag])
     );
+}
+
+function createStardust(x, y) {
+    const container = document.getElementById('app-container') || document.body;
+    
+    // Si usamos app-container (position:relative), requerimos coords relativas:
+    let containerRect = { left: 0, top: 0 };
+    if (container.id === 'app-container') {
+        containerRect = container.getBoundingClientRect();
+    }
+    
+    // Coordenadas locales al contenedor
+    const localX = x - containerRect.left;
+    const localY = y - containerRect.top;
+
+    for (let i = 0; i < 8; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'stardust-particle';
+        const size = Math.random() * 4 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${localX}px`;
+        particle.style.top = `${localY}px`;
+
+        const destinationX = (Math.random() - 0.5) * 100;
+        const destinationY = (Math.random() - 0.5) * 100;
+
+        particle.animate([
+            { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+            { transform: `translate(${destinationX}px, ${destinationY}px) scale(0)`, opacity: 0 }
+        ], {
+            duration: 800 + Math.random() * 400,
+            easing: 'cubic-bezier(0, .9, .57, 1)',
+            delay: Math.random() * 100
+        }).onfinish = () => particle.remove();
+
+        container.appendChild(particle);
+    }
 }
