@@ -121,16 +121,14 @@ body:has(#screen-setup.active) #app-container {
 /* Setup Screen Specials: 3-Zone Fixed Layout */
 #screen-setup {
     background: radial-gradient(circle at center, rgba(30, 10, 60, 0.1) 0%, rgba(15, 5, 30, 0.8) 100%),
-        url('assets/IMG/UI/bg_eleccion_jugadores.png') no-repeat top center / cover !important;
+        url('assets/IMG/UI/bg_eleccion_jugadores.png') no-repeat center center / cover !important;
     position: fixed !important;
     inset: 0 !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 100vw !important; /* Fixed width to prevent horizontal expanding */
-    max-width: 500px;
+    width: 100vw !important;
+    height: 100svh !important;
+    max-width: 100% !important; /* Forzar 100% en móvil */
     flex-direction: column !important;
-    overflow-x: hidden !important; /* Evitar expansión lateral por partículas */
-    overflow-y: hidden !important;
+    overflow: hidden !important;
     z-index: 1000;
 }
 
