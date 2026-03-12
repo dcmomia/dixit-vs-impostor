@@ -1866,20 +1866,19 @@ body:has(#screen-setup.active) #app-container {
 /* Eliminado por redundancia, ahora gestionado globalmente arriba */
 
 .main-menu-screen {
-    background: url('assets/IMG/UI/bg_main.jpg') no-repeat top center / cover; /* Quitamos fixed que da error en movil */
+    background: url('assets/IMG/UI/bg_main.jpg') no-repeat top center / cover;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100vw !important;
     min-height: 100svh;
-    position: fixed !important; /* Corregido: igual que el setup para ocupar todo el visor */
+    position: fixed !important;
     inset: 0 !important;
     padding: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    max-width: 100% !important; /* Permitir expansion total */
+    z-index: 10;
+    max-width: 100% !important;
 }
 
 /* Bloque de logo redundante eliminado para evitar conflictos */
