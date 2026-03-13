@@ -1909,6 +1909,30 @@ body:has(#screen-setup.active) #app-container {
     filter: drop-shadow(0 0 20px rgba(255, 60, 60, 0.6));
 }
 
+.shamanic-glyph {
+    font-family: 'Raleway', sans-serif;
+    font-size: 5.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin: 1rem 0;
+    word-break: break-word;
+    line-height: 1;
+    background: linear-gradient(to right, #00d2ff, #ff00cc, #00d2ff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.7)) 
+            drop-shadow(0 4px 15px rgba(255, 0, 204, 0.5));
+    animation: shamanicPulse 4s ease infinite;
+}
+
+@keyframes shamanicPulse {
+    0%, 100% { background-position: 0% 50%; opacity: 0.9; transform: scale(1); }
+    50% { background-position: 100% 50%; opacity: 1; transform: scale(1.02); }
+}
+
 .pulse-card {
     transition: transform 0.2s;
 }

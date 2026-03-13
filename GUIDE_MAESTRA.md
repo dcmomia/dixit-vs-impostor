@@ -98,7 +98,7 @@ Fase de secreto absoluto con tecnología de volteo 3D.
     - **Base de Piedra**: `assets/IMG/UI/btn_piedrareveal.png`.
     - **Aura Giratoria**: `assets/IMG/UI/btn_luz_reveal.png` (Animación `rotateMagicLight`).
 - **Texto/Imagen**: 
-    - Palabra secreta en fuente `Fredoka` con animación `heartbeat`.
+    - Palabra secreta: Clase `.shamanic-glyph` (Fuente `Raleway`, letras rectas, degradado azul-rosa y animación de pulso místico).
     - Cuenta atrás visual: Secuencia de imágenes `assets/IMG/UI/cuenta_atras/[5-1].png`.
 - **Botón Final**: "Finalizar Debate y Votar 🗳️".
 

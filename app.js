@@ -671,7 +671,7 @@ function showRevealPanicScreen() {
 
             <!-- FASE 2 y 3: PANICO Y DEBATE -->
             <div id="panic-phase-2" class="hidden" style="text-align: center; margin: auto 0;">
-                <h2 class="glow-text" style="font-size: 5rem; word-break: break-word; line-height: 1.1; margin: 1rem 0;">${escapeHTML(state.secretWord)}</h2>
+                <h2 class="shamanic-glyph">${escapeHTML(state.secretWord)}</h2>
                 
                 <div id="panic-countdown" class="panic-number">
                     <img src="assets/IMG/UI/cuenta_atras/5.png" alt="5">
