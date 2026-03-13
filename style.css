@@ -1884,9 +1884,9 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .btn-votar-action {
-    width: 95vw; /* Más ancho todavía */
-    max-width: 700px; /* Mayor límite para tablets */
-    height: 180px; /* Altura forzada para que sea grande */
+    width: 98vw;
+    max-width: 800px;
+    height: 300px; /* ¡Aún más grande! */
     background: url('assets/IMG/UI/btn_votar.png') no-repeat center;
     background-size: contain;
     border: none;
@@ -1897,7 +1897,7 @@ body:has(#screen-setup.active) #app-container {
     user-select: none;
     display: block;
     margin: 0 auto;
-    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
+    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.5));
 }
 
 .btn-votar-action:hover {
@@ -1936,13 +1936,16 @@ body:has(#screen-setup.active) #app-container {
 
 .shamanic-glyph {
     font-family: 'Raleway', sans-serif;
-    font-size: 3rem; /* Ligeramente reducido para asegurar una sola línea */
+    font-size: clamp(2.5rem, 10vw, 4rem); /* Tamaño responsivo que no desborda */
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin: 0;
-    white-space: nowrap; /* ¡PROHIBIDO SALTO DE LÍNEA! */
-    overflow: visible;
+    padding: 0 12vw; /* Más margen lateral */
+    margin: 2vh 0;
+    word-break: normal;
+    overflow-wrap: break-word;
+    text-align: center;
+    display: block;
     line-height: 1.1;
     background: linear-gradient(to right, #00d2ff, #ff00cc, #00d2ff);
     background-size: 200% auto;

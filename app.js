@@ -670,16 +670,17 @@ function showRevealPanicScreen() {
             </div>
 
             <!-- FASE 2 y 3: PANICO Y DEBATE -->
-            <div id="panic-phase-2" class="hidden" style="text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: flex-start; padding: 2vh 0;">
-                <div style="flex: 1; display: flex; align-items: center; justify-content: center; max-height: 20vh;">
+            <div id="panic-phase-2" class="hidden" style="text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: space-between; padding: 2vh 0 5vh;">
+                <!-- Tercio Superior: Palabra y Contador -->
+                <div style="flex: 1.5; display: flex; flex-direction: column; justify-content: center; gap: 2vh;">
                     <h2 class="shamanic-glyph">${escapeHTML(state.secretWord)}</h2>
+                    <div id="panic-countdown" class="panic-number">
+                        <img src="assets/IMG/UI/cuenta_atras/5.png" alt="5">
+                    </div>
                 </div>
                 
-                <div id="panic-countdown" class="panic-number" style="flex: 1; display: flex; align-items: center; justify-content: center;">
-                    <img src="assets/IMG/UI/cuenta_atras/5.png" alt="5">
-                </div>
-                
-                <div id="panic-debate-ui" class="hidden" style="flex: 2; display: flex; align-items: center; justify-content: center; padding-bottom: 5vh;">
+                <!-- 2/3 Partes Finales: Botón de Votar Gigante -->
+                <div id="panic-debate-ui" class="hidden" style="flex: 2; display: flex; align-items: flex-end; justify-content: center;">
                     <button id="btn-to-vote" class="btn-votar-action"></button>
                 </div>
             </div>
@@ -702,10 +703,7 @@ function showRevealPanicScreen() {
             panicTime--;
             if (panicTime > 0) {
                 countdownEl.innerHTML = `<img src="assets/IMG/UI/cuenta_atras/${panicTime}.png" alt="${panicTime}">`;
-                // Re-trigger anim
-                countdownEl.classList.remove('heartbeat');
                 void countdownEl.offsetWidth;
-                countdownEl.classList.add('heartbeat');
             } else {
                 clearInterval(panicInterval);
                 countdownEl.classList.add('hidden');
