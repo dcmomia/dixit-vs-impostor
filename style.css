@@ -1894,8 +1894,8 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .panic-number {
-    margin: 8rem 0 2rem;
-    /* Bajando drásticamente a 8rem para asegurar el centrado visual inferior */
+    margin: 10rem 0 2rem;
+    /* Bajando a 10rem para despejar el área central */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1911,7 +1911,7 @@ body:has(#screen-setup.active) #app-container {
 
 .shamanic-glyph {
     font-family: 'Raleway', sans-serif;
-    font-size: 3.5rem; /* Reducido de 5.5rem */
+    font-size: 3.5rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -1923,8 +1923,12 @@ body:has(#screen-setup.active) #app-container {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.7)) 
-            drop-shadow(0 4px 15px rgba(255, 0, 204, 0.5));
+    
+    /* Efecto triple: Azul + Rosa + Luz Blanca Angelical */
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))
+            drop-shadow(0 0 15px rgba(0, 210, 255, 0.6)) 
+            drop-shadow(0 4px 20px rgba(255, 0, 204, 0.4));
+    
     animation: shamanicPulse 4s ease infinite;
 }
 
