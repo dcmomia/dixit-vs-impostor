@@ -1911,13 +1911,13 @@ body:has(#screen-setup.active) #app-container {
 
 .shamanic-glyph {
     font-family: 'Raleway', sans-serif;
-    font-size: 5.5rem;
+    font-size: 3.5rem; /* Reducido de 5.5rem */
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin: 1rem 0;
+    letter-spacing: 0.1em;
+    margin: 0.5rem 0;
     word-break: break-word;
-    line-height: 1;
+    line-height: 1.1;
     background: linear-gradient(to right, #00d2ff, #ff00cc, #00d2ff);
     background-size: 200% auto;
     -webkit-background-clip: text;
