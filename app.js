@@ -670,14 +670,14 @@ function showRevealPanicScreen() {
             </div>
 
             <!-- FASE 2 y 3: PANICO Y DEBATE -->
-            <div id="panic-phase-2" class="hidden" style="text-align: center; margin: auto 0;">
-                <h2 class="shamanic-glyph">${escapeHTML(state.secretWord)}</h2>
+            <div id="panic-phase-2" class="hidden" style="text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: space-between; padding: 5vh 0;">
+                <h2 class="shamanic-glyph" style="margin-top: 5vh;">${escapeHTML(state.secretWord)}</h2>
                 
-                <div id="panic-countdown" class="panic-number">
+                <div id="panic-countdown" class="panic-number" style="margin: 0;">
                     <img src="assets/IMG/UI/cuenta_atras/5.png" alt="5">
                 </div>
                 
-                <div id="panic-debate-ui" class="hidden" style="margin-top: 2rem;">
+                <div id="panic-debate-ui" class="hidden" style="margin-bottom: 5vh;">
                     <button id="btn-to-vote" class="btn-votar-action"></button>
                 </div>
             </div>

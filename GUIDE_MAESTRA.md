@@ -97,10 +97,11 @@ Fase de secreto absoluto con tecnología de volteo 3D.
 - **Efecto Piedra:**
     - **Base de Piedra**: `assets/IMG/UI/btn_piedrareveal.png`.
     - **Aura Giratoria**: `assets/IMG/UI/btn_luz_reveal.png` (Animación `rotateMagicLight`).
-- **Texto/Imagen**: 
-    - Palabra secreta: Clase `.shamanic-glyph` (Fuente `Raleway`, letras rectas, degradado azul-rosa y animación de pulso místico).
-    - Cuenta atrás visual: Secuencia de imágenes `assets/IMG/UI/cuenta_atras/[5-1].png`.
-- **Botón Final**: `assets/IMG/UI/btn_votar.png` (Acción equilibrada con resplandor azul).
+- **Layout de Pánico/Debate**:
+    - **Tercio Superior**: Palabra secreta con estilo `.shamanic-glyph`.
+    - **Área Central**: Imágenes de cuenta atrás animadas.
+    - **Áreas Inferiores**: Botón de votar prominente (`width: 90vw`).
+- **Botón Final**: `assets/IMG/UI/btn_votar.png` (Tamaño aumentado para ocupar 2/3 del ancho visual).
 
 ---
 

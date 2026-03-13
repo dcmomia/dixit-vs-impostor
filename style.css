@@ -1884,8 +1884,10 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .btn-votar-action {
-    width: 340px;
-    height: 110px;
+    width: 90vw; /* Ocupa casi todo el ancho */
+    max-width: 500px;
+    height: auto;
+    aspect-ratio: 340 / 110;
     background: url('assets/IMG/UI/btn_votar.png') no-repeat center;
     background-size: contain;
     border: none;
@@ -1894,9 +1896,9 @@ body:has(#screen-setup.active) #app-container {
     transition: transform 0.2s, filter 0.2s;
     -webkit-user-select: none;
     user-select: none;
-    display: inline-block;
+    display: block;
     margin: 0 auto;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
 }
 
 .btn-votar-action:hover {
@@ -1919,12 +1921,11 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .panic-number {
-    margin: 10rem 0 2rem;
-    /* Bajando a 10rem para despejar el área central */
+    margin: 0; 
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 200px;
+    min-height: 150px;
 }
 
 .panic-number img {
