@@ -111,7 +111,7 @@ body:has(#screen-setup.active) #app-container {
     text-align: center;
     color: var(--primary);
     -webkit-text-stroke: 1.5px var(--border-hard);
-    text-shadow: 
+    text-shadow:
         0 4px 8px rgba(0, 0, 0, 0.8),
         0 0 20px rgba(0, 0, 0, 0.4),
         2px 2px 0 rgba(0, 0, 0, 0.6);
@@ -194,8 +194,15 @@ body:has(#screen-setup.active) #app-container {
 }
 
 @keyframes titleFloat {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-3px) scale(1.02); }
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-3px) scale(1.02);
+    }
 }
 
 @keyframes diamondShimmer {
@@ -241,8 +248,8 @@ body:has(#screen-setup.active) #app-container {
 
 /* Forzado de transparencia total en contenedores de setup para eliminar recuadros oscuros */
 .setup-parchment,
-.setup-scroll-body, 
-.player-list-wrapper, 
+.setup-scroll-body,
+.player-list-wrapper,
 #player-list,
 .vortex-container,
 .preset-section,
@@ -1887,7 +1894,8 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .panic-number {
-    margin: 3.6rem 0 1rem; /* Punto medio perfecto entre 4rem (bajo) y 3.2rem (alto) */
+    margin: 3.9rem 0 1rem;
+    /* Casi en el borde del '4rem' previo que era demasiado bajo */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2249,7 +2257,7 @@ body:has(#screen-setup.active) #app-container {
 
 .player-input-divider span {
     color: #ffffff !important;
-    text-shadow: 
+    text-shadow:
         1px 1px 0 #000,
         -1px -1px 0 #000,
         1px -1px 0 #000,
@@ -2808,7 +2816,8 @@ body:has(#screen-setup.active) #app-container {
     overflow: hidden !important;
     z-index: 1000;
     padding: 1.2rem 1rem 1.5rem;
-    transition: background-image 0.5s ease; /* Transición suave */
+    transition: background-image 0.5s ease;
+    /* Transición suave */
 }
 
 /* Fondo especial para cuando se revela la palabra */
@@ -2854,8 +2863,10 @@ body:has(#screen-setup.active) #app-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem; /* Más espacio para la sombra */
-    overflow: visible; /* Evita recortar la sombra paralela */
+    padding: 1rem;
+    /* Más espacio para la sombra */
+    overflow: visible;
+    /* Evita recortar la sombra paralela */
 }
 
 .starter-full-image {
@@ -3022,10 +3033,12 @@ body:has(#screen-setup.active) #app-container {
     /* Eliminado borde amarillo sólido */
     border: 2px solid rgba(255, 255, 255, 0.1);
     /* Resplandor Azul-Rosa solicitado */
-    box-shadow: 
+    box-shadow:
         0 4px 15px rgba(0, 0, 0, 0.4),
-        0 0 15px rgba(0, 198, 255, 0.3), /* Azul Cyan */
-        0 0 25px rgba(255, 0, 128, 0.2);  /* Rosa / Magenta */
+        0 0 15px rgba(0, 198, 255, 0.3),
+        /* Azul Cyan */
+        0 0 25px rgba(255, 0, 128, 0.2);
+    /* Rosa / Magenta */
     background-color: transparent;
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
     /* Efecto de Flotación */
@@ -3033,10 +3046,13 @@ body:has(#screen-setup.active) #app-container {
 }
 
 @keyframes categoryMagicFloat {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0) rotate(0deg);
         filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
     }
+
     50% {
         transform: translateY(-12px) rotate(1deg);
         filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.2));
@@ -3057,9 +3073,9 @@ body:has(#screen-setup.active) #app-container {
     transform: scale(1.08) translateY(-15px) !important;
     animation-play-state: paused;
     border-color: rgba(255, 255, 255, 0.6) !important;
-    box-shadow: 
+    box-shadow:
         0 20px 40px rgba(0, 0, 0, 0.6),
-        0 0 30px rgba(0, 198, 255, 0.7), 
+        0 0 30px rgba(0, 198, 255, 0.7),
         0 0 50px rgba(255, 0, 128, 0.5);
 }
 
