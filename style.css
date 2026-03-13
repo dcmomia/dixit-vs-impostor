@@ -1885,8 +1885,8 @@ body:has(#screen-setup.active) #app-container {
 
 .btn-votar-action {
     width: 98vw;
-    max-width: 800px;
-    height: 300px;
+    max-width: 900px;
+    height: 400px; /* Tamaño masivo solicitado */
     background: url('assets/IMG/UI/btn_votar.png') no-repeat center;
     background-size: contain;
     border: none;
@@ -1897,13 +1897,13 @@ body:has(#screen-setup.active) #app-container {
     user-select: none;
     display: block;
     margin: 0 auto;
-    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
-    animation: angelicButtonGlow 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.7));
+    animation: angelicButtonGlow 2.5s ease-in-out infinite;
 }
 
 @keyframes angelicButtonGlow {
-    0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4)) brightness(1); }
-    50% { filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.8)) brightness(1.15); }
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5)) brightness(1); }
+    50% { filter: drop-shadow(0 0 60px rgba(255, 255, 255, 0.9)) brightness(1.25); }
 }
 
 .btn-votar-action:hover {
@@ -1943,17 +1943,18 @@ body:has(#screen-setup.active) #app-container {
 
 .shamanic-glyph {
     font-family: 'Raleway', sans-serif;
-    font-size: clamp(2.5rem, 10vw, 4rem); /* Tamaño responsivo que no desborda */
+    font-size: clamp(2.2rem, 9vw, 3.5rem); 
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0 12vw; /* Más margen lateral */
-    margin: 2vh 0;
-    word-break: normal;
-    overflow-wrap: break-word;
+    letter-spacing: 0.02em;
+    padding: 0 5vw; /* Reducido para dar más aire a las palabras largas */
+    margin: 0;
+    word-break: keep-all; /* ¡PROHIBIDO CORTAR PALABRAS! */
+    overflow-wrap: normal;
+    white-space: normal; /* Permite saltos entre palabras pero no dentro de ellas */
     text-align: center;
     display: block;
-    line-height: 1.1;
+    line-height: 1.2;
     background: linear-gradient(to right, #00d2ff, #ff00cc, #00d2ff);
     background-size: 200% auto;
     -webkit-background-clip: text;

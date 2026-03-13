@@ -670,17 +670,18 @@ function showRevealPanicScreen() {
             </div>
 
             <!-- FASE 2 y 3: PANICO Y DEBATE -->
-            <div id="panic-phase-2" class="hidden" style="text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: center; padding: 2vh 0 5vh; gap: 4vh;">
-                <!-- Parte Superior: Palabra y Contador -->
-                <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 2vh;">
+            <div id="panic-phase-2" class="hidden" style="text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: center; padding: 0; box-sizing: border-box;">
+                
+                <!-- Contenedor Superior (Palabra y Contador - Menos peso para subir el botón) -->
+                <div style="flex: 0.8; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 2vh; gap: 2vh;">
                     <h2 class="shamanic-glyph">${escapeHTML(state.secretWord)}</h2>
                     <div id="panic-countdown" class="panic-number">
                         <img src="assets/IMG/UI/cuenta_atras/5.png" alt="5">
                     </div>
                 </div>
                 
-                <!-- Parte Central: Botón de Votar Gigante -->
-                <div id="panic-debate-ui" class="hidden" style="flex: 1; display: flex; align-items: center; justify-content: center;">
+                <!-- Contenedor del Botón (Centro de la pantalla) -->
+                <div id="panic-debate-ui" class="hidden" style="flex: 1.2; display: flex; align-items: flex-start; justify-content: center; padding-top: 0;">
                     <button id="btn-to-vote" class="btn-votar-action"></button>
                 </div>
             </div>
