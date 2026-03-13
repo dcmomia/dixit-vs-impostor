@@ -678,7 +678,7 @@ function showRevealPanicScreen() {
                 </div>
                 
                 <div id="panic-debate-ui" class="hidden" style="margin-top: 2rem;">
-                    <button id="btn-to-vote" class="btn-primary" style="width: 100%; padding: 1rem;">Finalizar Debate y Votar 🗳️</button>
+                    <button id="btn-to-vote" class="btn-votar-action"></button>
                 </div>
             </div>
             

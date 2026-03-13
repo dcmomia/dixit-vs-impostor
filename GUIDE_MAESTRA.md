@@ -100,7 +100,7 @@ Fase de secreto absoluto con tecnología de volteo 3D.
 - **Texto/Imagen**: 
     - Palabra secreta: Clase `.shamanic-glyph` (Fuente `Raleway`, letras rectas, degradado azul-rosa y animación de pulso místico).
     - Cuenta atrás visual: Secuencia de imágenes `assets/IMG/UI/cuenta_atras/[5-1].png`.
-- **Botón Final**: "Finalizar Debate y Votar 🗳️".
+- **Botón Final**: `assets/IMG/UI/btn_votar.png` (Acción equilibrada con resplandor azul).
 
 ---
 
@@ -131,6 +131,7 @@ Fase de secreto absoluto con tecnología de volteo 3D.
 | **UI** | `btn_cartasalamesa.png` | Fin de Turno |
 | **UI** | `btn_piedrareveal.png` | Piedra de Revelación |
 | **UI** | `btn_luz_reveal.png` | Aura de la Piedra |
+| **UI** | `btn_votar.png` | Botón para ir a votación |
 | **UI** | `cuenta_atras/` | Imágenes 5 a 1 para cuenta atrás |
 
 ---
