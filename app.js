@@ -686,6 +686,7 @@ function showRevealPanicScreen() {
     `;
 
     document.getElementById('panic-phase-1').onclick = () => {
+        document.getElementById('screen-panic').classList.add('revealed');
         document.getElementById('panic-phase-1').classList.add('hidden');
         document.getElementById('panic-phase-2').classList.remove('hidden');
 

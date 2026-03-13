@@ -91,11 +91,13 @@ Fase de secreto absoluto con tecnología de volteo 3D.
 ---
 
 ## 🚨 6. Pánico y Revelación (`screen-panic`)
-- **Fondo:** `assets/IMG/UI/bg_reveal.png`.
+- **Dinámica de Fondo:**
+    - Fase Inicial: `bg_reveal.png`.
+    - Fase Revelación (al pulsar piedra): `assets/IMG/UI/bg_palabrailuminada.png`.
 - **Efecto Piedra:**
     - **Base de Piedra**: `assets/IMG/UI/btn_piedrareveal.png`.
     - **Aura Giratoria**: `assets/IMG/UI/btn_luz_reveal.png` (Animación `rotateMagicLight`).
-- **Texto**: Palabra secreta en fuente `Fredoka` con animación `heartbeat`.
+- **Texto**: Palabra secreta en fuente `Fredoka` con animación `heartbeat` y cuenta atrás de 5s.
 - **Botón Final**: "Finalizar Debate y Votar 🗳️".
 
 ---

@@ -2801,6 +2801,13 @@ body:has(#screen-setup.active) #app-container {
     overflow: hidden !important;
     z-index: 1000;
     padding: 1.2rem 1rem 1.5rem;
+    transition: background-image 0.5s ease; /* Transición suave */
+}
+
+/* Fondo especial para cuando se revela la palabra */
+#screen-panic.revealed {
+    background: url('assets/IMG/UI/bg_palabrailuminada.png') no-repeat center center fixed !important;
+    background-size: cover !important;
 }
 
 #screen-timer {
