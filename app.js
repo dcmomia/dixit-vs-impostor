@@ -670,18 +670,18 @@ function showRevealPanicScreen() {
             </div>
 
             <!-- FASE 2 y 3: PANICO Y DEBATE -->
-            <div id="panic-phase-2" class="hidden" style="text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: center; padding: 0; box-sizing: border-box;">
+            <div id="panic-phase-2" class="hidden" style="text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: flex-start; padding: 2vh 0; box-sizing: border-box;">
                 
-                <!-- Contenedor Superior (Palabra y Contador - Menos peso para subir el botón) -->
-                <div style="flex: 0.8; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 2vh; gap: 2vh;">
+                <!-- Contenedor Superior (Palabra y Contador - Pegados arriba) -->
+                <div style="flex: 0; display: flex; flex-direction: column; justify-content: flex-start; padding-top: 5vh; gap: 2vh;">
                     <h2 class="shamanic-glyph">${escapeHTML(state.secretWord)}</h2>
-                    <div id="panic-countdown" class="panic-number">
+                    <div id="panic-countdown" class="panic-number" style="margin: 0;">
                         <img src="assets/IMG/UI/cuenta_atras/5.png" alt="5">
                     </div>
                 </div>
                 
                 <!-- Contenedor del Botón (Centro de la pantalla) -->
-                <div id="panic-debate-ui" class="hidden" style="flex: 1.2; display: flex; align-items: flex-start; justify-content: center; padding-top: 0;">
+                <div id="panic-debate-ui" class="hidden" style="flex: 1; display: flex; align-items: center; justify-content: center;">
                     <button id="btn-to-vote" class="btn-votar-action"></button>
                 </div>
             </div>
