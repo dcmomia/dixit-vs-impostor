@@ -180,23 +180,22 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .setup-header h2.glow-text.small {
-    font-family: 'Coda', cursive, monospace;
-    /* Tipografía facetada y ultra-angular */
-    font-size: 1.8rem;
-    font-weight: 300;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    margin-bottom: 0.5rem;
-    color: #b9f2ff !important;
-    background: linear-gradient(135deg, #e0faff 0%, #00d4ff 50%, #0088aa 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 1px rgba(185, 242, 255, 0.6);
-    /* Borde recto definido */
-    filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.9));
-    text-shadow: none !important;
-    animation: diamondShimmer 3s ease-in-out infinite;
+    background: url('assets/IMG/UI/btn_jugadores.png') no-repeat center !important;
+    background-size: contain !important;
+    width: 320px;
+    height: 90px;
+    margin: 0 auto 0.5rem;
+    color: transparent !important;
+    font-size: 0 !important;
+    border: none !important;
+    filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.7));
+    /* Animación suave de escala para que se sienta vivo */
+    animation: titleFloat 3s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-3px) scale(1.02); }
 }
 
 @keyframes diamondShimmer {
