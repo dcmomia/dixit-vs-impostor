@@ -671,13 +671,11 @@ function showRevealPanicScreen() {
 
             <!-- FASE 2 y 3: PANICO Y DEBATE -->
             <div id="panic-phase-2" class="hidden" style="text-align: center; margin: auto 0;">
-                <p class="subtitle" style="font-size: 1.5rem;">La palabra secreta es:</p>
-                <h2 class="glow-text" style="font-size: 4rem; word-break: break-word; line-height: 1.1; margin: 1rem 0;">${escapeHTML(state.secretWord)}</h2>
+                <h2 class="glow-text" style="font-size: 5rem; word-break: break-word; line-height: 1.1; margin: 1rem 0;">${escapeHTML(state.secretWord)}</h2>
                 
                 <div id="panic-countdown" class="panic-number">5</div>
                 
                 <div id="panic-debate-ui" class="hidden" style="margin-top: 2rem;">
-                    <h3 class="highlight slide-up" style="font-size: 2.5rem; margin-bottom: 2rem;">¡A defender!</h3>
                     <button id="btn-to-vote" class="btn-primary" style="width: 100%; padding: 1rem;">Finalizar Debate y Votar 🗳️</button>
                 </div>
             </div>
