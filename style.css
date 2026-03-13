@@ -1884,10 +1884,9 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .btn-votar-action {
-    width: 90vw; /* Ocupa casi todo el ancho */
-    max-width: 500px;
-    height: auto;
-    aspect-ratio: 340 / 110;
+    width: 95vw; /* Más ancho todavía */
+    max-width: 700px; /* Mayor límite para tablets */
+    height: 180px; /* Altura forzada para que sea grande */
     background: url('assets/IMG/UI/btn_votar.png') no-repeat center;
     background-size: contain;
     border: none;
@@ -1937,12 +1936,13 @@ body:has(#screen-setup.active) #app-container {
 
 .shamanic-glyph {
     font-family: 'Raleway', sans-serif;
-    font-size: 3.5rem;
+    font-size: 3rem; /* Ligeramente reducido para asegurar una sola línea */
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin: 0.5rem 0;
-    word-break: break-word;
+    letter-spacing: 0.05em;
+    margin: 0;
+    white-space: nowrap; /* ¡PROHIBIDO SALTO DE LÍNEA! */
+    overflow: visible;
     line-height: 1.1;
     background: linear-gradient(to right, #00d2ff, #ff00cc, #00d2ff);
     background-size: 200% auto;
