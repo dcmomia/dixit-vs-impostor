@@ -98,7 +98,7 @@ Fase de secreto absoluto con tecnología de volteo 3D.
     - **Base de Piedra**: `assets/IMG/UI/btn_piedrareveal.png`.
     - **Aura Giratoria**: `assets/IMG/UI/btn_luz_reveal.png` (Animación `rotateMagicLight`).
 - **Layout de Pánico/Debate**:
-    - **Parte Superior**: Palabra secreta y cuenta atrás equilibradas.
+    - **Parte Superior**: Palabra secreta (Clase `.shamanic-glyph`: Amarilla-Naranja, letras rectas) y cuenta atrás equilibradas.
     - **Centro Visual**: Botón de votar prominente con resplandor angelical.
 - **Botón Final**: `assets/IMG/UI/btn_votar.png` (Con animación `angelicButtonGlow` de brillo blanco pulsante).
 

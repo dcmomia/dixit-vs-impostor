@@ -1942,29 +1942,30 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .shamanic-glyph {
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Raleway', sans-serif; /* Letras rectas y geométricas */
     font-size: clamp(2.2rem, 9vw, 3.5rem); 
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 0.02em;
-    padding: 0 5vw; /* Reducido para dar más aire a las palabras largas */
+    letter-spacing: 0.05em;
+    padding: 0 5vw;
     margin: 0;
-    word-break: keep-all; /* ¡PROHIBIDO CORTAR PALABRAS! */
+    word-break: keep-all;
     overflow-wrap: normal;
-    white-space: normal; /* Permite saltos entre palabras pero no dentro de ellas */
+    white-space: normal;
     text-align: center;
     display: block;
     line-height: 1.2;
-    background: linear-gradient(to right, #00d2ff, #ff00cc, #00d2ff);
+    
+    /* Nuevo Degradado: Amarillo (Gold) a Naranja (Dark Orange) */
+    background: linear-gradient(to right, #ffd700, #ff8c00, #ffd700);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     
-    /* Efecto triple: Azul + Rosa + Luz Blanca Angelical */
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))
-            drop-shadow(0 0 15px rgba(0, 210, 255, 0.6)) 
-            drop-shadow(0 4px 20px rgba(255, 0, 204, 0.4));
+    /* Brillo: Luz Blanca Angelical + Resplandor Dorado */
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9))
+            drop-shadow(0 4px 15px rgba(255, 215, 0, 0.6));
     
     animation: shamanicPulse 4s ease infinite;
 }
