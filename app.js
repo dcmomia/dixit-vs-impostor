@@ -93,6 +93,39 @@ const UI = {
     startGameBtn: document.getElementById('btn-start-game')
 };
 
+// ── Gestor Mágico de Audio ────────────────────────────────────────────────
+const audioManager = {
+    bgMusic: document.getElementById('bg-music'),
+    isMuted: false,
+    hasStarted: false,
+    init() {
+        if (!this.bgMusic) return;
+        this.bgMusic.volume = 0.5; // Volumen inmersivo
+        
+        // El navegador requiere interacción humana para reproducir audio
+        const triggerPlay = () => {
+            if (!this.hasStarted && !this.isMuted) {
+                this.bgMusic.play().catch(e => console.warn("Autoaplay prevenido por el usuario:", e));
+                this.hasStarted = true;
+                // Limpiamos los listeners para no sobrecargar
+                ['click', 'pointerdown', 'keydown'].forEach(evt => document.removeEventListener(evt, triggerPlay));
+            }
+        };
+        ['click', 'pointerdown', 'keydown'].forEach(evt => document.addEventListener(evt, triggerPlay, { once: true }));
+    },
+    toggleMute() {
+        if (!this.bgMusic) return;
+        this.isMuted = !this.isMuted;
+        this.bgMusic.muted = this.isMuted;
+        if (this.isMuted) {
+            this.bgMusic.pause();
+        } else {
+            this.bgMusic.play().catch(e => console.warn("Autoaplay prevenido:", e));
+            this.hasStarted = true;
+        }
+    }
+};
+
 // ── Navegación principal ───────────────────────────────────────────────────
 // Pantallas ESTÁTICAS (existen en el HTML como <section>)
 const STATIC_SCREENS = ['screen-main-menu', 'screen-setup'];
@@ -165,11 +198,8 @@ function navigateTo(screenId, data = {}, recordHistory = true) {
                     };
                 }
             }
-            // Focus en el input de jugador
-            setTimeout(() => {
-                const input = document.getElementById('player-name');
-                if (input) input.focus();
-            }, 50);
+            // Focus automático ELIMINADO para evitar que salte el teclado virtual en móviles
+            // y tape la interfaz. El usuario deberá tocar explícitamente el campo de texto.
         }
     } else {
         // Pantalla DINÁMICA: ocultar estáticas y cargar contenido en main-content
@@ -184,6 +214,7 @@ function navigateTo(screenId, data = {}, recordHistory = true) {
 }
 // ── Inicialización ──────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+    audioManager.init(); // Inicializar motor de audio
     setupEventListeners();
     requestWakeLock(); // Activar bloqueo de suspensión
 
@@ -268,8 +299,15 @@ function setupEventListeners() {
     });
 
     UI.btnMenuSettings.addEventListener('click', () => {
-        showConfirm("⚙️ AJUSTES\n\nConfiguración de música, efectos y personalización próximamente en la versión estable.", () => { });
-        document.getElementById('modal-btn-cancel').classList.add('hidden');
+        const estado = audioManager.isMuted ? "REACTIVAR" : "SILENCIAR";
+        const icon = audioManager.isMuted ? "🔊" : "🔇";
+        
+        showConfirm(`⚙️ AJUSTES DE AUDIO\n\n¿Deseas ${estado} ${icon} la melodía "Clockwork Garden Carnival"?`, () => {
+            audioManager.toggleMute();
+        });
+        
+        // Asegurarnos de que el botón cancelar aparezca (puede estar oculto de otros modales)
+        document.getElementById('modal-btn-cancel').classList.remove('hidden');
     });
 
     // Setup
@@ -296,7 +334,7 @@ function showScreen(screenId, data = {}) {
                 
                 <div id="category-error" class="error-toast hidden"></div>
                 
-                <button id="btn-random-category" class="btn-secondary">Sorteo del Destino</button>
+                <button id="btn-random-category" aria-label="Sorteo del Destino"></button>
             </section>
         `;
         document.getElementById('btn-random-category').addEventListener('click', pickRandomCategory);
@@ -305,14 +343,14 @@ function showScreen(screenId, data = {}) {
         const playerRole = state.roles[data.index];
         const isImpostor = playerRole.isImpostor;
         const frontImgPath = getCardImagePath(player, 'Inocente');
-        const backImgPath = getCardImagePath(player, 'Impostor');
+        // Para inocentes, usamos la imagen de inocente en el reverso con la palabra encima
+        const backImgPath = isImpostor ? getCardImagePath(player, 'Impostor') : frontImgPath;
         const fallbackEmoji = state.playerAvatars[player] || '👤';
 
         UI.dynamicContent.innerHTML = `
             <section id="screen-reveal" class="screen active reveal-screen">
 
                 <div class="reveal-header">
-                    <p class="reveal-subtitle">REVELACIÓN DE ROLES</p>
                     <h2 class="reveal-player-name">${escapeHTML(player)}</h2>
                 </div>
 
@@ -320,7 +358,7 @@ function showScreen(screenId, data = {}) {
                 <div class="reveal-card-scene">
                     <div class="reveal-card" id="reveal-card">
 
-                        <!-- CARA FRONTAL: imagen inocente -->
+                        <!-- CARA FRONTAL: imagen inicial -->
                         <div class="reveal-card__face reveal-card__front">
                             <img
                                 src="${frontImgPath}"
@@ -332,35 +370,38 @@ function showScreen(screenId, data = {}) {
                             <div class="card-fallback" id="card-front-fallback" style="display:none">
                                 <span class="card-fallback-emoji">${fallbackEmoji}</span>
                             </div>
-                            <!-- Overlay que muestra la palabra al hacer hold (solo inocentes) -->
-                            <div class="reveal-word-overlay hidden" id="word-overlay">
-                                <span class="reveal-word-text" id="word-text"></span>
-                            </div>
                         </div>
 
-                        <!-- CARA TRASERA: imagen impostor (solo visible tras el flip) -->
+                        <!-- CARA TRASERA: Revelación (tras el flip 3D) -->
                         <div class="reveal-card__face reveal-card__back">
                             <img
                                 src="${backImgPath}"
-                                alt="Impostor"
+                                alt="Reverso"
                                 class="card-img"
                                 onerror="this.style.display='none';"
                             >
-                            <div class="impostor-overlay">
-                                <span class="impostor-label">ERES EL<br>IMPOSTOR</span>
-                            </div>
+                            ${isImpostor ? `
+                                <div class="impostor-overlay">
+                                    <span class="impostor-label">ERES EL<br>IMPOSTOR</span>
+                                </div>
+                            ` : `
+                                <div class="reveal-word-overlay">
+                                    <span class="reveal-word-text">${escapeHTML(playerRole.word)}</span>
+                                </div>
+                            `}
                         </div>
 
                     </div>
                 </div>
 
-                <!-- Instrucción contextual -->
-                <p class="reveal-instruction" id="reveal-instruction">Mantén pulsado para ver tu rol</p>
-
+                </div>
+                
                 <!-- Botones oníricos -->
                 <div class="reveal-actions">
-                    <button id="btn-reveal" class="btn-dreamy btn-dreamy--hold">MANTÉN PULSADO</button>
-                    <button id="btn-next-player" class="btn-dreamy btn-dreamy--ready hidden">LISTO</button>
+                    <div class="reveal-btn-container">
+                        <button id="btn-reveal" class="btn-dreamy btn-dreamy--hold btn-hold-dimmed" aria-label="Mantén pulsado"></button>
+                    </div>
+                    <button id="btn-next-player" class="btn-dreamy btn-dreamy--ready btn-locked" aria-label="Listo"></button>
                 </div>
 
             </section>
@@ -475,39 +516,24 @@ function getRandomSecure(max) {
 function setupRevealLogic(playerName, index) {
     const btnHold = document.getElementById('btn-reveal');
     const btnNext = document.getElementById('btn-next-player');
-    const instruction = document.getElementById('reveal-instruction');
     const card = document.getElementById('reveal-card');
-    const wordOverlay = document.getElementById('word-overlay');
-    const wordText = document.getElementById('word-text');
     const playerRole = state.roles[index];
 
     let hasRevealed = false;
 
     // ── Revelar ────────────────────────────────────────────────────────────
     const reveal = () => {
-        if (playerRole.isImpostor) {
-            // Impostor: flip de la carta
-            card.classList.add('is-flipped');
-        } else {
-            // Inocente: overlay de palabra sobre la imagen
-            if (wordOverlay && wordText) {
-                wordText.textContent = playerRole.word;
-                wordOverlay.classList.remove('hidden');
-            }
-        }
+        // Ahora TODOS giran la carta en 3D para ver el reverso
+        card.classList.add('is-flipped');
     };
 
     // ── Ocultar ────────────────────────────────────────────────────────────
     const hide = () => {
         card.classList.remove('is-flipped');
-        if (wordOverlay) wordOverlay.classList.add('hidden');
 
         if (!hasRevealed) {
             hasRevealed = true;
-            btnNext.classList.remove('hidden');
-            if (instruction) {
-                instruction.textContent = ''; // Limpiado el texto confuso
-            }
+            btnNext.classList.remove('btn-locked');
         }
     };
 
@@ -546,37 +572,43 @@ function showTimerScreen() {
         return `${m}:${s.toString().padStart(2, '0')}`;
     };
 
+    /**
+     * Obtiene la ruta de la imagen 'Empieza el turno' para un jugador.
+     */
+    const getStarterImagePath = (name) => {
+        const slug = name.toLowerCase().replace(/\s+/g, ''); // DC -> dc, DIEGO J -> diegoj
+        // Ruta limpia sin espacios para evitar problemas de carga
+        return `assets/IMG/Empieza_Turno/${slug}_start.png`;
+    };
+
+    const starterImage = getStarterImagePath(startPlayer);
+
     UI.dynamicContent.innerHTML = `
         <section id="screen-timer" class="screen active">
             <header>
-                <h2 class="glow-text small">Elección de Carta</h2>
-                <p class="subtitle">Buscad vuestra carta física en la mano.</p>
+                <h2 class="glow-text small">Empieza el turno</h2>
             </header>
             
-            <div class="glass-card table-info" style="text-align: center; margin-top: 1rem; padding: 1.5rem;">
-                <p style="margin-bottom: 0.5rem; color: var(--text-muted);">El primero en defender su carta será:</p>
-                <div class="hero-avatar-container">
-                    ${getHeroAvatarHTML(startPlayer)}
-                    <div class="hero-name">${escapeHTML(startPlayer)}</div>
-                </div>
+            <div class="starter-hero-panel">
+                <img src="${starterImage}" alt="Empieza el turno: ${startPlayer}" class="starter-full-image">
             </div>
             
-            <div class="timer-container" style="text-align: center; margin: 2rem 0;">
-                <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                    <button id="btn-time-sub" class="btn-score-mod" style="width: 50px; height: 50px; font-size: 1.2rem;">-15s</button>
-                    <div id="countdown-display" class="timer-display">${formatTime(timeLeft)}</div>
-                    <button id="btn-time-add" class="btn-score-mod" style="width: 50px; height: 50px; font-size: 1.2rem;">+15s</button>
+            <div class="timer-container" style="text-align: center; margin: 0.5rem 0;">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 0.8rem; margin-bottom: 0.3rem;">
+                    <button id="btn-time-sub" class="btn-preset">-15s</button>
+                    <div id="countdown-display" class="timer-display" style="font-size: 3.2rem;">${formatTime(timeLeft)}</div>
+                    <button id="btn-time-add" class="btn-preset">+15s</button>
                 </div>
                 
-                <div class="time-presets" style="display: flex; justify-content: center; gap: 0.5rem;">
-                    <button class="btn-preset btn-secondary" data-time="60">1:00</button>
-                    <button class="btn-preset btn-secondary" data-time="90">1:30</button>
-                    <button class="btn-preset btn-secondary" data-time="120">2:00</button>
+                <div class="time-presets" style="display: flex; justify-content: center; gap: 0.8rem;">
+                    <button class="btn-preset btn-preset--large" data-time="60">1:00</button>
+                    <button class="btn-preset btn-preset--large" data-time="90">1:30</button>
+                    <button class="btn-preset btn-preset--large" data-time="120">2:00</button>
                 </div>
             </div>
             
-            <div style="text-align: center; margin-top: 2rem;">
-                <button id="btn-all-ready" class="btn-primary glow" style="padding: 1rem 2rem; font-size: 1.2rem; width: 100%;">¡Cartas en la mesa!</button>
+            <div style="text-align: center; margin-top: 0.5rem; margin-bottom: -12px; position: relative; z-index: 10;">
+                <button id="btn-all-ready" class="btn-parchment-action" aria-label="¡Cartas en la mesa!"></button>
             </div>
         </section>
     `;
@@ -609,10 +641,13 @@ function showTimerScreen() {
     document.getElementById('btn-time-add').onclick = () => { timeLeft += 15; updateDisplay(); };
     document.getElementById('btn-time-sub').onclick = () => { timeLeft -= 15; updateDisplay(); };
 
-    document.querySelectorAll('.btn-preset').forEach(btn => {
+    document.querySelectorAll('.time-presets .btn-preset').forEach(btn => {
         btn.onclick = (e) => {
-            timeLeft = parseInt(e.target.dataset.time, 10);
-            updateDisplay();
+            const time = parseInt(e.target.dataset.time, 10);
+            if (!isNaN(time)) {
+                timeLeft = time;
+                updateDisplay();
+            }
         };
     });
 
@@ -626,10 +661,12 @@ function showRevealPanicScreen() {
     UI.dynamicContent.innerHTML = `
         <section id="screen-panic" class="screen active" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
             
-            <!-- FASE 1: ESPERA -->
-            <div id="panic-phase-1" class="btn-dreamy btn-dreamy--hold pulse-card" style="text-align: center; padding: 4rem 2rem; margin: auto 0; font-size: 1.5rem;">
-                <h2 class="glow-text">👆 Tap to Reveal</h2>
-                <p class="subtitle" style="margin-top: 1rem; font-size: 1.2rem;">Pulsa aquí para revelar la palabra secreta a toda la mesa...</p>
+            <!-- FASE 1: ESPERA (Piedra rúnica con luz giratoria) -->
+            <div id="panic-phase-1" style="height: 100%; display: flex; align-items: center; justify-content: center; position: relative; overflow: visible;">
+                <div class="panic-light-wrap">
+                    <div class="btn-dreamy--panic pulse-card" style="position: relative; z-index: 1;"></div>
+                    <img src="assets/IMG/UI/btn_luz_reveal.png" class="panic-magic-light" alt="Luz mágica">
+                </div>
             </div>
 
             <!-- FASE 2 y 3: PANICO Y DEBATE -->

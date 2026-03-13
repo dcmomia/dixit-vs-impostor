@@ -49,7 +49,6 @@
                     <!-- ZONA 1: HEADER FIJO (siempre visible) -->
                     <div class="setup-header">
                         <h2 class="glow-text small">Nueva Partida</h2>
-                        <p class="subtitle">INVOCA A LOS JUGADORES</p>
                     </div>
 
                     <div class="preset-section vortex-container">
@@ -61,7 +60,7 @@
 
                     <!-- ZONA 2B: PERGAMINO CENTRAL FIJO (con scroll solo en lista de jug. nuevos) -->
                     <div class="setup-scroll-body layout-compact">
-                        <div class="glass-card setup-parchment compact-card">
+                        <div class="setup-parchment compact-card">
 
                             <div class="player-input-divider">
                                 <span>O INVOCAR NUEVO</span>
@@ -70,13 +69,7 @@
                             <div class="player-input-container">
                                 <input type="text" id="player-name" placeholder="¿Quién se une al sueño?" autocomplete="off"
                                     class="dreamy-input">
-                                <button id="add-player" class="btn-lacre" aria-label="Invocar Jugador">
-                                    <svg viewBox="0 0 100 100" class="svg-lacre">
-                                        <circle cx="50" cy="50" r="45" fill="#1a2530" stroke="#d4af37" stroke-width="4" />
-                                        <path d="M50 25 V75 M25 50 H75" stroke="#f5ebe0" stroke-width="8"
-                                            stroke-linecap="round" />
-                                    </svg>
-                                </button>
+                                <button id="add-player" class="btn-lacre" aria-label="Invocar Jugador"></button>
                             </div>
 
                             <!-- Lista de jugadores con scroll SOLO aquí -->
@@ -114,7 +107,10 @@
         </div>
     </div>
 
-    <script src="app.js?v=3"></script>
+    <!-- Audio Global -->
+    <audio id="bg-music" src="music/Clockwork%20Garden%20Carnival.mp3" loop preload="auto"></audio>
+
+    <script src="app.js?v=5"></script>
 </body>
 
 </html>
