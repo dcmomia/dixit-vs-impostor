@@ -172,7 +172,7 @@ body:has(#screen-setup.active) #app-container {
 /* ZONA 1: HEADER FIJO */
 .setup-header {
     flex-shrink: 0;
-    padding: 1.2rem 1rem 0.2rem;
+    padding: 0.5rem 1rem 0.1rem;
     /* Bajado un poco más */
     background: transparent !important;
     position: relative;
@@ -573,7 +573,7 @@ body:has(#screen-setup.active) #app-container {
 .vortex-container {
     position: relative;
     padding: 0;
-    margin-top: 1rem;
+    margin-top: -0.5rem;
     /* Bajado para despegarlo del texto de Nueva Partida */
     margin-bottom: -1rem;
     border-radius: 20px;
@@ -2238,10 +2238,19 @@ body:has(#screen-setup.active) #app-container {
     align-items: center;
     gap: 0.8rem;
     margin: 0.8rem 0;
-    color: #ffffff;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 1), 0 0 10px rgba(0, 0, 0, 0.5);
-    font-size: 0.85rem;
-    font-weight: 800;
+}
+
+.player-input-divider span {
+    color: #ffffff !important;
+    text-shadow: 
+        1px 1px 0 #000,
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        0 4px 10px rgba(0, 0, 0, 1) !important;
+    font-size: 0.9rem;
+    font-weight: 900;
+    letter-spacing: 1px;
 }
 
 .player-input-divider::before,
