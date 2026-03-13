@@ -2239,7 +2239,7 @@ body:has(#screen-setup.active) #app-container {
     gap: 0.8rem;
     margin: 0.8rem 0;
     color: #ffffff;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 1), 0 0 10px rgba(0, 0, 0, 0.5);
     font-size: 0.85rem;
     font-weight: 800;
 }

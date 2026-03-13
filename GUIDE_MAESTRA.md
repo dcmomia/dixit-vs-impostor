@@ -50,6 +50,7 @@ Gestión de jugadores con transparencia total para revelar el fondo dinámico.
 - **Círculo de Invocación (Presets):**
     - **Tótems (Botones)**: Chips de madera con brillo azul al estar activos.
     - **Vórtice**: Animación circular `vortex-spin` de fondo.
+- **Divisor Visual**: Texto "**O INVOCAR NUEVO**" con sombreado profundo para legibilidad.
 - **Entrada Manual:**
     - **Input**: Placeholder "¿Quién se une al sueño?" (Estilo pergamino).
     - **Botón Añadir (+)**: `assets/IMG/UI/btm_mas.png` (Sello de lacre rojo).
