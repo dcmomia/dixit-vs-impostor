@@ -6,132 +6,135 @@ Este documento es la **única fuente de verdad** para la arquitectura visual, co
 
 ## 🛠️ Especificaciones Globales y Técnicas
 - **Arquitectura:** SPA (Single Page Application) con navegación dinámica gestionada por `app.js`.
-- **Efecto de Transparencia:** Pantallas como `screen-setup` utilizan transparencia total para revelar el fondo estelar dinámico.
-- **Contenedor Principal (`#app-container`):** Máximo de **500px**, centrado y optimizado para móviles.
+- **Contenedor Principal (`#app-container`):** Máximo de **550px** en escritorio (centrado) y **100%** en móviles.
 - **Tipografías:**
-    - `Fredoka`: Títulos principales y etiquetas de juego.
-    - `Raleway`: Interfaz de usuario y botones.
-    - `Coda`: Cabeceras técnicas (Angular/Facetadas).
-    - `Macondo`: Estética mística y narrativa.
-- **Área Táctil:** Mínimo de 48x48px en botones, concentrados en la mitad inferior para uso con una sola mano.
-- **Funcionalidades:** Implementa `Screen Wake Lock API` para evitar que la pantalla se apague durante el juego.
+    - `Fredoka`: Títulos místicos y etiquetas de juego.
+    - `Raleway`: Interfaz de usuario y botones técnicos.
+    - `Macondo`: Etiquetas narrativas y nombres de tarjetas.
+    - `Nunito`: Texto de apoyo y placeholders.
+- **Área Táctil:** Botones concentrados en la mitad inferior para uso con el pulgar.
+- **Funcionalidades:** Implementa `Screen Wake Lock API` para evitar la suspensión de pantalla.
 
 ---
 
 ## 🛠️ Activos Globales (Sistema)
-Elementos persistentes o compartidos entre múltiples pantallas.
+Elementos persistentes o compartidos entre pantallas.
 
 | Elemento | Archivo / Asset | Descripción |
 | :--- | :--- | :--- |
-| **Botón Atrás** | `assets/IMG/UI/btn_atras.png` | Ubicado en `global-nav`, permite el retroceso seguro. |
-| **Botón Inicio** | `assets/IMG/UI/btn_inicio.png` | Retorno directo al Menú Principal. |
-| **Ajustes / Audio** | `assets/IMG/UI/btn_ajustes.png` | Control global de silencio (Mute) para la música. |
-| **Música Global** | `music/Clockwork Garden Carnival.mp3` | Ambiente sonoro místico. |
-| **Avatares** | `assets/players/[slug].png` | Imágenes personalizadas por jugador (slug minúsculas). |
+| **Botón Atrás** | `assets/IMG/UI/btn_atras.png` | En `global-nav`. Historial de navegación. |
+| **Botón Inicio** | `assets/IMG/UI/btn_inicio.png` | En `global-nav`. Retorno al Menú Principal. |
+| **Ajustes / Audio** | `assets/IMG/UI/btn_ajustes.png` | Control global de volumen/mute. |
+| **Música Global** | `music/Clockwork Garden Carnival.mp3` | Ambiente sonoro principal. |
+| **Avatares** | `assets/players/[slug].png` | Retratos personalizados (3x3 en Setup). |
 
 ---
 
 ## 🏠 1. Menú Principal (`screen-main-menu`)
 Portal de entrada con atmósfera onírica y branding central.
 
-- **Fondo:** `assets/IMG/UI/bg_main.jpg` (con gradientes radiales oscuros).
+- **Fondo:** `assets/IMG/UI/bg_main.jpg` (Gradientes radiales profundos).
 - **Logotipo:** `assets/IMG/UI/logo_dixit.png` (Animación *pulse-pure* y *drift*).
 - **Interactivos:**
-    - **Botón Nueva Partida:** `assets/IMG/UI/btn_nueva_partida.png` (Asset integrado en `.btn-book`).
-    - **Botón Marcadores:** `assets/IMG/UI/btn-menu-scores.png` (Piedra circular).
-    - **Botón Reglas:** `assets/IMG/UI/btn_reglas.png` (Pergamino/Pétalo).
-- **Contenido:** "Dixit VS Impostor", "MARCADORES" (CSS) y "REGLAS" (CSS).
+    - **Botón Nueva Partida:** `assets/IMG/UI/btn_nueva_partida.png` (Estilo libro antiguo).
+    - **Botón Marcadores:** `assets/IMG/UI/btn-menu-scores.png` (Piedra rúnica con texto "MARCADORES").
+    - **Botón Reglas:** `assets/IMG/UI/btn_reglas.png` (Pétalo místico con texto "REGLAS").
 
 ---
 
 ## 👥 2. Configuración / Setup (`screen-setup`)
-Gestión de jugadores y círculo de invocación con transparencia nuclear.
+Gestión de jugadores con transparencia total para revelar el fondo dinámico.
 
-- **Fondo:** `assets/IMG/UI/bg_eleccion_jugadores.png` (Fondo estelar con animación `starsRotate`).
-- **Cabecera Visual:** `assets/IMG/UI/btn_jugadores.png` (Asset gráfico que sustituye al texto plano).
-- **Círculo de Invocación:**
-    - **Banner "Invoca"**: `assets/IMG/UI/btn_invoca.png` (Banner "Elegir del Círculo").
-    - **Vórtice Mágico**: Efecto `magic-vortex` con animación `vortex-spin`.
-    - **Tótems (Chips)**: `.preset-totem` de madera con brillo azul al activarse.
-- **Gestión Jugadores:**
+- **Fondo:** `assets/IMG/UI/bg_eleccion_jugadores.png` (Estrellas rotando).
+- **Cabecera:** `assets/IMG/UI/btn_jugadores.png` (Sustituye al h2 de "Nueva Partida").
+- **Círculo de Invocación (Presets):**
+    - **Tótems (Botones)**: Chips de madera con brillo azul al estar activos.
+    - **Vórtice**: Animación circular `vortex-spin` de fondo.
+- **Entrada Manual:**
+    - **Input**: Placeholder "¿Quién se une al sueño?" (Estilo pergamino).
     - **Botón Añadir (+)**: `assets/IMG/UI/btm_mas.png` (Sello de lacre rojo).
-    - **Cartas Jugador**: Grid de 3 columnas, marcos dorados y banda de nombre pergamino.
-    - **Botón Eliminar**: Sello de lacre rojo con aspa blanca (`.svg-wax-seal`).
-- **Botón Comenzar:** `assets/IMG/UI/btn_comenzarpartida.png` (Animación `pulse_glow`).
+- **Lista de Jugadores:** Grid de 3 columnas con cartas de marcos dorados y botón eliminar (Sello de lacre con aspa).
+- **Botón Comenzar:** `assets/IMG/UI/btn_comenzarpartida.png` (Animación de pulso dorado).
 
 ---
 
 ## 🎲 3. Selección de Categorías (`screen-categories`)
-- **Fondo:** `assets/IMG/UI/bg_categories.jpg` (Vista onírica amplia).
-- **Cartas de Categoría (351x500 aprox):**
+Asignación de la temática del mundo onírico.
+
+- **Fondo:** `assets/IMG/UI/bg_categories.jpg` (Vista de horizonte místico).
+- **Cartas de Categoría (351x500):**
     - `cat_conceptos.png` (💡), `cat_peliculas.png` (🎬), `cat_lugares.png` (📍), `cat_refranes.png` (🗣️), `cat_acciones.png` (🎭).
-- **Acción Inferior:** `assets/IMG/UI/btn_sorteo.png` (SORTEO DEL DESTINO).
+- **Botón Sorteo:** `assets/IMG/UI/btn_sorteo.png` (Sorteo del Destino).
 
 ---
 
 ## 👁️ 4. Revelación de Roles (`screen-reveal`)
-Fase de secreto absoluto y flip 3D.
+Fase de secreto absoluto con tecnología de volteo 3D.
 
-- **Fondo:** `assets/IMG/UI/bg_tension.jpg` (Fondo de alta tensión).
+- **Fondo:** `assets/IMG/UI/bg_tension.jpg` (Textura de alta tensión).
 - **Sistema de Cartas:**
-    - **Anverso (Inocente)**: `assets/players/{slug}.png`.
-    - **Reverso (Revelación)**: `assets/IMG/Impostor/{slug}_impostor.png` o Palabra Secreta.
-- **Botones:**
-    - `btn_mostrarrol.png`: **MANTÉN PULSADO**.
-    - `btn_listo.png`: **LISTO**.
+    - **Anverso (Frente)**: `assets/IMG/Inocente/[slug].png`.
+    - **Reverso (Giro)**: `assets/IMG/Impostor/[slug]_impostor.png` o Palabra Secreta.
+- **Botón Hold:** `assets/IMG/UI/btn_mostrarrol.png` (MANTÉN PULSADO).
+- **Botón Listo:** `assets/IMG/UI/btn_listo.png` (LISTO - Diseño de gran tamaño).
 
 ---
 
-## ⏳ 5. Elección de Carta y Temporizador (`screen-timer`)
+## ⏳ 5. Temporizador y Turno (`screen-timer`)
 - **Fondo:** `assets/IMG/UI/bg_eligetucarta.png`.
-- **Imagen Protagonista:** `assets/IMG/Empieza_Turno/[slug]_start.png` (Asset "Empieza el turno").
-- **Controles de Tiempo:** `btn_edittime.png` (Botones +/- 15s y rápidos de 60s, 90s, 120s).
-- **Botón Acción:** `btn_cartasalamesa.png` (¡CARTAS EN LA MESA! con `magic-flicker`).
+- **Imagen Protagonista:** `assets/IMG/Empieza_Turno/[slug]_start.png` (Imagen de gran formato del jugador que empieza).
+- **Controles:** `assets/IMG/UI/btn_edittime.png` (Botones circulares para +/- 15s y botones rápidos).
+- **Botón Acción:** `assets/IMG/UI/btn_cartasalamesa.png` (¡CARTAS EN LA MESA! con resplandor parpadeante).
 
 ---
 
 ## 🚨 6. Pánico y Revelación (`screen-panic`)
 - **Fondo:** `assets/IMG/UI/bg_reveal.png`.
-- **Piedra de Invocación:**
-    - **Base**: `btn_piedrareveal.png`.
-    - **Luz**: `btn_luz_reveal.png` (Animación `rotateMagicLight`).
-- **Visuales:** Palabra secreta gigante en fuente `Fredoka` con animación `heartbeat`.
-- **Botón Final:** "Finalizar Debate y Votar 🗳️".
+- **Efecto Piedra:**
+    - **Base de Piedra**: `assets/IMG/UI/btn_piedrareveal.png`.
+    - **Aura Giratoria**: `assets/IMG/UI/btn_luz_reveal.png` (Animación `rotateMagicLight`).
+- **Texto**: Palabra secreta en fuente `Fredoka` con animación `heartbeat`.
+- **Botón Final**: "Finalizar Debate y Votar 🗳️".
 
 ---
 
 ## 🗳️ 7. Votación y Marcadores (`screen-voting` & `screen-score`)
-- **Fondos:** `bg_reveal.png` (Votación) y `bg_soft.jpg` (Marcadores).
-- **Interactividad:** Lista `voting-row` con avatares y destello `✨`.
-- **Marcadores:** `score-item` con ganadores resaltados (`.winner`).
-- **Acciones:** `btn_primary.png` (Nueva Ronda), `btn_secondary.png` (Reset), `btn_danger.png` (Salir).
+- **Fondo Votación:** `bg_reveal.png`.
+- **Fondo Marcadores:** `bg_main.jpg` (con filtros de desenfoque).
+- **Activos de Voto:** Filas interactivas con avatares y destello `✨` de confirmación.
+- **Botones Marcadores:** `assets/IMG/UI/btn_circle.png` (Para ajustar puntos manualmente).
+- **Acciones Finales:** `btn_primary.png` (Nueva Ronda), `btn_secondary.png` (Reset), `btn_danger.png` (Salir).
 
 ---
 
-## 📊 Inventario de Assets y Resoluciones
+## 📊 Inventario de Assets por Categoría
 
-| Recurso | Resolución | Uso |
+| Categoría | Recurso | Función |
 | :--- | :--- | :--- |
-| **bg_main.jpg** | 1072x1920 | Menú y Marcadores |
-| **bg_categories.jpg** | 1616x2624 | Categorías |
-| **bg_tension.jpg** | 1072x1920 | Revelación y Votos |
-| **bg_reveal.png** | 1072x1920 | Pánico y Votación |
-| **logo_dixit.png** | 1024x512 | Branding Animado |
-| **btn_primary.png** | 1024x336 | Acciones Positivas |
-| **btn_jugadores.png** | 1024x256 | Cabecera Setup |
-| **btn_invoca.png** | 496x176 | Banner Setup |
-| **wax_seal_add.png** | 640x640 | Añadir Jugador |
-| **cat_*.png** | ~350x500 | Categorías |
+| **Fondos** | `bg_main.jpg` | Menú Principal / Marcadores |
+| **Fondos** | `bg_categories.jpg` | Categorías |
+| **Fondos** | `bg_tension.jpg` | Revelación |
+| **Fondos** | `bg_eleccion_jugadores.png` | Setup / Configuración |
+| **Fondos** | `bg_reveal.png` | Pánico / Votación |
+| **Fondos** | `bg_eligetucarta.png` | Temporizador / Turno |
+| **UI** | `btn_jugadores.png` | Cabecera Setup |
+| **UI** | `btm_mas.png` | Añadir Jugador |
+| **UI** | `btn_comenzarpartida.png` | Iniciar Juego |
+| **UI** | `btn_mostrarrol.png` | Revelación Secreta |
+| **UI** | `btn_listo.png` | Confirmación Turno |
+| **UI** | `btn_cartasalamesa.png` | Fin de Turno |
+| **UI** | `btn_piedrareveal.png` | Piedra de Revelación |
+| **UI** | `btn_luz_reveal.png` | Aura de la Piedra |
 
 ---
 
 ## ✨ Sistema de Efectos Visuales
-- **Dandelion Seeds:** Semillas voladoras (`seed-fly`) al iniciar partida.
-- **Star Dust:** Partículas doradas al interactuar con jugadores.
-- **Liquid Ripple:** Onda expansiva al pulsar botones.
-- **Vortex:** Espiral de luz en el círculo de invocación.
+- **Dandelion Seeds:** Semillas que vuelan al pulsar Nueva Partida.
+- **Star Dust / Stardust:** Partículas doradas (`✨`) al añadir, eliminar o interactuar con jugadores.
+- **Liquid Ripple:** Onda expansiva al pulsar botones principales.
+- **Magic Vortex:** Espiral de luz en el fondo de los jugadores preset.
 
 ---
 
 > [!IMPORTANT]
-> **Rutas Críticas:** Los nombres de activos para jugadores (`assets/players/`) deben coincidir exactamente con el **slug** del nombre del jugador (minúsculas, sin espacios). Ejemplo: `dc.png`.
+> **Rutas Críticas:** Todas las imágenes dinámicas dependen del **slug** del jugador (resultado de eliminar espacios y pasar a minúsculas). Ejemplo: `Diego J` -> `diegoj.png`.
