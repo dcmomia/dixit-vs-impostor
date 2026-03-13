@@ -1894,8 +1894,8 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .panic-number {
-    margin: 3.9rem 0 1rem;
-    /* Casi en el borde del '4rem' previo que era demasiado bajo */
+    margin: 4.5rem 0 1rem;
+    /* Bajando a 4.5rem tras peticiones de 'sigue estando alto' */
     display: flex;
     justify-content: center;
     align-items: center;
