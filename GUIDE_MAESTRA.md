@@ -64,7 +64,8 @@ Asignación de la temática del mundo onírico.
 
 - **Fondo:** `assets/IMG/UI/bg_categories.jpg` (Vista de horizonte místico).
 - **Cartas de Categoría (351x500):**
-    - `cat_conceptos.png` (💡), `cat_peliculas.png` (🎬), `cat_lugares.png` (📍), `cat_refranes.png` (🗣️), `cat_acciones.png` (🎭).
+    - Activos: `cat_conceptos.png` (💡), `cat_peliculas.png` (🎬), `cat_lugares.png` (📍), `cat_refranes.png` (🗣️), `cat_acciones.png` (🎭).
+    - Diseño: **Resplandor Dual Azul-Rosa** (`box-shadow`) y efecto de **Flotación Mágica** (`categoryMagicFloat`). Sin bordes sólidos amarillos.
 - **Botón Sorteo:** `assets/IMG/UI/btn_sorteo.png` (Sorteo del Destino).
 
 ---
@@ -134,6 +135,7 @@ Fase de secreto absoluto con tecnología de volteo 3D.
 - **Star Dust / Stardust:** Partículas doradas (`✨`) al añadir, eliminar o interactuar con jugadores.
 - **Liquid Ripple:** Onda expansiva al pulsar botones principales.
 - **Magic Vortex:** Espiral de luz en el fondo de los jugadores preset.
+- **Magic Float:** Efecto de levitación rítmica para las cartas de categoría.
 
 ---
 
