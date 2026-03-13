@@ -1886,23 +1886,30 @@ body:has(#screen-setup.active) #app-container {
 .btn-votar-action {
     width: 98vw;
     max-width: 800px;
-    height: 300px; /* ¡Aún más grande! */
+    height: 300px;
     background: url('assets/IMG/UI/btn_votar.png') no-repeat center;
     background-size: contain;
     border: none;
     background-color: transparent !important;
     cursor: pointer;
-    transition: transform 0.2s, filter 0.2s;
+    transition: transform 0.2s, filter 0.3s;
     -webkit-user-select: none;
     user-select: none;
     display: block;
     margin: 0 auto;
-    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.5));
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+    animation: angelicButtonGlow 3s ease-in-out infinite;
+}
+
+@keyframes angelicButtonGlow {
+    0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4)) brightness(1); }
+    50% { filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.8)) brightness(1.15); }
 }
 
 .btn-votar-action:hover {
     transform: scale(1.05);
-    filter: brightness(1.1) drop-shadow(0 0 20px rgba(0, 198, 255, 0.5));
+    filter: brightness(1.2) drop-shadow(0 0 45px rgba(255, 255, 255, 1));
+    animation-play-state: paused;
 }
 
 .btn-votar-action:active {
