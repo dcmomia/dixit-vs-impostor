@@ -99,7 +99,7 @@ Fase de secreto absoluto con tecnología de volteo 3D.
     - **Aura Giratoria**: `assets/IMG/UI/btn_luz_reveal.png` (Animación `rotateMagicLight`).
 - **Texto/Imagen**: 
     - Palabra secreta en fuente `Fredoka` con animación `heartbeat`.
-    - Cuenta atrás visual: Secuencia de imágenes `assets/IMG/UI/Cuenta atras/[5-1].PNG`.
+    - Cuenta atrás visual: Secuencia de imágenes `assets/IMG/UI/cuenta_atras/[5-1].png`.
 - **Botón Final**: "Finalizar Debate y Votar 🗳️".
 
 ---
@@ -131,7 +131,7 @@ Fase de secreto absoluto con tecnología de volteo 3D.
 | **UI** | `btn_cartasalamesa.png` | Fin de Turno |
 | **UI** | `btn_piedrareveal.png` | Piedra de Revelación |
 | **UI** | `btn_luz_reveal.png` | Aura de la Piedra |
-| **UI** | `Cuenta atras/` | Imágenes 5 a 1 para cuenta atrás |
+| **UI** | `cuenta_atras/` | Imágenes 5 a 1 para cuenta atrás |
 
 ---
 
