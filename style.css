@@ -1887,7 +1887,7 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .panic-number {
-    margin: 1rem 0;
+    margin: 4rem 0 1rem; /* Aumentado margen superior de 1rem a 4rem */
     display: flex;
     justify-content: center;
     align-items: center;
