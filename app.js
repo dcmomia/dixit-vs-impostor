@@ -673,7 +673,9 @@ function showRevealPanicScreen() {
             <div id="panic-phase-2" class="hidden" style="text-align: center; margin: auto 0;">
                 <h2 class="glow-text" style="font-size: 5rem; word-break: break-word; line-height: 1.1; margin: 1rem 0;">${escapeHTML(state.secretWord)}</h2>
                 
-                <div id="panic-countdown" class="panic-number">5</div>
+                <div id="panic-countdown" class="panic-number">
+                    <img src="assets/IMG/UI/Cuenta atras/5.PNG" alt="5">
+                </div>
                 
                 <div id="panic-debate-ui" class="hidden" style="margin-top: 2rem;">
                     <button id="btn-to-vote" class="btn-primary" style="width: 100%; padding: 1rem;">Finalizar Debate y Votar 🗳️</button>
@@ -697,7 +699,7 @@ function showRevealPanicScreen() {
         panicInterval = setInterval(() => {
             panicTime--;
             if (panicTime > 0) {
-                countdownEl.textContent = panicTime;
+                countdownEl.innerHTML = `<img src="assets/IMG/UI/Cuenta atras/${panicTime}.PNG" alt="${panicTime}">`;
                 // Re-trigger anim
                 countdownEl.classList.remove('heartbeat');
                 void countdownEl.offsetWidth;

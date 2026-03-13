@@ -1887,11 +1887,18 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .panic-number {
-    font-size: 8rem;
-    font-family: 'Fredoka', cursive;
-    color: var(--accent);
-    text-shadow: 0 0 20px rgba(255, 107, 107, 0.8), 0 0 40px rgba(255, 107, 107, 0.4);
-    margin: 2rem 0;
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.panic-number img {
+    height: 180px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(255, 60, 60, 0.6));
 }
 
 .pulse-card {
