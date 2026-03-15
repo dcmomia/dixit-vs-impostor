@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -14,20 +14,20 @@
         rel="stylesheet">
 </head>
 
-    <!-- Navegación Global (Fuera del contenedor para evitar clips en móvil) -->
+    <!-- NavegaciÃ³n Global (Fuera del contenedor para evitar clips en mÃ³vil) -->
     <nav id="global-nav" class="global-nav">
-        <button id="btn-global-back" class="btn-nav btn-nav-back" title="Atrás"></button>
-        <button id="btn-global-home" class="btn-nav btn-nav-home" title="Menú Principal"></button>
+        <button id="btn-global-back" class="btn-nav btn-nav-back" title="AtrÃ¡s"></button>
+        <button id="btn-global-home" class="btn-nav btn-nav-home" title="MenÃº Principal"></button>
     </nav>
 
     <div id="app-container">
-        <!-- Las pantallas se cargarán dinámicamente aquí -->
+        <!-- Las pantallas se cargarÃ¡n dinÃ¡micamente aquÃ­ -->
 
         <main id="main-content">
             <div id="static-content">
-                <!-- PANTALLA MENÚ PRINCIPAL -->
+                <!-- PANTALLA MENÃš PRINCIPAL -->
                 <section id="screen-main-menu" class="screen main-menu-screen active">
-                    <img src="assets/IMG/UI/logo_dixit.png" alt="Dixit VS Impostor" class="main-logo"
+                    <img src="assets/IMG/UI/menu/logo_dixit.png" alt="Dixit VS Impostor" class="main-logo"
                         onerror="this.style.display='none'">
 
                     <div class="main-menu-actions">
@@ -40,7 +40,7 @@
 
                 </section>
 
-                <!-- El botón de ajustes se mueve aquí para ser global -->
+                <!-- El botÃ³n de ajustes se mueve aquÃ­ para ser global -->
                 <button id="btn-menu-settings" class="btn-settings" title="Ajustes"></button>
 
                 <!-- PANTALLA SETUP -->
@@ -67,12 +67,12 @@
                             </div>
 
                             <div class="player-input-container">
-                                <input type="text" id="player-name" placeholder="¿Quién se une al sueño?" autocomplete="off"
+                                <input type="text" id="player-name" placeholder="Â¿QuiÃ©n se une al sueÃ±o?" autocomplete="off"
                                     class="dreamy-input">
                                 <button id="add-player" class="btn-lacre" aria-label="Invocar Jugador"></button>
                             </div>
 
-                            <!-- Lista de jugadores con scroll SOLO aquí -->
+                            <!-- Lista de jugadores con scroll SOLO aquÃ­ -->
                             <div class="player-list-wrapper">
                                 <ul id="player-list">
                                     <!-- Jugadores generados por app.js -->
@@ -83,7 +83,7 @@
                         </div>
                     </div>
 
-                    <!-- ZONA 3: FOOTER FIJO CON BOTÓN (siempre visible) -->
+                    <!-- ZONA 3: FOOTER FIJO CON BOTÃ“N (siempre visible) -->
                     <div class="setup-footer">
                         <button id="btn-start-game" class="btn-primary" disabled>Comenzar Partida</button>
                     </div>
@@ -91,15 +91,15 @@
                 </section>
             </div>
 
-            <!-- Contenedor para Inyección Dinámica SPA -->
+            <!-- Contenedor para InyecciÃ³n DinÃ¡mica SPA -->
             <div id="dynamic-content"></div>
         </main>
     </div>
 
-    <!-- Modal de Confirmación Personalizado -->
+    <!-- Modal de ConfirmaciÃ³n Personalizado -->
     <div id="modal-container" class="hidden">
         <div class="modal glass-card">
-            <p id="modal-message">¿Estás seguro?</p>
+            <p id="modal-message">Â¿EstÃ¡s seguro?</p>
             <div class="modal-actions">
                 <button id="modal-btn-confirm" class="btn-primary">Confirmar</button>
                 <button id="modal-btn-cancel" class="btn-secondary">Cancelar</button>

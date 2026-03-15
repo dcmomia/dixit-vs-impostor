@@ -1,7 +1,7 @@
 const state = {
     players: [],
-    playerAvatars: {}, // {playerName: '🐰'}
-    avatarPool: ['🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🦄', '🐶', '🐱', '🐹', '🐭'],
+    playerAvatars: {}, // {playerName: 'ðŸ°'}
+    avatarPool: ['ðŸ°', 'ðŸ¦Š', 'ðŸ»', 'ðŸ¼', 'ðŸ¨', 'ðŸ¯', 'ðŸ¦', 'ðŸ®', 'ðŸ·', 'ðŸ¸', 'ðŸµ', 'ðŸ¦„', 'ðŸ¶', 'ðŸ±', 'ðŸ¹', 'ðŸ­'],
     minPlayers: 3,
     selectedCategory: null,
     gameData: null,
@@ -15,11 +15,11 @@ const state = {
     usedWords: [], // FIX: Para no repetir palabras
     lastImpostor: null, // FIX: Para prevenir rachas repetitivas
     categories: [
-        { id: 'conceptos', name: 'Conceptos', icon: '💡' },
-        { id: 'peliculas', name: 'Películas', icon: '🎬' },
-        { id: 'lugares', name: 'Lugares', icon: '📍' },
-        { id: 'refranes', name: 'Refranes', icon: '🗣️' },
-        { id: 'acciones', name: 'Acciones', icon: '🎭' }
+        { id: 'conceptos', name: 'Conceptos', icon: 'ðŸ’¡' },
+        { id: 'peliculas', name: 'PelÃ­culas', icon: 'ðŸŽ¬' },
+        { id: 'lugares', name: 'Lugares', icon: 'ðŸ“' },
+        { id: 'refranes', name: 'Refranes', icon: 'ðŸ—£ï¸' },
+        { id: 'acciones', name: 'Acciones', icon: 'ðŸŽ­' }
     ]
 };
 
@@ -28,11 +28,11 @@ const PRESET_PLAYERS = ['DC', 'JAVI', 'AG', 'ELI', 'JUAN', 'JUANI', 'IRENE', 'TI
 
 /**
  * Genera el HTML para el avatar de un jugador intentando cargar su imagen si existe.
- * Si la imagen (nombre.png) no se encuentra (404), el atributo onerror la reemplaza dinámicamente
+ * Si la imagen (nombre.png) no se encuentra (404), el atributo onerror la reemplaza dinÃ¡micamente
  * por su emoji de fallback asignado en state.playerAvatars
  */
 function getAvatarHTML(name, sizeClass = '') {
-    const fallbackEmoji = state.playerAvatars[name] || '👤';
+    const fallbackEmoji = state.playerAvatars[name] || 'ðŸ‘¤';
     // FIX: Eliminar espacios para coincidir con el sistema de archivos (diego j -> diegoj)
     const slug = name.toLowerCase().replace(/\s+/g, '');
     const imagePath = `assets/players/${slug}.png`;
@@ -43,7 +43,7 @@ function getAvatarHTML(name, sizeClass = '') {
 }
 
 function getSetupAvatarHTML(name) {
-    const fallbackEmoji = state.playerAvatars[name] || '🐰';
+    const fallbackEmoji = state.playerAvatars[name] || 'ðŸ°';
     const slug = name.toLowerCase().replace(/\s+/g, '');
     const imagePath = `assets/players/${slug}.png`;
 
@@ -56,7 +56,7 @@ function getSetupAvatarHTML(name) {
 }
 
 function getHeroAvatarHTML(name) {
-    const fallbackEmoji = state.playerAvatars[name] || '👤';
+    const fallbackEmoji = state.playerAvatars[name] || 'ðŸ‘¤';
     const slug = name.toLowerCase().replace(/\s+/g, '');
     const imagePath = `assets/players/${slug}.png`;
 
@@ -67,7 +67,7 @@ function getHeroAvatarHTML(name) {
 
 /**
  * Deriva la ruta de imagen de carta a partir del nombre del jugador.
- * Convierte "DIEGO J" → "diegoj", "JAVI" → "javi", etc.
+ * Convierte "DIEGO J" â†’ "diegoj", "JAVI" â†’ "javi", etc.
  */
 function getCardImagePath(name, type = 'Inocente') {
     const filename = name.toLowerCase().replace(/\s+/g, '');
@@ -93,7 +93,7 @@ const UI = {
     startGameBtn: document.getElementById('btn-start-game')
 };
 
-// ── Gestor Mágico de Audio ────────────────────────────────────────────────
+// â”€â”€ Gestor MÃ¡gico de Audio â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const audioManager = {
     bgMusic: document.getElementById('bg-music'),
     isMuted: false,
@@ -102,7 +102,7 @@ const audioManager = {
         if (!this.bgMusic) return;
         this.bgMusic.volume = 0.5; // Volumen inmersivo
         
-        // El navegador requiere interacción humana para reproducir audio
+        // El navegador requiere interacciÃ³n humana para reproducir audio
         const triggerPlay = () => {
             if (!this.hasStarted && !this.isMuted) {
                 this.bgMusic.play().catch(e => console.warn("Autoaplay prevenido por el usuario:", e));
@@ -126,21 +126,28 @@ const audioManager = {
     }
 };
 
-// ── Navegación principal ───────────────────────────────────────────────────
-// Pantallas ESTÁTICAS (existen en el HTML como <section>)
+// â”€â”€ NavegaciÃ³n principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Pantallas ESTÃTICAS (existen en el HTML como <section>)
 const STATIC_SCREENS = ['screen-main-menu', 'screen-setup'];
 let currentTimerInterval = null;
-let navigationHistory = []; // Rastreo para botón atrás
+let navigationHistory = [{ id: 'screen-main-menu', data: {} }]; // Rastreo para botÃ³n atrÃ¡s
 let isStartingRound = false;
 let panicInterval = null;
 
 function goBack() {
     if (navigationHistory.length > 1) {
         navigationHistory.pop(); // Sacar la actual
-        const previousScreen = navigationHistory.pop(); // Obtener la anterior
-        navigateTo(previousScreen, {}, false); // Navegar sin registrar de nuevo
+        const previousScreen = navigationHistory[navigationHistory.length - 1]; // Obtener la anterior
+        navigateTo(previousScreen.id, previousScreen.data || {}, false); // Navegar sin registrar de nuevo
     } else {
-        navigateTo('main-menu');
+        navigateTo('main-menu', {}, false);
+    }
+}
+
+function updateGlobalNav(screenId) {
+    const globalNav = document.getElementById('global-nav');
+    if (globalNav) {
+        globalNav.style.display = (screenId === 'screen-main-menu' || screenId === 'main-menu') ? 'none' : 'flex';
     }
 }
 
@@ -150,33 +157,31 @@ function navigateTo(screenId, data = {}, recordHistory = true) {
 
     // Registrar historia si no es un "goBack"
     if (recordHistory) {
-        if (navigationHistory[navigationHistory.length - 1] !== screenId) {
-            navigationHistory.push(screenId);
+        const last = navigationHistory[navigationHistory.length - 1];
+        if (!last || last.id !== screenId || JSON.stringify(last.data) !== JSON.stringify(data)) {
+            navigationHistory.push({ id: screenId, data: data });
         }
     }
 
-    // Visibilidad de controles de navegación globales
-    const globalNav = document.getElementById('global-nav');
-    if (globalNav) {
-        globalNav.style.display = (screenId === 'screen-main-menu' || screenId === 'main-menu') ? 'none' : 'flex';
-    }
+    // Visibilidad de controles de navegaciÃ³n globales
+    updateGlobalNav(screenId);
 
-    // Si la pantalla objetivo es estática, mostrar/ocultar secciones
+    // Si la pantalla objetivo es estÃ¡tica, mostrar/ocultar secciones
     if (STATIC_SCREENS.includes(screenId) || screenId === 'main-menu') {
         const targetId = screenId === 'main-menu' ? 'screen-main-menu' : screenId;
-        // Ocultar menú y setup
+        // Ocultar menÃº y setup
         STATIC_SCREENS.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.remove('active');
         });
 
-        // Limpiar contenido dinámico
+        // Limpiar contenido dinÃ¡mico
         if (UI.dynamicContent) UI.dynamicContent.innerHTML = '';
 
         const target = document.getElementById(targetId);
         if (target) target.classList.add('active');
 
-        // Restaurar sección setup en main-content si fue reemplazada
+        // Restaurar secciÃ³n setup en main-content si fue reemplazada
         if (screenId === 'screen-setup') {
             renderPresetPlayers();
             renderPlayerList();
@@ -198,11 +203,11 @@ function navigateTo(screenId, data = {}, recordHistory = true) {
                     };
                 }
             }
-            // Focus automático ELIMINADO para evitar que salte el teclado virtual en móviles
-            // y tape la interfaz. El usuario deberá tocar explícitamente el campo de texto.
+            // Focus automÃ¡tico ELIMINADO para evitar que salte el teclado virtual en mÃ³viles
+            // y tape la interfaz. El usuario deberÃ¡ tocar explÃ­citamente el campo de texto.
         }
     } else {
-        // Pantalla DINÁMICA: ocultar estáticas y cargar contenido en main-content
+        // Pantalla DINÃMICA: ocultar estÃ¡ticas y cargar contenido en main-content
         STATIC_SCREENS.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.remove('active');
@@ -212,11 +217,11 @@ function navigateTo(screenId, data = {}, recordHistory = true) {
         if (screenId === 'screen-categories') renderCategories();
     }
 }
-// ── Inicialización ──────────────────────────────────────────────────────────
+// â”€â”€ InicializaciÃ³n â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.addEventListener('DOMContentLoaded', () => {
     audioManager.init(); // Inicializar motor de audio
     setupEventListeners();
-    requestWakeLock(); // Activar bloqueo de suspensión
+    requestWakeLock(); // Activar bloqueo de suspensiÃ³n
 
     // Skill pwa-offline-setup: Reconectar WakeLock si minimizan la app
     document.addEventListener('visibilitychange', async () => {
@@ -232,7 +237,7 @@ async function requestWakeLock() {
     try {
         if ('wakeLock' in navigator) {
             wakeLock = await navigator.wakeLock.request('screen');
-            console.log('✨ Pantalla bloqueada para el sueño místico...');
+            console.log('âœ¨ Pantalla bloqueada para el sueÃ±o mÃ­stico...');
         }
     } catch (err) {
         console.warn('No se pudo activar el Wake Lock:', err);
@@ -259,17 +264,17 @@ function setupEventListeners() {
         setTimeout(() => ripple.remove(), 800);
     }
 
-    // Menú Principal
+    // MenÃº Principal
     UI.btnMenuNew.addEventListener('click', (e) => {
         createLiquidRipple(e, UI.btnMenuNew);
         
-        // Generar semillas de diente de león
+        // Generar semillas de diente de leÃ³n
         const container = document.createElement('div');
         container.className = 'dandelion-container';
         document.body.appendChild(container);
 
         const rect = UI.btnMenuNew.getBoundingClientRect();
-        // Ajuste: El centro del botón SVG para que las semillas salgan del núcleo
+        // Ajuste: El centro del botÃ³n SVG para que las semillas salgan del nÃºcleo
         const startX = rect.left + rect.width / 2;
         const startY = rect.top + rect.height / 2;
 
@@ -282,7 +287,7 @@ function setupEventListeners() {
             container.appendChild(seed);
         }
 
-        // Retrasar navegación para el efecto visual
+        // Retrasar navegaciÃ³n para el efecto visual
         setTimeout(() => {
             navigateTo('screen-setup');
             setTimeout(() => {
@@ -293,20 +298,20 @@ function setupEventListeners() {
 
 
     UI.btnMenuRules.addEventListener('click', () => {
-        const rules = "🎮 CÓMO JUGAR\n\n1. El GM asigna en secreto una palabra a cada jugador.\n2. El IMPOSTOR recibe una palabra diferente o nada.\n3. Jugad cartas de Dixit sin revelar la palabra.\n4. Votad: ¿quién es el Impostor?\n5. Si el Impostor no es descubierto → gana. Si es descubierto, puede salvar puntos adivinando la palabra secreta.";
+        const rules = "ðŸŽ® CÃ“MO JUGAR\n\n1. El GM asigna en secreto una palabra a cada jugador.\n2. El IMPOSTOR recibe una palabra diferente o nada.\n3. Jugad cartas de Dixit sin revelar la palabra.\n4. Votad: Â¿quiÃ©n es el Impostor?\n5. Si el Impostor no es descubierto â†’ gana. Si es descubierto, puede salvar puntos adivinando la palabra secreta.";
         showConfirm(rules, () => { });
         document.getElementById('modal-btn-cancel').classList.add('hidden');
     });
 
     UI.btnMenuSettings.addEventListener('click', () => {
         const estado = audioManager.isMuted ? "REACTIVAR" : "SILENCIAR";
-        const icon = audioManager.isMuted ? "🔊" : "🔇";
+        const icon = audioManager.isMuted ? "ðŸ”Š" : "ðŸ”‡";
         
-        showConfirm(`⚙️ AJUSTES DE AUDIO\n\n¿Deseas ${estado} ${icon} la melodía "Clockwork Garden Carnival"?`, () => {
+        showConfirm(`âš™ï¸ AJUSTES DE AUDIO\n\nÂ¿Deseas ${estado} ${icon} la melodÃ­a "Clockwork Garden Carnival"?`, () => {
             audioManager.toggleMute();
         });
         
-        // Asegurarnos de que el botón cancelar aparezca (puede estar oculto de otros modales)
+        // Asegurarnos de que el botÃ³n cancelar aparezca (puede estar oculto de otros modales)
         document.getElementById('modal-btn-cancel').classList.remove('hidden');
     });
 
@@ -315,21 +320,21 @@ function setupEventListeners() {
     UI.playerNameInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') addPlayer(e);
     });
-    // btn-start-game listener extraído para evitar dual-fire con navigateTo()
+    // btn-start-game listener extraÃ­do para evitar dual-fire con navigateTo()
 }
 
 function showScreen(screenId, data = {}) {
-    // Renderizado dinámico de pantallas
+    // Renderizado dinÃ¡mico de pantallas
     if (screenId === 'screen-categories') {
         UI.dynamicContent.innerHTML = `
             <section id="screen-categories" class="screen active">
                 <header>
-                    <h2 class="glow-text small">Categorías</h2>
-                    <p class="subtitle">Selecciona la temática</p>
+                    <h2 class="glow-text small">CategorÃ­as</h2>
+                    <p class="subtitle">Selecciona la temÃ¡tica</p>
                 </header>
                 
                 <div class="category-grid" id="category-grid">
-                    <!-- Categorías inyectadas -->
+                    <!-- CategorÃ­as inyectadas -->
                 </div>
                 
                 <div id="category-error" class="error-toast hidden"></div>
@@ -345,7 +350,7 @@ function showScreen(screenId, data = {}) {
         const frontImgPath = getCardImagePath(player, 'Inocente');
         // Para inocentes, usamos la imagen de inocente en el reverso con la palabra encima
         const backImgPath = isImpostor ? getCardImagePath(player, 'Impostor') : frontImgPath;
-        const fallbackEmoji = state.playerAvatars[player] || '👤';
+        const fallbackEmoji = state.playerAvatars[player] || 'ðŸ‘¤';
 
         UI.dynamicContent.innerHTML = `
             <section id="screen-reveal" class="screen active reveal-screen">
@@ -370,9 +375,11 @@ function showScreen(screenId, data = {}) {
                             <div class="card-fallback" id="card-front-fallback" style="display:none">
                                 <span class="card-fallback-emoji">${fallbackEmoji}</span>
                             </div>
+                            <!-- Marco Inocente (siempre en la cara inicial) -->
+                            <div class="card-frame card-frame--inocente"></div>
                         </div>
 
-                        <!-- CARA TRASERA: Revelación (tras el flip 3D) -->
+                        <!-- CARA TRASERA: RevelaciÃ³n (tras el flip 3D) -->
                         <div class="reveal-card__face reveal-card__back">
                             <img
                                 src="${backImgPath}"
@@ -380,15 +387,13 @@ function showScreen(screenId, data = {}) {
                                 class="card-img"
                                 onerror="this.style.display='none';"
                             >
-                            ${isImpostor ? `
-                                <div class="impostor-overlay">
-                                    <span class="impostor-label">ERES EL<br>IMPOSTOR</span>
-                                </div>
-                            ` : `
+                            ${isImpostor ? '' : `
                                 <div class="reveal-word-overlay">
                                     <span class="reveal-word-text">${escapeHTML(playerRole.word)}</span>
                                 </div>
                             `}
+                            <!-- Marco Trasero (depende del rol) -->
+                            <div class="card-frame ${isImpostor ? 'card-frame--impostor' : 'card-frame--inocente'}"></div>
                         </div>
 
                     </div>
@@ -396,10 +401,10 @@ function showScreen(screenId, data = {}) {
 
                 </div>
                 
-                <!-- Botones oníricos -->
+                <!-- Botones onÃ­ricos -->
                 <div class="reveal-actions">
                     <div class="reveal-btn-container">
-                        <button id="btn-reveal" class="btn-dreamy btn-dreamy--hold btn-hold-dimmed" aria-label="Mantén pulsado"></button>
+                        <button id="btn-reveal" class="btn-dreamy btn-dreamy--hold btn-hold-dimmed" aria-label="MantÃ©n pulsado"></button>
                     </div>
                     <button id="btn-next-player" class="btn-dreamy btn-dreamy--ready btn-locked" aria-label="Listo"></button>
                 </div>
@@ -407,6 +412,14 @@ function showScreen(screenId, data = {}) {
             </section>
         `;
         setupRevealLogic(player, data.index);
+    } else if (screenId === 'screen-timer') {
+        showTimerScreen();
+    } else if (screenId === 'screen-panic') {
+        showRevealPanicScreen();
+    } else if (screenId === 'screen-voting') {
+        showVotingScreen();
+    } else if (screenId === 'screen-score') {
+        showScoreScreen();
     }
 }
 
@@ -419,7 +432,7 @@ function renderCategories() {
         const card = document.createElement('div');
         card.className = 'category-card';
         // Usamos setAttribute para el style para mayor seguridad
-        card.style.backgroundImage = `url('assets/IMG/UI/cat_${cat.id}.png')`;
+        card.style.backgroundImage = `url('assets/IMG/UI/categories/cat_${cat.id}.png')`;
         card.setAttribute('aria-label', cat.name);
         card.onclick = () => selectCategory(cat.id);
         grid.appendChild(card);
@@ -433,7 +446,7 @@ async function selectCategory(catId) {
     state.selectedCategory = catId;
     const errorToast = document.getElementById('category-error');
 
-    // Cargar palabras si no están cargadas
+    // Cargar palabras si no estÃ¡n cargadas
     if (!state.gameData) {
         try {
             const response = await fetch('data/words.json');
@@ -467,24 +480,24 @@ function startRoleAssignment() {
     // Si se agotan, resetear la lista (o avisar)
     if (availableWords.length === 0) {
         if (errorToast) {
-            errorToast.textContent = "¡Se han agotado las palabras de esta categoría! Reseteando base de datos interna...";
+            errorToast.textContent = "Â¡Se han agotado las palabras de esta categorÃ­a! Reseteando base de datos interna...";
             errorToast.classList.remove('hidden');
         }
         state.usedWords = [];
         availableWords = words;
     }
 
-    // Selección segura criptográfica para la palabra
+    // SelecciÃ³n segura criptogrÃ¡fica para la palabra
     const wordIndex = getRandomSecure(availableWords.length);
     state.secretWord = availableWords[wordIndex];
     state.usedWords.push(state.secretWord);
 
-    // Selección segura criptográfica para el impostor con sistema anti-racha mitigada
+    // SelecciÃ³n segura criptogrÃ¡fica para el impostor con sistema anti-racha mitigada
     let impostorIndex = getRandomSecure(state.players.length);
     let chosenImpostor = state.players[impostorIndex];
 
     // Si toca el mismo de la ronda anterior, volvemos a tirar los dados una vez 
-    // (reduce brutalmente la repetición seguida pero no la hace "imposible")
+    // (reduce brutalmente la repeticiÃ³n seguida pero no la hace "imposible")
     if (chosenImpostor === state.lastImpostor && state.players.length > 3) {
         impostorIndex = getRandomSecure(state.players.length);
         chosenImpostor = state.players[impostorIndex];
@@ -496,13 +509,13 @@ function startRoleAssignment() {
     state.roles = state.players.map((name) => ({
         name,
         isImpostor: name === state.impostorName,
-        word: name === state.impostorName ? "¡ERES EL IMPOSTOR!" : state.secretWord
+        word: name === state.impostorName ? "Â¡ERES EL IMPOSTOR!" : state.secretWord
     }));
 
-    showScreen('screen-reveal', { player: state.players[0], index: 0 });
+    navigateTo('screen-reveal', { player: state.players[0], index: 0 });
 }
 
-// Generador Criptográfico de Números Aleatorios
+// Generador CriptogrÃ¡fico de NÃºmeros Aleatorios
 function getRandomSecure(max) {
     if (window.crypto && window.crypto.getRandomValues) {
         const array = new Uint32Array(1);
@@ -521,15 +534,27 @@ function setupRevealLogic(playerName, index) {
 
     let hasRevealed = false;
 
-    // ── Revelar ────────────────────────────────────────────────────────────
+    // â”€â”€ Revelar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const reveal = () => {
         // Ahora TODOS giran la carta en 3D para ver el reverso
         card.classList.add('is-flipped');
+
+        // MECÃ NICA NUEVA: Si es impostor, cambiamos el fondo de la pantalla a bg_tension_dark (oscuro)
+        if (playerRole.isImpostor) {
+            const screen = document.getElementById('screen-reveal');
+            if (screen) screen.classList.add('impostor-reveal-active');
+        }
     };
 
-    // ── Ocultar ────────────────────────────────────────────────────────────
+    // â”€â”€ Ocultar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const hide = () => {
         card.classList.remove('is-flipped');
+
+        // Quitar el fondo especial al soltar
+        if (playerRole.isImpostor) {
+            const screen = document.getElementById('screen-reveal');
+            if (screen) screen.classList.remove('impostor-reveal-active');
+        }
 
         if (!hasRevealed) {
             hasRevealed = true;
@@ -537,7 +562,7 @@ function setupRevealLogic(playerName, index) {
         }
     };
 
-    // ── Pointer Events (mobile safe) ───────────────────────────────────────
+    // â”€â”€ Pointer Events (mobile safe) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     btnHold.onpointerdown = (e) => {
         if (e.cancelable) e.preventDefault();
         reveal();
@@ -547,19 +572,19 @@ function setupRevealLogic(playerName, index) {
         hide();
     };
 
-    // ── Avanzar al siguiente jugador ───────────────────────────────────────
+    // â”€â”€ Avanzar al siguiente jugador â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     btnNext.onclick = () => {
         const nextIndex = index + 1;
         if (nextIndex < state.players.length) {
-            showScreen('screen-reveal', { player: state.players[nextIndex], index: nextIndex });
+            navigateTo('screen-reveal', { player: state.players[nextIndex], index: nextIndex });
         } else {
-            showTimerScreen();
+            navigateTo('screen-timer');
         }
     };
 }
 
 function showTimerScreen() {
-    // Elegir aleatoriamente quién empieza a hablar (cualquier jugador, incl. el impostor)
+    // Elegir aleatoriamente quiÃ©n empieza a hablar (cualquier jugador, incl. el impostor)
     const startIndex = getRandomSecure(state.players.length);
     const startPlayer = state.players[startIndex];
 
@@ -593,22 +618,25 @@ function showTimerScreen() {
                 <img src="${starterImage}" alt="Empieza el turno: ${startPlayer}" class="starter-full-image">
             </div>
             
-            <div class="timer-container" style="text-align: center; margin: 0.5rem 0;">
-                <div style="display: flex; justify-content: center; align-items: center; gap: 0.8rem; margin-bottom: 0.3rem;">
-                    <button id="btn-time-sub" class="btn-preset">-15s</button>
-                    <div id="countdown-display" class="timer-display" style="font-size: 3.2rem;">${formatTime(timeLeft)}</div>
-                    <button id="btn-time-add" class="btn-preset">+15s</button>
+            <div class="timer-widget">
+                <div class="countdown-orb">
+                    <div id="countdown-display" class="timer-display">${formatTime(timeLeft)}</div>
                 </div>
                 
-                <div class="time-presets" style="display: flex; justify-content: center; gap: 0.8rem;">
-                    <button class="btn-preset btn-preset--large" data-time="60">1:00</button>
-                    <button class="btn-preset btn-preset--large" data-time="90">1:30</button>
-                    <button class="btn-preset btn-preset--large" data-time="120">2:00</button>
-                </div>
+                <!-- Botones Laterales (-/+ 15s) -->
+                <button id="btn-time-sub" class="btn-preset btn-preset--side btn-preset--left">-15s</button>
+                <button id="btn-time-add" class="btn-preset btn-preset--side btn-preset--right">+15s</button>
+            </div>
+
+            <!-- Columna Derecha (Presets Rápidos) -->
+            <div class="right-presets-column">
+                <button class="btn-preset btn-preset--column" data-time="60">1:00</button>
+                <button class="btn-preset btn-preset--column" data-time="90">1:30</button>
+                <button class="btn-preset btn-preset--column" data-time="120">2:00</button>
             </div>
             
-            <div style="text-align: center; margin-top: 0.5rem; margin-bottom: -12px; position: relative; z-index: 10;">
-                <button id="btn-all-ready" class="btn-parchment-action" aria-label="¡Cartas en la mesa!"></button>
+            <div class="bottom-action-container">
+                <button id="btn-all-ready" class="btn-parchment-action" aria-label="Â¡Cartas en la mesa!"></button>
             </div>
         </section>
     `;
@@ -653,7 +681,7 @@ function showTimerScreen() {
 
     document.getElementById('btn-all-ready').onclick = () => {
         if (currentTimerInterval) clearInterval(currentTimerInterval);
-        showRevealPanicScreen();
+        navigateTo('screen-panic');
     };
 }
 
@@ -661,28 +689,30 @@ function showRevealPanicScreen() {
     UI.dynamicContent.innerHTML = `
         <section id="screen-panic" class="screen active" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
             
-            <!-- FASE 1: ESPERA (Piedra rúnica con luz giratoria) -->
+            <!-- FASE 1: ESPERA (Piedra rÃºnica con luz giratoria) -->
             <div id="panic-phase-1" style="height: 100%; display: flex; align-items: center; justify-content: center; position: relative; overflow: visible;">
                 <div class="panic-light-wrap">
                     <div class="btn-dreamy--panic pulse-card" style="position: relative; z-index: 1;"></div>
-                    <img src="assets/IMG/UI/btn_luz_reveal.png" class="panic-magic-light" alt="Luz mágica">
+                    <img src="assets/IMG/UI/tension/btn_luz_reveal.png" class="panic-magic-light" alt="Luz mÃ¡gica">
                 </div>
             </div>
 
             <!-- FASE 2 y 3: PANICO Y DEBATE -->
             <div id="panic-phase-2" class="hidden" style="text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: flex-start; padding: 2vh 0; box-sizing: border-box;">
                 
-                <!-- Contenedor Superior (Palabra y Contador - Pegados arriba) -->
+                <!-- Contenedor Superior (Palabra pegada arriba) -->
                 <div style="flex: 0; display: flex; flex-direction: column; justify-content: flex-start; padding-top: 5vh; gap: 2vh;">
                     <h2 class="shamanic-glyph">${escapeHTML(state.secretWord)}</h2>
-                    <div id="panic-countdown" class="panic-number" style="margin: 0;">
-                        <img src="assets/IMG/UI/cuenta_atras/5.png" alt="5">
-                    </div>
                 </div>
                 
-                <!-- Contenedor del Botón (Centro de la pantalla) -->
-                <div id="panic-debate-ui" class="hidden" style="flex: 1; display: flex; align-items: center; justify-content: center;">
-                    <button id="btn-to-vote" class="btn-votar-action"></button>
+                <!-- Contenedor Central (Cuenta atrÃ¡s O BotÃ³n Votar) -->
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                    <div id="panic-countdown" class="panic-number" style="margin: 0;">
+                        <img src="assets/IMG/UI/tension/cuenta_atras/5.png" alt="5">
+                    </div>
+                    <div id="panic-debate-ui" class="hidden" style="display: flex; align-items: center; justify-content: center; width: 100%;">
+                        <button id="btn-to-vote" class="btn-votar-action"></button>
+                    </div>
                 </div>
             </div>
             
@@ -703,18 +733,20 @@ function showRevealPanicScreen() {
         panicInterval = setInterval(() => {
             panicTime--;
             if (panicTime > 0) {
-                countdownEl.innerHTML = `<img src="assets/IMG/UI/cuenta_atras/${panicTime}.png" alt="${panicTime}">`;
+                countdownEl.innerHTML = `<img src="assets/IMG/UI/tension/cuenta_atras/${panicTime}.png" alt="${panicTime}">`;
                 void countdownEl.offsetWidth;
             } else {
                 clearInterval(panicInterval);
                 countdownEl.classList.add('hidden');
                 document.getElementById('panic-debate-ui').classList.remove('hidden');
+                // Cambio de fondo: ahora es la fase de votaciÃ³n
+                document.getElementById('screen-panic').classList.add('voting-mode');
             }
         }, 1000);
     };
 
     document.getElementById('btn-to-vote').onclick = () => {
-        showVotingScreen();
+        navigateTo('screen-voting');
     };
 }
 
@@ -725,8 +757,8 @@ function showVotingScreen() {
     UI.dynamicContent.innerHTML = `
         <section id="screen-voting" class="screen active">
             <header>
-                <h2 class="glow-text small">Votación</h2>
-                <p class="subtitle">¿Quiénes acertaron al impostor?</p>
+                <h2 class="glow-text small">VotaciÃ³n</h2>
+                <p class="subtitle">Â¿QuiÃ©nes acertaron al impostor?</p>
             </header>
             
             <div class="voting-list">
@@ -737,7 +769,7 @@ function showVotingScreen() {
                             <span class="player-name">${escapeHTML(name)}</span>
                         </div>
                         <div class="vote-indicator">
-                            <span class="magic-spark">✨</span>
+                            <span class="magic-spark">âœ¨</span>
                         </div>
                         <input type="checkbox" class="vote-check-hidden" data-name="${escapeHTML(name)}">
                     </div>
@@ -748,7 +780,7 @@ function showVotingScreen() {
         </section>
     `;
 
-    // Lógica de interacción para las filas
+    // LÃ³gica de interacciÃ³n para las filas
     const rows = document.querySelectorAll('.voting-row');
     rows.forEach(row => {
         const toggle = () => {
@@ -776,16 +808,16 @@ function showVotingScreen() {
 
         state.lastCorrectVoters = correctVoters;
 
-        // El impostor no tiene salvación en las nuevas reglas, directos a la asignación de puntos
+        // El impostor no tiene salvaciÃ³n en las nuevas reglas, directos a la asignaciÃ³n de puntos
         handleRoundEnd({
             impostorFound: true,
             correctVoters: state.lastCorrectVoters
         });
-        showScoreScreen();
+        navigateTo('screen-score');
     };
 }
 
-// Fase de salvación eliminada
+// Fase de salvaciÃ³n eliminada
 
 function handleRoundEnd({ impostorFound, correctVoters = [] }) {
     // Inicializar scores y limpiar deltas de ronda anterior
@@ -806,73 +838,73 @@ function handleRoundEnd({ impostorFound, correctVoters = [] }) {
         // Nadie acierta (Impostor invicto)
         state.scores[state.impostorName] += 6;
         state.roundScores[state.impostorName] = 6;
-        state.roundReasons[state.impostorName] = "👻 Invicto (Nadie acierta)";
+        state.roundReasons[state.impostorName] = "ðŸ‘» Invicto (Nadie acierta)";
     } else {
         if (numAcertantes === 1) {
             // Solo 1 acierta: Impostor +4, Acertante +6
             state.scores[state.impostorName] += 4;
             state.roundScores[state.impostorName] = 4;
-            state.roundReasons[state.impostorName] = "🤡 Descubierto por 1";
+            state.roundReasons[state.impostorName] = "ðŸ¤¡ Descubierto por 1";
 
             state.scores[correctVoters[0]] += 6;
             state.roundScores[correctVoters[0]] = 6;
-            state.roundReasons[correctVoters[0]] = "🎯 Único Acertante";
+            state.roundReasons[correctVoters[0]] = "ðŸŽ¯ Ãšnico Acertante";
         } else if (numAcertantes < innocentCount / 2) {
-            // Minoría acierta: Impostor +2, Acertantes +4
+            // MinorÃ­a acierta: Impostor +2, Acertantes +4
             state.scores[state.impostorName] += 2;
             state.roundScores[state.impostorName] = 2;
-            state.roundReasons[state.impostorName] = "🤡 Descubierto por minoría";
+            state.roundReasons[state.impostorName] = "ðŸ¤¡ Descubierto por minorÃ­a";
 
             correctVoters.forEach(name => {
                 state.scores[name] += 4;
                 state.roundScores[name] = 4;
-                state.roundReasons[name] = "✔️ Acierto (Minoría)";
+                state.roundReasons[name] = "âœ”ï¸ Acierto (MinorÃ­a)";
             });
         } else if (numAcertantes === innocentCount / 2) {
             // Empate (50%): Impostor +1, Acertantes +3
             state.scores[state.impostorName] += 1;
             state.roundScores[state.impostorName] = 1;
-            state.roundReasons[state.impostorName] = "⚖️ Descubierto por la mitad";
+            state.roundReasons[state.impostorName] = "âš–ï¸ Descubierto por la mitad";
 
             correctVoters.forEach(name => {
                 state.scores[name] += 3;
                 state.roundScores[name] = 3;
-                state.roundReasons[name] = "✔️ Acierto (Empate)";
+                state.roundReasons[name] = "âœ”ï¸ Acierto (Empate)";
             });
         } else if (numAcertantes > innocentCount / 2 && numAcertantes < innocentCount) {
-            // Mayoría acierta: Impostor 0, Acertantes +2
+            // MayorÃ­a acierta: Impostor 0, Acertantes +2
             state.scores[state.impostorName] += 0;
             state.roundScores[state.impostorName] = 0;
-            state.roundReasons[state.impostorName] = "🚨 Descubierto por mayoría";
+            state.roundReasons[state.impostorName] = "ðŸš¨ Descubierto por mayorÃ­a";
 
             correctVoters.forEach(name => {
                 state.scores[name] += 2;
                 state.roundScores[name] = 2;
-                state.roundReasons[name] = "✔️ Acierto (Mayoría)";
+                state.roundReasons[name] = "âœ”ï¸ Acierto (MayorÃ­a)";
             });
         } else if (numAcertantes === innocentCount) {
             // Todos aciertan: Impostor -1, Acertantes +2
             state.scores[state.impostorName] -= 1;
             state.roundScores[state.impostorName] = -1;
-            state.roundReasons[state.impostorName] = "💀 Pillado por TODOS";
+            state.roundReasons[state.impostorName] = "ðŸ’€ Pillado por TODOS";
 
             correctVoters.forEach(name => {
                 state.scores[name] += 2;
                 state.roundScores[name] = 2;
-                state.roundReasons[name] = "✔️ Acierto Unánime";
+                state.roundReasons[name] = "âœ”ï¸ Acierto UnÃ¡nime";
             });
         }
     }
 }
 
 function showScoreScreen() {
-    // Ordenar por puntuación descendente
+    // Ordenar por puntuaciÃ³n descendente
     const sortedPlayers = [...state.players].sort((a, b) => (state.scores[b] || 0) - (state.scores[a] || 0));
 
-    // FIX: Añadido id="screen-score" y clase score-screen con botones de sumar y restar
+    // FIX: AÃ±adido id="screen-score" y clase score-screen con botones de sumar y restar
     UI.dynamicContent.innerHTML = `
         <section id="screen-score" class="screen score-screen active">
-            <h2>Marcadores 🏆</h2>
+            <h2>Marcadores ðŸ†</h2>
             <div class="score-list glass-card">
                 ${sortedPlayers.map((name, index) => {
         const delta = state.roundScores[name] || 0;
@@ -899,14 +931,14 @@ function showScoreScreen() {
                 `}).join('')}
             </div>
             <div class="score-actions">
-                <button id="btn-next-round" class="btn-primary">Nueva Ronda 🔄</button>
-                <button id="btn-reset-scores" class="btn-secondary">Resetear Marcadores ⚠️</button>
-                <button id="btn-exit-game" class="btn-danger">Salir al Inicio 🚪</button>
+                <button id="btn-next-round" class="btn-primary">Nueva Ronda ðŸ”„</button>
+                <button id="btn-reset-scores" class="btn-secondary">Resetear Marcadores âš ï¸</button>
+                <button id="btn-exit-game" class="btn-danger">Salir al Inicio ðŸšª</button>
             </div>
         </section>
     `;
 
-    // Listeners para botones de puntuación
+    // Listeners para botones de puntuaciÃ³n
     document.querySelectorAll('.btn-score-mod').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const player = e.target.dataset.player;
@@ -930,22 +962,22 @@ function showScoreScreen() {
     };
 
     document.getElementById('btn-reset-scores').onclick = () => {
-        showConfirm("¿Seguro que quieres resetear todos los puntos?", () => {
+        showConfirm("Â¿Seguro que quieres resetear todos los puntos?", () => {
             state.players.forEach(p => state.scores[p] = 0);
             showScoreScreen();
         });
     };
 
     document.getElementById('btn-exit-game').onclick = () => {
-        showConfirm("¿Volver al menú principal? Se perderá el progreso de esta ronda.", () => {
-            // Limpiamos el contenido dinámico 
+        showConfirm("Â¿Volver al menÃº principal? Se perderÃ¡ el progreso de esta ronda.", () => {
+            // Limpiamos el contenido dinÃ¡mico 
             UI.dynamicContent.innerHTML = '';
             // Reset state partial
             state.gameData = null;
             state.scores = {};
             state.players = [];
             state.playerAvatars = {};
-            state.avatarPool = ['🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🦄', '🐶', '🐱', '🐹', '🐭'];
+            state.avatarPool = ['ðŸ°', 'ðŸ¦Š', 'ðŸ»', 'ðŸ¼', 'ðŸ¨', 'ðŸ¯', 'ðŸ¦', 'ðŸ®', 'ðŸ·', 'ðŸ¸', 'ðŸµ', 'ðŸ¦„', 'ðŸ¶', 'ðŸ±', 'ðŸ¹', 'ðŸ­'];
 
             // Reactivate setup screen to be sure
             navigateTo('screen-main-menu');
@@ -959,7 +991,7 @@ function showConfirm(message, onConfirm) {
     const btnConfirm = document.getElementById('modal-btn-confirm');
     const btnCancel = document.getElementById('modal-btn-cancel');
 
-    // Restaurar el botón cancelar por si fue ocultado
+    // Restaurar el botÃ³n cancelar por si fue ocultado
     btnCancel.classList.remove('hidden');
 
     msg.innerText = message; // innerText respeta \n
@@ -985,15 +1017,15 @@ function addPlayer(e) {
     if (name && !state.players.includes(name)) {
         state.players.push(name);
 
-        // Asignar emoji aleatorio único (sin repetir) como fallback
-        let fallbackEmoji = '👤';
+        // Asignar emoji aleatorio Ãºnico (sin repetir) como fallback
+        let fallbackEmoji = 'ðŸ‘¤';
         if (state.avatarPool.length > 0) {
             const poolIndex = Math.floor(Math.random() * state.avatarPool.length);
             fallbackEmoji = state.avatarPool.splice(poolIndex, 1)[0];
         }
         state.playerAvatars[name] = fallbackEmoji;
 
-        createStarDust(e); // El evento e vendrá del listener
+        createStarDust(e); // El evento e vendrÃ¡ del listener
         UI.playerNameInput.value = '';
         renderPlayerList();
         checkMinPlayers();
@@ -1017,7 +1049,7 @@ function createStarDust(e) {
     for (let i = 0; i < 12; i++) {
         const star = document.createElement('div');
         star.className = 'star-dust';
-        star.innerHTML = '✨';
+        star.innerHTML = 'âœ¨';
         star.style.left = `${localX}px`;
         star.style.top = `${localY}px`;
 
@@ -1054,7 +1086,7 @@ function removePlayer(name) {
 
     // Liberar el avatar para que otros puedan usarlo
     const releasedAvatar = state.playerAvatars[name];
-    if (releasedAvatar && releasedAvatar !== '👤') {
+    if (releasedAvatar && releasedAvatar !== 'ðŸ‘¤') {
         state.avatarPool.push(releasedAvatar);
     }
     delete state.playerAvatars[name];
@@ -1076,7 +1108,7 @@ function renderPresetPlayers() {
         chip.innerHTML = `<span class="totem-text">${name}</span>`;
         chip.setAttribute('role', 'button');
         chip.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-        chip.title = isActive ? 'Quitar de la partida' : 'Añadir a la partida';
+        chip.title = isActive ? 'Quitar de la partida' : 'AÃ±adir a la partida';
         chip.setAttribute('data-name', name);
 
         chip.addEventListener('click', (e) => {
@@ -1085,7 +1117,7 @@ function renderPresetPlayers() {
             } else {
                 createStardust(e.clientX, e.clientY);
                 state.players.push(name);
-                let fallbackEmoji = '👤';
+                let fallbackEmoji = 'ðŸ‘¤';
                 if (state.avatarPool.length > 0) {
                     const poolIndex = Math.floor(Math.random() * state.avatarPool.length);
                     fallbackEmoji = state.avatarPool.splice(poolIndex, 1)[0];
@@ -1123,7 +1155,7 @@ function renderPlayerList() {
             <div class="card-name-band">
                 <span>${escapeHTML(name.charAt(0).toUpperCase() + name.slice(1))}</span>
             </div>
-            <div class="active-glow-star" aria-hidden="true">⭐</div>
+            <div class="active-glow-star" aria-hidden="true">â­</div>
         `;
 
         li.querySelector('.remove-player-btn').addEventListener('click', () => {
@@ -1147,12 +1179,12 @@ function checkMinPlayers() {
     }
 }
 
-// ── Inicialización y Eventos Globales (Fase 0) ──────────────────────────────
+// â”€â”€ InicializaciÃ³n y Eventos Globales (Fase 0) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.addEventListener('DOMContentLoaded', () => {
     // Inicializar historial con la pantalla de inicio
-    navigationHistory = ['screen-main-menu'];
+    navigationHistory = [{ id: 'screen-main-menu', data: {} }];
 
-    // Listeners de navegación global
+    // Listeners de navegaciÃ³n global
     const btnBack = document.getElementById('btn-global-back');
     const btnHome = document.getElementById('btn-global-home');
 
