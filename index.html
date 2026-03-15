@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -12,6 +12,11 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;800&family=Macondo&family=Raleway:wght@400;700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
         rel="stylesheet">
+    
+    <!-- PWA Config -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1b263b">
+    <link rel="apple-touch-icon" href="assets/IMG/UI/menu/logo_dixit.png">
 </head>
 
     <!-- NavegaciÃ³n Global (Fuera del contenedor para evitar clips en mÃ³vil) -->
@@ -111,6 +116,16 @@
     <audio id="bg-music" src="music/Clockwork%20Garden%20Carnival.mp3" loop preload="auto"></audio>
 
     <script src="app.js?v=5"></script>
+    <script>
+        // Registro de Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker Registrado!', reg))
+                    .catch(err => console.error('Error al registrar SW', err));
+            });
+        }
+    </script>
 </body>
 
 </html>

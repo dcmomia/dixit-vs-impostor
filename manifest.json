@@ -1,0 +1,18 @@
+{
+  "name": "Dixit vs Impostor",
+  "short_name": "DXT Impostor",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d1b2a",
+  "theme_color": "#1b263b",
+  "description": "Game Master App premium para gestionar partidas fisicas de Dixit vs Impostor.",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/IMG/UI/menu/logo_dixit.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
