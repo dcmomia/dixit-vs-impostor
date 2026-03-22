@@ -3588,7 +3588,7 @@ body:has(#screen-setup.active) #app-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 3rem 2rem 6rem 2rem;
+    padding: 1rem 2rem 6rem 2rem;
     height: 100svh;
     overflow-y: auto;
     position: relative;
@@ -3607,9 +3607,15 @@ body:has(#screen-setup.active) #app-container {
 
 .astral-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem; /* Reducido para compactar mÃƒÂ¡s */
     position: relative;
     z-index: 2;
+}
+
+.astral-title-img {
+    width: 425px; /* Reducción del 15% aproximada sobre el valor implícito */
+    height: auto;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
 }
 
 .astral-title {
@@ -3649,10 +3655,20 @@ body:has(#screen-setup.active) #app-container {
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 20px;
-    padding: 1.2rem 2rem;
     position: relative;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    
+    /* TAMAÑO FIJO SOLICITADO */
+    width: 320.78px !important;
+    min-width: 320.78px !important;
+    max-width: 320.78px !important;
+    height: 65px !important;
+    min-height: 65px !important;
+    max-height: 65px !important;
+    padding: 0 1.2rem !important;
+    margin: 0 auto;
+    overflow: hidden !important; /* Evitar que el contenido lo estire */
 }
 
 .astral-score-item:hover {
@@ -3664,37 +3680,53 @@ body:has(#screen-setup.active) #app-container {
 .astral-item-gold {
     border: 1px solid rgba(251, 191, 36, 0.9);
     background: linear-gradient(90deg, rgba(251, 191, 36, 0.5) 0%, rgba(251, 191, 36, 0.15) 50%, rgba(15, 23, 42, 0.8) 100%);
-    box-shadow: 0 10px 30px rgba(251, 191, 36, 0.35), inset 0 0 25px rgba(251, 191, 36, 0.25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    width: 320.78px !important;
+    height: 65px !important;
+    min-height: 65px !important;
+    max-height: 65px !important;
 }
 
 .astral-item-gold:hover {
-    box-shadow: 0 15px 40px rgba(251, 191, 36, 0.5), inset 0 0 35px rgba(251, 191, 36, 0.35);
-    border-color: rgba(251, 191, 36, 1);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
 }
 
 .astral-item-silver {
     border: 1px solid rgba(148, 163, 184, 0.9);
     background: linear-gradient(90deg, rgba(148, 163, 184, 0.5) 0%, rgba(148, 163, 184, 0.15) 50%, rgba(15, 23, 42, 0.8) 100%);
-    box-shadow: 0 8px 25px rgba(148, 163, 184, 0.25), inset 0 0 20px rgba(148, 163, 184, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    width: 320.78px !important;
+    height: 65px !important;
+    min-height: 65px !important;
+    max-height: 65px !important;
 }
 
 .astral-item-bronze {
     border: 1px solid rgba(205, 127, 50, 0.9);
     background: linear-gradient(90deg, rgba(205, 127, 50, 0.5) 0%, rgba(205, 127, 50, 0.15) 50%, rgba(15, 23, 42, 0.8) 100%);
-    box-shadow: 0 8px 25px rgba(205, 127, 50, 0.25), inset 0 0 20px rgba(205, 127, 50, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    width: 320.78px !important;
+    height: 65px !important;
+    min-height: 65px !important;
+    max-height: 65px !important;
 }
 
 .astral-item-red {
     border: 1px solid rgba(239, 68, 68, 0.9);
     background: linear-gradient(90deg, rgba(239, 68, 68, 0.5) 0%, rgba(239, 68, 68, 0.15) 50%, rgba(15, 23, 42, 0.8) 100%);
-    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3), inset 0 0 20px rgba(239, 68, 68, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    width: 320.78px !important;
+    height: 65px !important;
+    min-height: 65px !important;
+    max-height: 65px !important;
 }
 
 .astral-rank-number {
     font-family: var(--font-serif);
-    font-size: 2.2rem;
+    font-size: 1.5rem; /* Reducido para encajar en 65px */
     font-weight: 800;
-    min-width: 50px;
+    min-width: 40px;
     text-align: center;
     color: #64748b;
 }
@@ -3702,7 +3734,6 @@ body:has(#screen-setup.active) #app-container {
 .astral-rank-1 {
     color: #fbbf24;
     text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
-    font-size: 2.8rem;
 }
 
 .astral-rank-2 {
@@ -3720,6 +3751,46 @@ body:has(#screen-setup.active) #app-container {
     text-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
 }
 
+.rank-number-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+    font-weight: 900;
+    font-size: 1.2rem; /* Mucho mÃƒÂ¡s pequeño */
+    pointer-events: none;
+    z-index: 5;
+    -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.8);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.rank-1-blue {
+    color: #b3e5fc !important; /* Azul perla brillante muy claro */
+    -webkit-text-fill-color: #b3e5fc !important;
+    text-shadow: 
+        0 0 8px rgba(179, 229, 252, 0.8),
+        0 0 15px rgba(3, 169, 244, 0.5),
+        0 0 25px rgba(255, 255, 255, 0.6);
+    -webkit-text-stroke: 0 !important; /* Quitar trazo negro */
+}
+
+.rank-2-silver {
+    color: #f1f5f9 !important; /* Gris plata muy claro y elegante */
+    -webkit-text-fill-color: #f1f5f9 !important;
+    text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 20px rgba(148, 163, 184, 0.5),
+        0 0 5px rgba(0, 0, 0, 0.2);
+    -webkit-text-stroke: 0 !important; /* Quitar trazo negro para elegancia */
+    font-weight: 800;
+}
+
+.astral-rank-img {
+    width: 45px; /* Reducido de 60px */
+    height: 45px;
+    object-fit: contain;
+}
+
 .astral-crown-icon {
     position: absolute;
     top: -20px;
@@ -3735,18 +3806,46 @@ body:has(#screen-setup.active) #app-container {
     50% { transform: translateY(-8px) rotate(8deg) scale(1.1); }
 }
 
+.astral-crown-badge {
+    position: absolute;
+    top: -10px;
+    right: -8px;
+    width: 32px; /* Reducido para el nuevo tamaño */
+    height: 32px;
+    z-index: 20;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)) drop-shadow(0 0 10px rgba(251, 191, 36, 0.4));
+    animation: floatingCrown 3s ease-in-out infinite;
+}
+
+.astral-dagger-badge {
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    width: 40px;
+    height: 40px;
+    z-index: 20;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)) drop-shadow(0 0 10px rgba(239, 68, 68, 0.4));
+    animation: daggerFloat 2.5s ease-in-out infinite;
+}
+
+@keyframes daggerFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(-10deg); }
+}
+
 .astral-avatar-wrapper {
-    width: 70px;
-    height: 70px;
+    position: relative;
+    width: 48px; /* Reducido de 70px para encajar en 65px */
+    height: 48px;
     border-radius: 50%;
-    margin: 0 2rem;
+    margin: 0 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.03);
     border: 2px solid rgba(255, 255, 255, 0.1);
     box-shadow: inset 0 0 15px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.3);
-    font-size: 2.4rem;
+    font-size: 1.8rem;
 }
 
 .astral-player-info {
@@ -3757,19 +3856,20 @@ body:has(#screen-setup.active) #app-container {
 
 .astral-player-name {
     font-family: var(--font-serif);
-    font-size: 1.6rem;
+    font-size: 1.1rem; /* Reducido de 1.6rem */
     font-weight: 700;
     color: #f8fafc;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    line-height: 1.1;
 }
 
 .astral-player-role {
     font-family: var(--font-sans);
-    font-size: 0.9rem;
+    font-size: 0.65rem; /* Reducido de 0.9rem */
     color: #64748b;
     text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-top: 0.2rem;
+    letter-spacing: 1px;
+    margin-top: 0.1rem;
 }
 
 .astral-delta-pts {
@@ -3792,13 +3892,13 @@ body:has(#screen-setup.active) #app-container {
 
 .astral-total-pts {
     font-family: var(--font-serif);
-    font-size: 2.8rem;
+    font-size: 1.8rem; /* Reducido de 2.8rem */
     font-weight: 800;
     color: #e2e8f0;
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    min-width: 70px;
+    min-width: 50px;
     text-align: right;
-    margin-right: 2rem;
+    margin-right: 1rem;
 }
 
 .astral-score-controls {
@@ -3847,7 +3947,7 @@ body:has(#screen-setup.active) #app-container {
     right: 0;
     display: flex;
     justify-content: center;
-    gap: 3.5rem; /* Un poco mÃƒÂ¡s de espacio entre los 2 grandes */
+    gap: 2.5rem; /* Reducido proporcionalmente */
     z-index: 20;
     padding: 0 1rem;
     pointer-events: none; /* Let clicks pass if they hit between buttons */
@@ -3860,8 +3960,8 @@ body:has(#screen-setup.active) #app-container {
     background-position: center !important;
     background-size: contain !important;
     border: none !important;
-    width: 320px !important; /* Aumentado de 280px */
-    height: 110px !important; /* Aumentado de 100px */
+    width: 272px !important; /* -15% de 320px */
+    height: 94px !important; /* -15% de 110px */
     cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
@@ -3878,8 +3978,8 @@ body:has(#screen-setup.active) #app-container {
 }
 #btn-next-round { 
     background-image: url('assets/IMG/UI/voting_score/btn_nueva_ronda.png') !important; 
-    width: 444px !important; /* +20% sobre 370px */
-    height: 151px !important; /* +20% sobre 126px */
+    width: 377px !important; /* -15% de 444px */
+    height: 128px !important; /* -15% de 151px */
     z-index: 25 !important;
     filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.6)) drop-shadow(0 10px 18px rgba(0,0,0,0.65)) !important;
 }

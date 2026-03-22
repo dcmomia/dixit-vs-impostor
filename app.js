@@ -725,7 +725,7 @@ function showRevealPanicScreen() {
                 
                 <!-- Icono Superior -->
                 <div style="flex: 0; display: flex; justify-content: center; margin-top: -6vh; margin-bottom: 1.5vh;">
-                    <img src="assets/IMG/UI/tension/btn_hora.png" alt="Hora" class="panic-time-icon" style="width: 173px; height: auto; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4));">
+                    <img src="assets/IMG/UI/tension/btn_hora.png" alt="Hora" class="panic-time-icon" style="width: 240px; height: auto; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4));">
                 </div>
                 
                 <!-- Contenedor Superior (Palabra centrada) -->
@@ -953,12 +953,18 @@ function handleRoundEnd({ impostorFound, correctVoters = [] }) {
         return `
                     <div class="astral-score-item ${borderClass}">
                         <div class="astral-rank-number ${rankClass}">
-                            ${(rankClass === "astral-rank-base")
-                                ? `<img src="assets/IMG/UI/voting_score/btn_pos_cualquiera.png" class="astral-rank-img" alt="Medalla">
-                                   <span class="rank-number-overlay">${index + 1}</span>`
-                                : (index < 3 && !isLast) 
-                                    ? `<img src="assets/IMG/UI/voting_score/btn_pos_${index + 1}.png" class="astral-rank-img" alt="${index + 1}">` 
-                                    : (index + 1)}
+                            ${(rankClass === "astral-rank-1")
+                                ? `<img src="assets/IMG/UI/voting_score/btn_pos_1.png" class="astral-rank-img" alt="1">
+                                   <span class="rank-number-overlay rank-1-blue">1</span>`
+                                : (rankClass === "astral-rank-2")
+                                    ? `<img src="assets/IMG/UI/voting_score/btn_pos_2.png" class="astral-rank-img" alt="2">
+                                       <span class="rank-number-overlay rank-2-silver">2</span>`
+                                    : (rankClass === "astral-rank-3" && !isLast)
+                                        ? `<img src="assets/IMG/UI/voting_score/btn_pos_3.png" class="astral-rank-img" alt="3">`
+                                        : (rankClass === "astral-rank-base")
+                                            ? `<img src="assets/IMG/UI/voting_score/btn_pos_cualquiera.png" class="astral-rank-img" alt="Medalla">
+                                               <span class="rank-number-overlay">${index + 1}</span>`
+                                            : (index + 1)}
                         </div>
                         
                         <div class="astral-avatar-wrapper">

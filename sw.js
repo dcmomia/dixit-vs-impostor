@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dixit-impostor-v36';
+const CACHE_NAME = 'dixit-impostor-v39';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
