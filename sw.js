@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dixit-impostor-v1';
+const CACHE_NAME = 'dixit-impostor-v36';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -32,7 +32,7 @@ self.addEventListener('fetch', event => {
                 return cachedResponse; // Devolvemos de cache primero
             }
             
-            // Si no estÃ¡ en cachÃ©, lo pedimos a la red
+            // Si no estÃƒÂ¡ en cachÃƒÂ©, lo pedimos a la red
             return fetch(event.request).then(networkResponse => {
                 // Solo guardamos si vale la pena (no es opaco, no hay error)
                 if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
@@ -65,3 +65,5 @@ self.addEventListener('activate', event => {
         })
     );
 });
+
+

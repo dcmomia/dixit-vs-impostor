@@ -1,0 +1,164 @@
+<!-- 
+    index_explicado.html - Versión comentada línea a línea de Dixit vs Impostor
+    Este archivo explica la estructura y el propósito de cada elemento HTML.
+-->
+
+<!DOCTYPE html> <!-- Define que este documento es un archivo HTML5. -->
+<html lang="es"> <!-- Establece el idioma principal como español. Impacto: Ayuda a los lectores de pantalla y buscadores. -->
+
+<head> <!-- Contiene metadatos e información técnica que no se ve directamente en la página. -->
+    <meta charset="UTF-8"> <!-- Define la codificación de caracteres universal (UTF-8) para soportar acentos y ñ. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <!-- Configura el tamaño de la pantalla. initial-scale=1.0 evita que el móvil haga zoom automático. 
+         Impacto: Esencial para que el diseño sea responsivo y se vea bien en celulares. -->
+
+    <title>Dixit vs Impostor - Game Master</title> <!-- El título que aparece en la pestaña del navegador. -->
+    
+    <link rel="stylesheet" href="style.css?v=14"> 
+    <!-- Enlaza el archivo de estilos CSS. El "?v=14" es para forzar al navegador a descargar la última versión 
+         y no usar una antigua guardada en caché. -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <!-- Optimiza la carga de fuentes externas. -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!-- Optimiza la carga de fuentes externas (seguridad). -->
+    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;800&family=Macondo&family=Raleway:wght@400;700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
+        rel="stylesheet">
+    <!-- Carga las tipografías: Fredoka (cómic), Nunito (moderna), Macondo (mística), Raleway y Lora. 
+         Impacto: Cambiar estas fuentes alteraría radicalmente la estética "premium" de la app. -->
+
+    <!-- Configuración PWA (Progressive Web App) -->
+    <link rel="manifest" href="manifest.json"> <!-- Archivo que permite instalar la web como una App en el móvil. -->
+    <meta name="theme-color" content="#1b263b"> <!-- Color de la barra de estado en dispositivos móviles Android. -->
+    <link rel="apple-touch-icon" href="assets/IMG/UI/menu/logo_dixit.png"> <!-- Icono para cuando se guarda en el escritorio de un iPhone/iPad. -->
+</head>
+
+<body> <!-- Aquí comienza todo el contenido visible de la aplicación. -->
+
+    <!-- Navegación Global (Fuera del contenedor para evitar cortes visuales en móviles) -->
+    <nav id="global-nav" class="global-nav"> <!-- Barra de navegación superior. -->
+        <button id="btn-global-back" class="btn-nav btn-nav-back" title="Atrás"></button> 
+        <!-- Botón para retroceder. App.js controla su historial. -->
+        <button id="btn-global-home" class="btn-nav btn-nav-home" title="Menú Principal"></button> 
+        <!-- Botón para ir al inicio. Reinicia el estado visual pero no los puntos necesariamente. -->
+    </nav>
+
+    <div id="app-container"> <!-- Contenedor principal que limita el ancho en pantallas grandes (max-width en CSS). -->
+        
+        <main id="main-content"> <!-- Lugar donde vive el juego. Se divide en contenido estático y dinámico. -->
+            
+            <div id="static-content"> <!-- Contenido que ya está cargado en el HTML para rapidez. -->
+                
+                <!-- PANTALLA MENÚ PRINCIPAL -->
+                <section id="screen-main-menu" class="screen main-menu-screen active"> 
+                    <!-- section: Representa una pantalla completa. .active la hace visible. -->
+                    
+                    <img src="assets/IMG/UI/menu/logo_dixit.png" alt="Dixit VS Impostor" class="main-logo"
+                        onerror="this.style.display='none'">
+                    <!-- Logo principal. onerror oculta la imagen si el archivo no existe. -->
+
+                    <div class="main-menu-actions"> <!-- Contenedor de botones centrales. -->
+                        <button id="btn-menu-new" class="btn-book">NUEVA PARTIDA</button> 
+                        <!-- Botón principal. Su clase .btn-book le da forma de libro en CSS. -->
+                        
+                        <div class="secondary-actions"> <!-- Botones secundarios. -->
+                            <button id="btn-menu-scores" class="btn-organic btn-stone">MARCADORES</button> 
+                            <!-- Botón con forma de piedra (definido en CSS). -->
+                            <button id="btn-menu-rules" class="btn-organic btn-petal">REGLAS</button> 
+                            <!-- Botón con forma de pétalo (definido en CSS). -->
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- El botón de ajustes es global y flota en la esquina -->
+                <button id="btn-menu-settings" class="btn-settings" title="Ajustes"></button>
+
+                <!-- PANTALLA SETUP (Configuración de jugadores) -->
+                <section id="screen-setup" class="screen">
+
+                    <!-- Cabecera de la pantalla de configuración -->
+                    <div class="setup-header">
+                        <h2 class="glow-text small">Nueva Partida</h2>
+                    </div>
+
+                    <div class="preset-section vortex-container"> <!-- Zona de "Vórtice mágico" para jugadores guardados. -->
+                        <div id="preset-players-grid" class="preset-grid magic-vortex">
+                            <!-- Aquí app.js inyectará los "chips" de jugadores frecuentes como DC, JAVI, etc. -->
+                        </div>
+                    </div>
+
+                    <!-- Cuerpo central con efecto de pergamino -->
+                    <div class="setup-scroll-body layout-compact">
+                        <div class="setup-parchment compact-card">
+
+                            <div class="player-input-divider">
+                                <span>O INVOCA UNO NUEVO</span> <!-- Texto decorativo. -->
+                            </div>
+
+                            <div class="player-input-container"> <!-- Campo para escribir nombres. -->
+                                <input type="text" id="player-name" placeholder="¿Quién se une al sueño?"
+                                    autocomplete="off" class="dreamy-input">
+                                <button id="add-player" class="btn-lacre" aria-label="Invocar Jugador"></button> 
+                                <!-- Botón con forma de sello de lacre rojo. -->
+                            </div>
+
+                            <!-- Lista de jugadores activos -->
+                            <div class="player-list-wrapper">
+                                <ul id="player-list">
+                                    <!-- app.js inyectará aquí los <li> con las tarjetas de cada jugador. -->
+                                </ul>
+                                <div class="scroll-fade-overlay"></div> <!-- Sombra visual para indicar que hay más lista abajo. -->
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Pie de página fijo de Setup -->
+                    <div class="setup-footer">
+                        <button id="btn-start-game" class="btn-primary" disabled>Comenzar Partida</button> 
+                        <!-- Botón para iniciar. Viene desactivado (disabled) hasta que haya min. 3 jugadores. -->
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- Contenedor para Inyección Dinámica SPA -->
+            <div id="dynamic-content"></div> 
+            <!-- IMPORTANTÍSIMO: Aquí es donde app.js "dibuja" las pantallas de categorías, reveal, timer, etc. 
+                 Si se borra, el juego se detiene tras el setup. -->
+        </main>
+    </div>
+
+    <!-- Modal de Confirmación Personalizado (Sustituye al 'alert' o 'confirm' feo del navegador) -->
+    <div id="modal-container" class="hidden"> <!-- .hidden lo mantiene invisible hasta que se necesite. -->
+        <div class="modal glass-card">
+            <p id="modal-message">¿Estás seguro?</p>
+            <div class="modal-actions">
+                <button id="modal-btn-confirm" class="btn-primary">Confirmar</button>
+                <button id="modal-btn-cancel" class="btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Global (Música de fondo) -->
+    <audio id="bg-music" src="music/Clockwork%20Garden%20Carnival.mp3" loop preload="auto"></audio> 
+    <!-- loop: Se repite infinitamente. preload: Prepara el archivo para que no tarde en sonar. -->
+
+    <!-- Enlace al Lógica del Juego -->
+    <script src="app.js?v=14"></script> <!-- Carga el cerebro de la aplicación. -->
+
+    <script>
+        // Registro de Service Worker para que la App funcione Offline (PWA)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker Registrado!', reg))
+                    .catch(err => console.error('Error al registrar SW', err));
+            });
+        }
+    </script>
+
+</body>
+
+</html>

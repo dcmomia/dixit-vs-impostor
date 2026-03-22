@@ -16,19 +16,35 @@ const state = {
     lastImpostor: null, // FIX: Para prevenir rachas repetitivas
     categories: [
         { id: 'conceptos', name: 'Conceptos', icon: 'ðŸ’¡' },
-        { id: 'peliculas', name: 'PelÃ­culas', icon: 'ðŸŽ¬' },
+        { id: 'peliculas', name: 'Películas', icon: 'ðŸŽ¬' },
         { id: 'lugares', name: 'Lugares', icon: 'ðŸ“' },
         { id: 'refranes', name: 'Refranes', icon: 'ðŸ—£ï¸' },
         { id: 'acciones', name: 'Acciones', icon: 'ðŸŽ­' }
-    ]
+    ],
+    globalRanking: JSON.parse(localStorage.getItem('dixit_global_ranking')) || {}
 };
 
 // Jugadores recurrentes (plantilla predefinida)
 const PRESET_PLAYERS = ['DC', 'JAVI', 'AG', 'ELI', 'JUAN', 'JUANI', 'IRENE', 'TINA', 'DIEGO J', 'SANTI', 'TRINI'];
 
+// Títulos nativos por cada Preset
+const PLAYER_TITLES = {
+    'DC': 'El ingenioso',
+    'JAVI': 'El sensato',
+    'AG': 'La energía',
+    'ELI': 'La ambiciosa',
+    'JUAN': 'Don de gentes',
+    'JUANI': 'La artista',
+    'IRENE': 'La protectora',
+    'TINA': 'La bailarina',
+    'DIEGO J': 'El vendedor',
+    'SANTI': 'El feliz',
+    'TRINI': 'La viajera'
+};
+
 /**
  * Genera el HTML para el avatar de un jugador intentando cargar su imagen si existe.
- * Si la imagen (nombre.png) no se encuentra (404), el atributo onerror la reemplaza dinÃ¡micamente
+ * Si la imagen (nombre.png) no se encuentra (404), el atributo onerror la reemplaza dinámicamente
  * por su emoji de fallback asignado en state.playerAvatars
  */
 function getAvatarHTML(name, sizeClass = '') {
@@ -93,7 +109,7 @@ const UI = {
     startGameBtn: document.getElementById('btn-start-game')
 };
 
-// â”€â”€ Gestor MÃ¡gico de Audio â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€ Gestor Mágico de Audio â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const audioManager = {
     bgMusic: document.getElementById('bg-music'),
     isMuted: false,
@@ -101,8 +117,8 @@ const audioManager = {
     init() {
         if (!this.bgMusic) return;
         this.bgMusic.volume = 0.5; // Volumen inmersivo
-        
-        // El navegador requiere interacciÃ³n humana para reproducir audio
+
+        // El navegador requiere interacción humana para reproducir audio
         const triggerPlay = () => {
             if (!this.hasStarted && !this.isMuted) {
                 this.bgMusic.play().catch(e => console.warn("Autoaplay prevenido por el usuario:", e));
@@ -126,11 +142,11 @@ const audioManager = {
     }
 };
 
-// â”€â”€ NavegaciÃ³n principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€ Navegación principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Pantallas ESTÃTICAS (existen en el HTML como <section>)
-const STATIC_SCREENS = ['screen-main-menu', 'screen-setup'];
+const STATIC_SCREENS = ['screen-main-menu', 'screen-setup', 'screen-global-scores'];
 let currentTimerInterval = null;
-let navigationHistory = [{ id: 'screen-main-menu', data: {} }]; // Rastreo para botÃ³n atrÃ¡s
+let navigationHistory = [{ id: 'screen-main-menu', data: {} }]; // Rastreo para botón atrás
 let isStartingRound = false;
 let panicInterval = null;
 
@@ -149,6 +165,9 @@ function updateGlobalNav(screenId) {
     if (globalNav) {
         globalNav.style.display = (screenId === 'screen-main-menu' || screenId === 'main-menu') ? 'none' : 'flex';
     }
+    // Restaurar botón de ajustes (puede ser ocultado por pantallas específicas como 'score')
+    const settingsBtn = document.getElementById('btn-menu-settings');
+    if (settingsBtn) settingsBtn.style.display = 'block';
 }
 
 function navigateTo(screenId, data = {}, recordHistory = true) {
@@ -163,25 +182,25 @@ function navigateTo(screenId, data = {}, recordHistory = true) {
         }
     }
 
-    // Visibilidad de controles de navegaciÃ³n globales
+    // Visibilidad de controles de navegación globales
     updateGlobalNav(screenId);
 
-    // Si la pantalla objetivo es estÃ¡tica, mostrar/ocultar secciones
+    // Si la pantalla objetivo es estática, mostrar/ocultar secciones
     if (STATIC_SCREENS.includes(screenId) || screenId === 'main-menu') {
         const targetId = screenId === 'main-menu' ? 'screen-main-menu' : screenId;
-        // Ocultar menÃº y setup
+        // Ocultar menú y setup
         STATIC_SCREENS.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.remove('active');
         });
 
-        // Limpiar contenido dinÃ¡mico
+        // Limpiar contenido dinámico
         if (UI.dynamicContent) UI.dynamicContent.innerHTML = '';
 
         const target = document.getElementById(targetId);
         if (target) target.classList.add('active');
 
-        // Restaurar secciÃ³n setup en main-content si fue reemplazada
+        // Restaurar sección setup en main-content si fue reemplazada
         if (screenId === 'screen-setup') {
             renderPresetPlayers();
             renderPlayerList();
@@ -203,11 +222,15 @@ function navigateTo(screenId, data = {}, recordHistory = true) {
                     };
                 }
             }
-            // Focus automÃ¡tico ELIMINADO para evitar que salte el teclado virtual en mÃ³viles
-            // y tape la interfaz. El usuario deberÃ¡ tocar explÃ­citamente el campo de texto.
+            // Focus automático ELIMINADO para evitar que salte el teclado virtual en móviles
+            // y tape la interfaz. El usuario deberá tocar explícitamente el campo de texto.
+        }
+
+        if (screenId === 'screen-global-scores') {
+            renderGlobalScores();
         }
     } else {
-        // Pantalla DINÃMICA: ocultar estÃ¡ticas y cargar contenido en main-content
+        // Pantalla DINÃMICA: ocultar estáticas y cargar contenido en main-content
         STATIC_SCREENS.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.remove('active');
@@ -217,11 +240,11 @@ function navigateTo(screenId, data = {}, recordHistory = true) {
         if (screenId === 'screen-categories') renderCategories();
     }
 }
-// â”€â”€ InicializaciÃ³n â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€ Inicialización â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.addEventListener('DOMContentLoaded', () => {
     audioManager.init(); // Inicializar motor de audio
     setupEventListeners();
-    requestWakeLock(); // Activar bloqueo de suspensiÃ³n
+    requestWakeLock(); // Activar bloqueo de suspensión
 
     // Skill pwa-offline-setup: Reconectar WakeLock si minimizan la app
     document.addEventListener('visibilitychange', async () => {
@@ -237,7 +260,7 @@ async function requestWakeLock() {
     try {
         if ('wakeLock' in navigator) {
             wakeLock = await navigator.wakeLock.request('screen');
-            console.log('âœ¨ Pantalla bloqueada para el sueÃ±o mÃ­stico...');
+            console.log('âœ¨ Pantalla bloqueada para el sueño místico...');
         }
     } catch (err) {
         console.warn('No se pudo activar el Wake Lock:', err);
@@ -264,17 +287,17 @@ function setupEventListeners() {
         setTimeout(() => ripple.remove(), 800);
     }
 
-    // MenÃº Principal
+    // Menú Principal
     UI.btnMenuNew.addEventListener('click', (e) => {
         createLiquidRipple(e, UI.btnMenuNew);
-        
-        // Generar semillas de diente de leÃ³n
+
+        // Generar semillas de diente de león
         const container = document.createElement('div');
         container.className = 'dandelion-container';
         document.body.appendChild(container);
 
         const rect = UI.btnMenuNew.getBoundingClientRect();
-        // Ajuste: El centro del botÃ³n SVG para que las semillas salgan del nÃºcleo
+        // Ajuste: El centro del botón SVG para que las semillas salgan del núcleo
         const startX = rect.left + rect.width / 2;
         const startY = rect.top + rect.height / 2;
 
@@ -287,7 +310,7 @@ function setupEventListeners() {
             container.appendChild(seed);
         }
 
-        // Retrasar navegaciÃ³n para el efecto visual
+        // Retrasar navegación para el efecto visual
         setTimeout(() => {
             navigateTo('screen-setup');
             setTimeout(() => {
@@ -298,20 +321,35 @@ function setupEventListeners() {
 
 
     UI.btnMenuRules.addEventListener('click', () => {
-        const rules = "ðŸŽ® CÃ“MO JUGAR\n\n1. El GM asigna en secreto una palabra a cada jugador.\n2. El IMPOSTOR recibe una palabra diferente o nada.\n3. Jugad cartas de Dixit sin revelar la palabra.\n4. Votad: Â¿quiÃ©n es el Impostor?\n5. Si el Impostor no es descubierto â†’ gana. Si es descubierto, puede salvar puntos adivinando la palabra secreta.";
+        const rules = `📜 REGLAS DEL DESTINO
+
+1. SELECCIÓN: Todos reciben la PALABRA SECRETA, excepto el IMPOSTOR.
+2. ACCIÓN: Cada uno juega una carta física de Dixit que evoque la palabra.
+3. DEBATE: El Impostor debe fingir que conoce la palabra para no ser descubierto.
+4. VOTACIÓN: Al final, señalad al unísono a quién creéis que es el Impostor.
+
+🏆 PUNTUACIÓN:
+• Si NADIE descubre al Impostor: Impostor +6 pts.
+• Si TODOS descubren al Impostor: Impostor -1 pt / Inocentes +2 pts.
+• Si hay dudas: Los puntos se reparten según el éxito del engaño.`;
         showConfirm(rules, () => { });
         document.getElementById('modal-btn-cancel').classList.add('hidden');
+    });
+
+    UI.btnMenuScores.addEventListener('click', (e) => {
+        createLiquidRipple(e, UI.btnMenuScores);
+        navigateTo('screen-global-scores');
     });
 
     UI.btnMenuSettings.addEventListener('click', () => {
         const estado = audioManager.isMuted ? "REACTIVAR" : "SILENCIAR";
         const icon = audioManager.isMuted ? "ðŸ”Š" : "ðŸ”‡";
-        
-        showConfirm(`âš™ï¸ AJUSTES DE AUDIO\n\nÂ¿Deseas ${estado} ${icon} la melodÃ­a "Clockwork Garden Carnival"?`, () => {
+
+        showConfirm(`âš™ï¸ AJUSTES DE AUDIO\n\nÂ¿Deseas ${estado} ${icon} la melodía "Clockwork Garden Carnival"?`, () => {
             audioManager.toggleMute();
         });
-        
-        // Asegurarnos de que el botÃ³n cancelar aparezca (puede estar oculto de otros modales)
+
+        // Asegurarnos de que el botón cancelar aparezca (puede estar oculto de otros modales)
         document.getElementById('modal-btn-cancel').classList.remove('hidden');
     });
 
@@ -320,21 +358,21 @@ function setupEventListeners() {
     UI.playerNameInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') addPlayer(e);
     });
-    // btn-start-game listener extraÃ­do para evitar dual-fire con navigateTo()
+    // btn-start-game listener extraído para evitar dual-fire con navigateTo()
 }
 
 function showScreen(screenId, data = {}) {
-    // Renderizado dinÃ¡mico de pantallas
+    // Renderizado dinámico de pantallas
     if (screenId === 'screen-categories') {
         UI.dynamicContent.innerHTML = `
             <section id="screen-categories" class="screen active">
                 <header>
-                    <h2 class="glow-text small">CategorÃ­as</h2>
-                    <p class="subtitle">Selecciona la temÃ¡tica</p>
+                    <h2 class="glow-text small">Categorías</h2>
+                    <p class="subtitle">Selecciona la temática</p>
                 </header>
                 
                 <div class="category-grid" id="category-grid">
-                    <!-- CategorÃ­as inyectadas -->
+                    <!-- Categorías inyectadas -->
                 </div>
                 
                 <div id="category-error" class="error-toast hidden"></div>
@@ -379,7 +417,7 @@ function showScreen(screenId, data = {}) {
                             <div class="card-frame card-frame--inocente"></div>
                         </div>
 
-                        <!-- CARA TRASERA: RevelaciÃ³n (tras el flip 3D) -->
+                        <!-- CARA TRASERA: Revelación (tras el flip 3D) -->
                         <div class="reveal-card__face reveal-card__back">
                             <img
                                 src="${backImgPath}"
@@ -401,10 +439,10 @@ function showScreen(screenId, data = {}) {
 
                 </div>
                 
-                <!-- Botones onÃ­ricos -->
+                <!-- Botones oníricos -->
                 <div class="reveal-actions">
                     <div class="reveal-btn-container">
-                        <button id="btn-reveal" class="btn-dreamy btn-dreamy--hold btn-hold-dimmed" aria-label="MantÃ©n pulsado"></button>
+                        <button id="btn-reveal" class="btn-dreamy btn-dreamy--hold btn-hold-dimmed" aria-label="Mantén pulsado"></button>
                     </div>
                     <button id="btn-next-player" class="btn-dreamy btn-dreamy--ready btn-locked" aria-label="Listo"></button>
                 </div>
@@ -416,8 +454,8 @@ function showScreen(screenId, data = {}) {
         showTimerScreen();
     } else if (screenId === 'screen-panic') {
         showRevealPanicScreen();
-    } else if (screenId === 'screen-voting') {
-        showVotingScreen();
+    } else if (screenId === 'screen-aciertos') {
+        showAciertosScreen();
     } else if (screenId === 'screen-score') {
         showScoreScreen();
     }
@@ -446,7 +484,7 @@ async function selectCategory(catId) {
     state.selectedCategory = catId;
     const errorToast = document.getElementById('category-error');
 
-    // Cargar palabras si no estÃ¡n cargadas
+    // Cargar palabras si no están cargadas
     if (!state.gameData) {
         try {
             const response = await fetch('data/words.json');
@@ -480,24 +518,24 @@ function startRoleAssignment() {
     // Si se agotan, resetear la lista (o avisar)
     if (availableWords.length === 0) {
         if (errorToast) {
-            errorToast.textContent = "Â¡Se han agotado las palabras de esta categorÃ­a! Reseteando base de datos interna...";
+            errorToast.textContent = "Â¡Se han agotado las palabras de esta categoría! Reseteando base de datos interna...";
             errorToast.classList.remove('hidden');
         }
         state.usedWords = [];
         availableWords = words;
     }
 
-    // SelecciÃ³n segura criptogrÃ¡fica para la palabra
+    // Selección segura criptográfica para la palabra
     const wordIndex = getRandomSecure(availableWords.length);
     state.secretWord = availableWords[wordIndex];
     state.usedWords.push(state.secretWord);
 
-    // SelecciÃ³n segura criptogrÃ¡fica para el impostor con sistema anti-racha mitigada
+    // Selección segura criptográfica para el impostor con sistema anti-racha mitigada
     let impostorIndex = getRandomSecure(state.players.length);
     let chosenImpostor = state.players[impostorIndex];
 
     // Si toca el mismo de la ronda anterior, volvemos a tirar los dados una vez 
-    // (reduce brutalmente la repeticiÃ³n seguida pero no la hace "imposible")
+    // (reduce brutalmente la repetición seguida pero no la hace "imposible")
     if (chosenImpostor === state.lastImpostor && state.players.length > 3) {
         impostorIndex = getRandomSecure(state.players.length);
         chosenImpostor = state.players[impostorIndex];
@@ -515,7 +553,7 @@ function startRoleAssignment() {
     navigateTo('screen-reveal', { player: state.players[0], index: 0 });
 }
 
-// Generador CriptogrÃ¡fico de NÃºmeros Aleatorios
+// Generador Criptográfico de Números Aleatorios
 function getRandomSecure(max) {
     if (window.crypto && window.crypto.getRandomValues) {
         const array = new Uint32Array(1);
@@ -539,7 +577,7 @@ function setupRevealLogic(playerName, index) {
         // Ahora TODOS giran la carta en 3D para ver el reverso
         card.classList.add('is-flipped');
 
-        // MECÃ NICA NUEVA: Si es impostor, cambiamos el fondo de la pantalla a bg_tension_dark (oscuro)
+        // MECáNICA NUEVA: Si es impostor, cambiamos el fondo de la pantalla a bg_tension_dark (oscuro)
         if (playerRole.isImpostor) {
             const screen = document.getElementById('screen-reveal');
             if (screen) screen.classList.add('impostor-reveal-active');
@@ -584,7 +622,7 @@ function setupRevealLogic(playerName, index) {
 }
 
 function showTimerScreen() {
-    // Elegir aleatoriamente quiÃ©n empieza a hablar (cualquier jugador, incl. el impostor)
+    // Elegir aleatoriamente quién empieza a hablar (cualquier jugador, incl. el impostor)
     const startIndex = getRandomSecure(state.players.length);
     const startPlayer = state.players[startIndex];
 
@@ -628,12 +666,6 @@ function showTimerScreen() {
                 <button id="btn-time-add" class="btn-preset btn-preset--side btn-preset--right">+15s</button>
             </div>
 
-            <!-- Columna Derecha (Presets Rápidos) -->
-            <div class="right-presets-column">
-                <button class="btn-preset btn-preset--column" data-time="60">1:00</button>
-                <button class="btn-preset btn-preset--column" data-time="90">1:30</button>
-                <button class="btn-preset btn-preset--column" data-time="120">2:00</button>
-            </div>
             
             <div class="bottom-action-container">
                 <button id="btn-all-ready" class="btn-parchment-action" aria-label="Â¡Cartas en la mesa!"></button>
@@ -669,15 +701,6 @@ function showTimerScreen() {
     document.getElementById('btn-time-add').onclick = () => { timeLeft += 15; updateDisplay(); };
     document.getElementById('btn-time-sub').onclick = () => { timeLeft -= 15; updateDisplay(); };
 
-    document.querySelectorAll('.time-presets .btn-preset').forEach(btn => {
-        btn.onclick = (e) => {
-            const time = parseInt(e.target.dataset.time, 10);
-            if (!isNaN(time)) {
-                timeLeft = time;
-                updateDisplay();
-            }
-        };
-    });
 
     document.getElementById('btn-all-ready').onclick = () => {
         if (currentTimerInterval) clearInterval(currentTimerInterval);
@@ -689,29 +712,36 @@ function showRevealPanicScreen() {
     UI.dynamicContent.innerHTML = `
         <section id="screen-panic" class="screen active" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
             
-            <!-- FASE 1: ESPERA (Piedra rÃºnica con luz giratoria) -->
+            <!-- FASE 1: ESPERA (Piedra rúnica con luz giratoria) -->
             <div id="panic-phase-1" style="height: 100%; display: flex; align-items: center; justify-content: center; position: relative; overflow: visible;">
                 <div class="panic-light-wrap">
                     <div class="btn-dreamy--panic pulse-card" style="position: relative; z-index: 1;"></div>
-                    <img src="assets/IMG/UI/tension/btn_luz_reveal.png" class="panic-magic-light" alt="Luz mÃ¡gica">
+                    <img src="assets/IMG/UI/tension/btn_luz_reveal.png" class="panic-magic-light" alt="Luz mágica">
                 </div>
             </div>
 
             <!-- FASE 2 y 3: PANICO Y DEBATE -->
-            <div id="panic-phase-2" class="hidden" style="text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: flex-start; padding: 2vh 0; box-sizing: border-box;">
+            <div id="panic-phase-2" class="hidden" style="text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: flex-start; padding-top: 5vh; box-sizing: border-box;">
                 
-                <!-- Contenedor Superior (Palabra pegada arriba) -->
-                <div style="flex: 0; display: flex; flex-direction: column; justify-content: flex-start; padding-top: 5vh; gap: 2vh;">
-                    <h2 class="shamanic-glyph">${escapeHTML(state.secretWord)}</h2>
+                <!-- Icono Superior -->
+                <div style="flex: 0; display: flex; justify-content: center; margin-top: -6vh; margin-bottom: 1.5vh;">
+                    <img src="assets/IMG/UI/tension/btn_hora.png" alt="Hora" class="panic-time-icon" style="width: 173px; height: auto; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4));">
                 </div>
                 
-                <!-- Contenedor Central (Cuenta atrÃ¡s O BotÃ³n Votar) -->
+                <!-- Contenedor Superior (Palabra centrada) -->
+                <div style="flex: 0; display: flex; flex-direction: column; justify-content: center; min-height: 25vh; gap: 2vh;">
+                    <h2 class="shamanic-glyph" style="margin: 0; padding-top: 4vh;">${escapeHTML(state.secretWord)}</h2>
+                </div>
+                
+                <!-- Contenedor Central (Cuenta atrás O Botón Votar) -->
                 <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
                     <div id="panic-countdown" class="panic-number" style="margin: 0;">
                         <img src="assets/IMG/UI/tension/cuenta_atras/5.png" alt="5">
                     </div>
                     <div id="panic-debate-ui" class="hidden" style="display: flex; align-items: center; justify-content: center; width: 100%;">
-                        <button id="btn-to-vote" class="btn-votar-action"></button>
+                        <button id="btn-to-vote" class="btn-confirm-votos-action">
+                            <img src="assets/IMG/UI/voting_score/btn_confirmar_votos.png" alt="Confirmar" style="width: 250px; max-width: 70vw;">
+                        </button>
                     </div>
                 </div>
             </div>
@@ -737,78 +767,59 @@ function showRevealPanicScreen() {
                 void countdownEl.offsetWidth;
             } else {
                 clearInterval(panicInterval);
-                countdownEl.classList.add('hidden');
-                document.getElementById('panic-debate-ui').classList.remove('hidden');
-                // Cambio de fondo: ahora es la fase de votaciÃ³n
-                document.getElementById('screen-panic').classList.add('voting-mode');
+                navigateTo('screen-aciertos');
             }
         }, 1000);
     };
-
-    document.getElementById('btn-to-vote').onclick = () => {
-        navigateTo('screen-voting');
-    };
 }
 
-function showVotingScreen() {
-    // Lista de jugadores que no son el impostor
-    const voters = state.players.filter(p => p !== state.impostorName);
+function showAciertosScreen() {
+    const playersExceptImpostor = state.players.filter(p => !state.roles.find(r => r.name === p).isImpostor);
 
     UI.dynamicContent.innerHTML = `
-        <section id="screen-voting" class="screen active">
-            <header>
-                <h2 class="glow-text small">VotaciÃ³n</h2>
-                <p class="subtitle">Â¿QuiÃ©nes acertaron al impostor?</p>
-            </header>
-            
-            <div class="voting-list">
-                ${voters.map(name => `
-                    <div class="voting-row" role="checkbox" aria-checked="false" tabindex="0" data-name="${escapeHTML(name)}">
-                        <div class="player-info">
-                            ${getAvatarHTML(name)}
-                            <span class="player-name">${escapeHTML(name)}</span>
-                        </div>
-                        <div class="vote-indicator">
-                            <span class="magic-spark">âœ¨</span>
-                        </div>
-                        <input type="checkbox" class="vote-check-hidden" data-name="${escapeHTML(name)}">
-                    </div>
-                `).join('')}
+        <section id="screen-aciertos" class="screen score-setup-screen active">
+            <div class="aciertos-header">
+                <img src="assets/IMG/UI/voting_score/btn_acertarimpostor.png" alt="Acierta al Impostor" class="img-header-aciertos">
             </div>
-            
-            <button id="btn-confirm-votes" class="btn-primary">Confirmar Votos</button>
+
+            <div class="aciertos-grid-container">
+                <div class="aciertos-grid grid-count-${playersExceptImpostor.length}">
+                    ${playersExceptImpostor.map(name => `
+                        <div class="vote-avatar-card" data-name="${escapeHTML(name)}" role="button" aria-pressed="false" tabindex="0">
+                            <div class="vote-avatar-frame-wrapper">
+                                ${getSetupAvatarHTML(name)}
+                            </div>
+                            <div class="vote-player-name">${escapeHTML(name)}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div class="aciertos-footer">
+                <button id="btn-confirm-aciertos" class="btn-confirm-votos-action">
+                    <img src="assets/IMG/UI/voting_score/btn_confirmar_votos.png" alt="Confirmar">
+                </button>
+            </div>
         </section>
     `;
 
-    // LÃ³gica de interacciÃ³n para las filas
-    const rows = document.querySelectorAll('.voting-row');
-    rows.forEach(row => {
-        const toggle = () => {
-            const isVoted = row.classList.toggle('is-voted');
-            row.setAttribute('aria-checked', isVoted);
-            const checkbox = row.querySelector('.vote-check-hidden');
-            if (checkbox) checkbox.checked = isVoted;
-        };
-
-        row.onclick = toggle;
-        row.onkeydown = (e) => {
-            if (e.key === ' ' || e.key === 'Enter') {
-                e.preventDefault();
-                toggle();
-            }
+    // Lógica de selección (similar a la anterior pero adaptada)
+    const cards = document.querySelectorAll('.vote-avatar-card');
+    cards.forEach(card => {
+        card.onclick = () => {
+            const isSelected = card.classList.toggle('is-selected');
+            card.setAttribute('aria-pressed', isSelected);
         };
     });
 
-    document.getElementById('btn-confirm-votes').onclick = () => {
-        const checks = document.querySelectorAll('.vote-check-hidden');
+    document.getElementById('btn-confirm-aciertos').onclick = () => {
+        const selectedCards = document.querySelectorAll('.vote-avatar-card.is-selected');
         const correctVoters = [];
-        checks.forEach(c => {
-            if (c.checked) correctVoters.push(c.dataset.name);
+        selectedCards.forEach(card => {
+            correctVoters.push(card.dataset.name);
         });
 
         state.lastCorrectVoters = correctVoters;
-
-        // El impostor no tiene salvaciÃ³n en las nuevas reglas, directos a la asignaciÃ³n de puntos
         handleRoundEnd({
             impostorFound: true,
             correctVoters: state.lastCorrectVoters
@@ -817,10 +828,7 @@ function showVotingScreen() {
     };
 }
 
-// Fase de salvaciÃ³n eliminada
-
 function handleRoundEnd({ impostorFound, correctVoters = [] }) {
-    // Inicializar scores y limpiar deltas de ronda anterior
     state.roundScores = {};
     state.roundReasons = {};
 
@@ -831,114 +839,169 @@ function handleRoundEnd({ impostorFound, correctVoters = [] }) {
     });
 
     const totalPlayers = state.players.length;
-    const innocentCount = totalPlayers - 1; // Todos menos el impostor
+    const innocentCount = totalPlayers - 1;
     const numAcertantes = correctVoters.length;
 
     if (!impostorFound || numAcertantes === 0) {
-        // Nadie acierta (Impostor invicto)
         state.scores[state.impostorName] += 6;
         state.roundScores[state.impostorName] = 6;
-        state.roundReasons[state.impostorName] = "ðŸ‘» Invicto (Nadie acierta)";
+        state.roundReasons[state.impostorName] = "Invicto (Nadie acierta)";
     } else {
         if (numAcertantes === 1) {
-            // Solo 1 acierta: Impostor +4, Acertante +6
             state.scores[state.impostorName] += 4;
             state.roundScores[state.impostorName] = 4;
-            state.roundReasons[state.impostorName] = "ðŸ¤¡ Descubierto por 1";
+            state.roundReasons[state.impostorName] = "Descubierto por 1";
 
             state.scores[correctVoters[0]] += 6;
             state.roundScores[correctVoters[0]] = 6;
-            state.roundReasons[correctVoters[0]] = "ðŸŽ¯ Ãšnico Acertante";
+            state.roundReasons[correctVoters[0]] = "Único Acertante";
         } else if (numAcertantes < innocentCount / 2) {
-            // MinorÃ­a acierta: Impostor +2, Acertantes +4
             state.scores[state.impostorName] += 2;
             state.roundScores[state.impostorName] = 2;
-            state.roundReasons[state.impostorName] = "ðŸ¤¡ Descubierto por minorÃ­a";
+            state.roundReasons[state.impostorName] = "Descubierto por minoría";
 
             correctVoters.forEach(name => {
                 state.scores[name] += 4;
                 state.roundScores[name] = 4;
-                state.roundReasons[name] = "âœ”ï¸ Acierto (MinorÃ­a)";
+                state.roundReasons[name] = "Acierto (Minoría)";
             });
         } else if (numAcertantes === innocentCount / 2) {
-            // Empate (50%): Impostor +1, Acertantes +3
             state.scores[state.impostorName] += 1;
             state.roundScores[state.impostorName] = 1;
-            state.roundReasons[state.impostorName] = "âš–ï¸ Descubierto por la mitad";
+            state.roundReasons[state.impostorName] = "Descubierto por la mitad";
 
             correctVoters.forEach(name => {
                 state.scores[name] += 3;
                 state.roundScores[name] = 3;
-                state.roundReasons[name] = "âœ”ï¸ Acierto (Empate)";
+                state.roundReasons[name] = "Acierto (Empate)";
             });
         } else if (numAcertantes > innocentCount / 2 && numAcertantes < innocentCount) {
-            // MayorÃ­a acierta: Impostor 0, Acertantes +2
             state.scores[state.impostorName] += 0;
             state.roundScores[state.impostorName] = 0;
-            state.roundReasons[state.impostorName] = "ðŸš¨ Descubierto por mayorÃ­a";
+            state.roundReasons[state.impostorName] = "Descubierto por mayoría";
 
             correctVoters.forEach(name => {
                 state.scores[name] += 2;
                 state.roundScores[name] = 2;
-                state.roundReasons[name] = "âœ”ï¸ Acierto (MayorÃ­a)";
+                state.roundReasons[name] = "Acierto (Mayoría)";
             });
         } else if (numAcertantes === innocentCount) {
-            // Todos aciertan: Impostor -1, Acertantes +2
             state.scores[state.impostorName] -= 1;
             state.roundScores[state.impostorName] = -1;
-            state.roundReasons[state.impostorName] = "ðŸ’€ Pillado por TODOS";
+            state.roundReasons[state.impostorName] = "Pillado por TODOS";
 
             correctVoters.forEach(name => {
                 state.scores[name] += 2;
                 state.roundScores[name] = 2;
-                state.roundReasons[name] = "âœ”ï¸ Acierto UnÃ¡nime";
+                state.roundReasons[name] = "Acierto Unánime";
             });
         }
     }
 }
 
-function showScoreScreen() {
-    // Ordenar por puntuaciÃ³n descendente
+  function showScoreScreen() {
     const sortedPlayers = [...state.players].sort((a, b) => (state.scores[b] || 0) - (state.scores[a] || 0));
 
-    // FIX: AÃ±adido id="screen-score" y clase score-screen con botones de sumar y restar
+    const getPlayerRoleText = (name) => {
+        const playerRoleObj = state.roles.find(r => r.name === name);
+        if (playerRoleObj && playerRoleObj.isImpostor) return 'El Impostor';
+        return PLAYER_TITLES[name.toUpperCase()] || 'Participante Astral';
+    };
+
     UI.dynamicContent.innerHTML = `
-        <section id="screen-score" class="screen score-screen active">
-            <h2>Marcadores ðŸ†</h2>
-            <div class="score-list glass-card">
+        <section id="screen-score" class="screen score-screen astral-score-screen active">
+            
+            <header class="astral-header">
+                <img src="assets/IMG/UI/voting_score/btn_marcadores.png" alt="Marcadores" class="astral-title-img">
+            </header>
+
+            <div class="astral-score-list">
                 ${sortedPlayers.map((name, index) => {
         const delta = state.roundScores[name] || 0;
-        const reason = state.roundReasons[name] || "";
-        const deltaHTML = delta > 0 ? `<div class="round-delta"><span class="delta-pts">+${delta}</span> <span class="delta-reason">${reason}</span></div>` : (reason ? `<div class="round-delta"><span class="delta-pts muted">+0</span> <span class="delta-reason muted">${reason}</span></div>` : '');
+        const deltaText = delta > 0 ? `+${delta}` : `+0`;
         const slugId = name.toLowerCase().replace(/\s+/g, '-');
+        const roleText = getPlayerRoleText(name);
+        
+        let rankClass = "astral-rank-base";
+        let rankIcon = "";
+        let borderClass = "astral-item-base";
+        let isLast = index === sortedPlayers.length - 1;
+        
+        if (index === 0) {
+            rankClass = "astral-rank-1";
+            borderClass = "astral-item-gold";
+        } else if (index === 1) {
+            rankClass = "astral-rank-2";
+            borderClass = "astral-item-silver";
+        } else if (index === 2 && !isLast) {
+            rankClass = "astral-rank-3";
+            borderClass = "astral-item-bronze";
+        }
+
+        if (isLast && index > 0) {
+            rankClass = "astral-rank-last";
+            borderClass = "astral-item-red";
+        }
+
+        const isFirst = index === 0;
+        const isImpostor = !!(state.roles.find(r => r.name === name && r.isImpostor));
+        
+        let extraIcons = "";
+        if (isFirst) extraIcons += `<img src="assets/IMG/UI/voting_score/btn_corona.png" class="astral-crown-badge" alt="Corona">`;
+        if (isImpostor) extraIcons += `<img src="assets/IMG/UI/voting_score/btn_daga.png" class="astral-dagger-badge" alt="Daga">`;
 
         return `
-                    <div class="score-item ${index === 0 && state.scores[name] > 0 ? 'winner' : ''}">
-                        <span class="rank">${index + 1}</span>
-                        <div class="name">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                ${getAvatarHTML(name)}
-                                <span>${escapeHTML(name)}</span>
-                            </div>
-                            ${deltaHTML}
+                    <div class="astral-score-item ${borderClass}">
+                        <div class="astral-rank-number ${rankClass}">
+                            ${(rankClass === "astral-rank-base")
+                                ? `<img src="assets/IMG/UI/voting_score/btn_pos_cualquiera.png" class="astral-rank-img" alt="Medalla">
+                                   <span class="rank-number-overlay">${index + 1}</span>`
+                                : (index < 3 && !isLast) 
+                                    ? `<img src="assets/IMG/UI/voting_score/btn_pos_${index + 1}.png" class="astral-rank-img" alt="${index + 1}">` 
+                                    : (index + 1)}
                         </div>
-                        <div class="score-edit-group">
-                            <button class="btn-score-mod" data-action="minus" data-player="${escapeHTML(name)}">-</button>
-                            <span class="score-display" id="score-val-${slugId}">${state.scores[name] || 0}</span>
-                            <button class="btn-score-mod" data-action="plus" data-player="${escapeHTML(name)}">+</button>
+                        
+                        <div class="astral-avatar-wrapper">
+                            ${getAvatarHTML(name, 'astral-avatar')}
+                            ${extraIcons}
+                        </div>
+                        
+                        <div class="astral-player-info">
+                            <span class="astral-player-name">${escapeHTML(name)}</span>
+                            <span class="astral-player-role">${roleText}</span>
+                        </div>
+                        
+                        <div class="astral-delta-pts ${delta > 0 ? 'delta-positive' : ''}" 
+                             data-reason="${escapeHTML(state.roundReasons[name] || '')}" 
+                             title="Click para ver razón">
+                            ${deltaText}
+                        </div>
+                        
+                        <div class="astral-total-pts">
+                            <span id="score-val-${slugId}">${state.scores[name] || 0}</span>
+                        </div>
+                        
+                        <div class="astral-score-controls">
+                            <button class="btn-score-mod astral-mod" data-action="minus" data-player="${escapeHTML(name)}">-</button>
+                            <button class="btn-score-mod astral-mod" data-action="plus" data-player="${escapeHTML(name)}">+</button>
                         </div>
                     </div>
                 `}).join('')}
             </div>
-            <div class="score-actions">
-                <button id="btn-next-round" class="btn-primary">Nueva Ronda ðŸ”„</button>
-                <button id="btn-reset-scores" class="btn-secondary">Resetear Marcadores âš ï¸</button>
-                <button id="btn-exit-game" class="btn-danger">Salir al Inicio ðŸšª</button>
+
+            <div class="astral-footer-actions">
+                <button id="btn-exit-game" class="btn-astral-action" aria-label="Finalizar Partida"></button>
+                <button id="btn-next-round" class="btn-astral-action primary-astral" aria-label="Nueva Ronda"></button>
+                <button id="btn-reset-scores" class="btn-astral-action" aria-label="Resetear Puntos"></button>
             </div>
         </section>
     `;
 
-    // Listeners para botones de puntuaciÃ³n
+    // Ocultar botón de ajustes solo en esta pantalla
+    const settingsBtn = document.getElementById('btn-menu-settings');
+    if (settingsBtn) settingsBtn.style.display = 'none';
+
+    // Listeners para botones de puntuación
     document.querySelectorAll('.btn-score-mod').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const player = e.target.dataset.player;
@@ -951,197 +1014,237 @@ function showScoreScreen() {
 
             state.scores[player] = currentScore;
             document.getElementById('score-val-' + playerSlug).textContent = currentScore;
-
-            // Re-render opcional completo para reordenar
-            // showScoreScreen();
         });
     });
 
-    document.getElementById('btn-next-round').onclick = () => {
-        navigateTo('screen-categories');
-    };
-
-    document.getElementById('btn-reset-scores').onclick = () => {
-        showConfirm("Â¿Seguro que quieres resetear todos los puntos?", () => {
-            state.players.forEach(p => state.scores[p] = 0);
-            showScoreScreen();
+    // Listener para mostrar la razón del delta
+    document.querySelectorAll('.astral-delta-pts').forEach(delta => {
+        delta.style.cursor = 'pointer';
+        delta.addEventListener('click', (e) => {
+            const reason = e.target.dataset.reason;
+            if (reason) {
+                showAstralToast(reason);
+            }
         });
-    };
+    });
 
-    document.getElementById('btn-exit-game').onclick = () => {
-        showConfirm("Â¿Volver al menÃº principal? Se perderÃ¡ el progreso de esta ronda.", () => {
-            // Limpiamos el contenido dinÃ¡mico 
-            UI.dynamicContent.innerHTML = '';
-            // Reset state partial
-            state.gameData = null;
-            state.scores = {};
-            state.players = [];
-            state.playerAvatars = {};
-            state.avatarPool = ['ðŸ°', 'ðŸ¦Š', 'ðŸ»', 'ðŸ¼', 'ðŸ¨', 'ðŸ¯', 'ðŸ¦', 'ðŸ®', 'ðŸ·', 'ðŸ¸', 'ðŸµ', 'ðŸ¦„', 'ðŸ¶', 'ðŸ±', 'ðŸ¹', 'ðŸ­'];
+        document.getElementById('btn-next-round').onclick = () => {
+            navigateTo('screen-categories');
+        };
 
-            // Reactivate setup screen to be sure
-            navigateTo('screen-main-menu');
-        });
-    };
+        document.getElementById('btn-reset-scores').onclick = () => {
+            showConfirm("Â¿Seguro que quieres resetear todos los puntos?", () => {
+                state.players.forEach(p => state.scores[p] = 0);
+                showScoreScreen();
+            });
+        };
+
+        document.getElementById('btn-exit-game').onclick = () => {
+            showConfirm("¿Volver al menú principal? Se guardarán los puntos de esta partida.", () => {
+                // ACTUALIZAR RANKING GLOBAL
+                const sortedPlayers = [...state.players].sort((a, b) => (state.scores[b] || 0) - (state.scores[a] || 0));
+                state.players.forEach(name => {
+                    if (!state.globalRanking[name]) {
+                        state.globalRanking[name] = { played: 0, points: 0, wins: 0, avatar: state.playerAvatars[name] || '👤' };
+                    }
+                    state.globalRanking[name].played += 1;
+                });
+                const podium = sortedPlayers.slice(0, 3);
+                podium.forEach((name, idx) => {
+                    const bonus = [5, 3, 1][idx];
+                    state.globalRanking[name].points += bonus;
+                    if (idx === 0) state.globalRanking[name].wins += 1;
+                });
+                localStorage.setItem('dixit_global_ranking', JSON.stringify(state.globalRanking));
+
+                // Limpiamos el contenido dinámico 
+                UI.dynamicContent.innerHTML = '';
+                // Reset state partial
+                state.gameData = null;
+                state.scores = {};
+                state.players = [];
+                state.playerAvatars = {};
+                state.avatarPool = ['ðŸ°', 'ðŸ¦Š', 'ðŸ»', 'ðŸ¼', 'ðŸ¨', 'ðŸ¯', 'ðŸ¦', 'ðŸ®', 'ðŸ·', 'ðŸ¸', 'ðŸµ', 'ðŸ¦„', 'ðŸ¶', 'ðŸ±', 'ðŸ¹', 'ðŸ­'];
+
+                // Reactivate setup screen to be sure
+                navigateTo('screen-main-menu');
+            });
+        };
+    }
+
+function showAstralToast(message) {
+    const existing = document.querySelector('.astral-toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'astral-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('active'), 10);
+    setTimeout(() => {
+        toast.classList.remove('active');
+        setTimeout(() => toast.remove(), 500);
+    }, 2500);
 }
 
 function showConfirm(message, onConfirm) {
-    const modal = document.getElementById('modal-container');
-    const msg = document.getElementById('modal-message');
-    const btnConfirm = document.getElementById('modal-btn-confirm');
-    const btnCancel = document.getElementById('modal-btn-cancel');
+            const modal = document.getElementById('modal-container');
+            const msg = document.getElementById('modal-message');
+            const btnConfirm = document.getElementById('modal-btn-confirm');
+            const btnCancel = document.getElementById('modal-btn-cancel');
 
-    // Restaurar el botÃ³n cancelar por si fue ocultado
-    btnCancel.classList.remove('hidden');
+            // Restaurar el botón cancelar por si fue ocultado
+            btnCancel.classList.remove('hidden');
 
-    msg.innerText = message; // innerText respeta \n
-    modal.classList.remove('hidden');
+            msg.innerText = message; // innerText respeta \n
+            modal.classList.remove('hidden');
 
-    btnConfirm.onclick = () => {
-        modal.classList.add('hidden');
-        onConfirm();
-    };
+            btnConfirm.onclick = () => {
+                modal.classList.add('hidden');
+                onConfirm();
+            };
 
-    btnCancel.onclick = () => {
-        modal.classList.add('hidden');
-    };
-}
+            btnCancel.onclick = () => {
+                modal.classList.add('hidden');
+            };
+        }
 
 function pickRandomCategory() {
-    const random = state.categories[Math.floor(Math.random() * state.categories.length)];
-    selectCategory(random.id);
-}
+            const random = state.categories[Math.floor(Math.random() * state.categories.length)];
+            selectCategory(random.id);
+        }
 
 function addPlayer(e) {
-    const name = UI.playerNameInput.value.trim();
-    if (name && !state.players.includes(name)) {
-        state.players.push(name);
-
-        // Asignar emoji aleatorio Ãºnico (sin repetir) como fallback
-        let fallbackEmoji = 'ðŸ‘¤';
-        if (state.avatarPool.length > 0) {
-            const poolIndex = Math.floor(Math.random() * state.avatarPool.length);
-            fallbackEmoji = state.avatarPool.splice(poolIndex, 1)[0];
-        }
-        state.playerAvatars[name] = fallbackEmoji;
-
-        createStarDust(e); // El evento e vendrÃ¡ del listener
-        UI.playerNameInput.value = '';
-        renderPlayerList();
-        checkMinPlayers();
-    }
-}
-
-function createStarDust(e) {
-    // Reutilizar la logica que limite las particulas al app-container para no desbordar body
-    const container = document.getElementById('app-container') || document.body;
-    let containerRect = { left: 0, top: 0 };
-    if(container.id === 'app-container') {
-        containerRect = container.getBoundingClientRect();
-    }
-    
-    const x = e.clientX || e.pageX;
-    const y = e.clientY || e.pageY;
-    
-    const localX = x - containerRect.left;
-    const localY = y - containerRect.top;
-
-    for (let i = 0; i < 12; i++) {
-        const star = document.createElement('div');
-        star.className = 'star-dust';
-        star.innerHTML = 'âœ¨';
-        star.style.left = `${localX}px`;
-        star.style.top = `${localY}px`;
-
-        const angle = Math.random() * Math.PI * 2;
-        const velocity = 2 + Math.random() * 5;
-        const vx = Math.cos(angle) * velocity;
-        const vy = Math.sin(angle) * velocity;
-
-        container.appendChild(star);
-
-        let posX = x;
-        let posY = y;
-        let opacity = 1;
-
-        const anim = setInterval(() => {
-            posX += vx;
-            posY += vy;
-            opacity -= 0.05;
-            star.style.left = `${posX}px`;
-            star.style.top = `${posY}px`;
-            star.style.opacity = opacity;
-            star.style.transform = `scale(${opacity})`;
-
-            if (opacity <= 0) {
-                clearInterval(anim);
-                star.remove();
-            }
-        }, 16);
-    }
-}
-
-function removePlayer(name) {
-    state.players = state.players.filter(p => p !== name);
-
-    // Liberar el avatar para que otros puedan usarlo
-    const releasedAvatar = state.playerAvatars[name];
-    if (releasedAvatar && releasedAvatar !== 'ðŸ‘¤') {
-        state.avatarPool.push(releasedAvatar);
-    }
-    delete state.playerAvatars[name];
-
-    renderPlayerList();
-    renderPresetPlayers();
-    checkMinPlayers();
-}
-
-function renderPresetPlayers() {
-    const grid = document.getElementById('preset-players-grid');
-    if (!grid) return;
-    grid.innerHTML = '';
-
-    PRESET_PLAYERS.forEach(name => {
-        const isActive = state.players.includes(name);
-        const chip = document.createElement('button');
-        chip.className = 'preset-totem' + (isActive ? ' active' : '');
-        chip.innerHTML = `<span class="totem-text">${name}</span>`;
-        chip.setAttribute('role', 'button');
-        chip.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-        chip.title = isActive ? 'Quitar de la partida' : 'AÃ±adir a la partida';
-        chip.setAttribute('data-name', name);
-
-        chip.addEventListener('click', (e) => {
-            if (state.players.includes(name)) {
-                removePlayer(name);
-            } else {
-                createStardust(e.clientX, e.clientY);
+            const name = UI.playerNameInput.value.trim();
+            if (name && !state.players.includes(name)) {
                 state.players.push(name);
+
+                // Asignar emoji aleatorio único (sin repetir) como fallback
                 let fallbackEmoji = 'ðŸ‘¤';
                 if (state.avatarPool.length > 0) {
                     const poolIndex = Math.floor(Math.random() * state.avatarPool.length);
                     fallbackEmoji = state.avatarPool.splice(poolIndex, 1)[0];
                 }
                 state.playerAvatars[name] = fallbackEmoji;
+
+                createStarDust(e); // El evento e vendrá del listener
+                UI.playerNameInput.value = '';
                 renderPlayerList();
-                renderPresetPlayers();
                 checkMinPlayers();
             }
-        });
+        }
 
-        grid.appendChild(chip);
-    });
-}
+function createStarDust(e) {
+            // Reutilizar la logica que limite las particulas al app-container para no desbordar body
+            const container = document.getElementById('app-container') || document.body;
+            let containerRect = { left: 0, top: 0 };
+            if (container.id === 'app-container') {
+                containerRect = container.getBoundingClientRect();
+            }
+
+            const x = e.clientX || e.pageX;
+            const y = e.clientY || e.pageY;
+
+            const localX = x - containerRect.left;
+            const localY = y - containerRect.top;
+
+            for (let i = 0; i < 12; i++) {
+                const star = document.createElement('div');
+                star.className = 'star-dust';
+                star.innerHTML = 'âœ¨';
+                star.style.left = `${localX}px`;
+                star.style.top = `${localY}px`;
+
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 2 + Math.random() * 5;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+
+                container.appendChild(star);
+
+                let posX = x;
+                let posY = y;
+                let opacity = 1;
+
+                const anim = setInterval(() => {
+                    posX += vx;
+                    posY += vy;
+                    opacity -= 0.05;
+                    star.style.left = `${posX}px`;
+                    star.style.top = `${posY}px`;
+                    star.style.opacity = opacity;
+                    star.style.transform = `scale(${opacity})`;
+
+                    if (opacity <= 0) {
+                        clearInterval(anim);
+                        star.remove();
+                    }
+                }, 16);
+            }
+        }
+
+function removePlayer(name) {
+            state.players = state.players.filter(p => p !== name);
+
+            // Liberar el avatar para que otros puedan usarlo
+            const releasedAvatar = state.playerAvatars[name];
+            if (releasedAvatar && releasedAvatar !== 'ðŸ‘¤') {
+                state.avatarPool.push(releasedAvatar);
+            }
+            delete state.playerAvatars[name];
+
+            renderPlayerList();
+            renderPresetPlayers();
+            checkMinPlayers();
+        }
+
+function renderPresetPlayers() {
+            const grid = document.getElementById('preset-players-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            PRESET_PLAYERS.forEach(name => {
+                const isActive = state.players.includes(name);
+                const chip = document.createElement('button');
+                chip.className = 'preset-totem' + (isActive ? ' active' : '');
+                chip.innerHTML = `<span class="totem-text">${name}</span>`;
+                chip.setAttribute('role', 'button');
+                chip.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+                chip.title = isActive ? 'Quitar de la partida' : 'Añadir a la partida';
+                chip.setAttribute('data-name', name);
+
+                chip.addEventListener('click', (e) => {
+                    if (state.players.includes(name)) {
+                        removePlayer(name);
+                    } else {
+                        createStardust(e.clientX, e.clientY);
+                        state.players.push(name);
+                        let fallbackEmoji = 'ðŸ‘¤';
+                        if (state.avatarPool.length > 0) {
+                            const poolIndex = Math.floor(Math.random() * state.avatarPool.length);
+                            fallbackEmoji = state.avatarPool.splice(poolIndex, 1)[0];
+                        }
+                        state.playerAvatars[name] = fallbackEmoji;
+                        renderPlayerList();
+                        renderPresetPlayers();
+                        checkMinPlayers();
+                    }
+                });
+
+                grid.appendChild(chip);
+            });
+        }
 
 function renderPlayerList() {
-    UI.playerList.innerHTML = '';
-    state.players.forEach((name, index) => {
-        const li = document.createElement('li');
-        li.className = `player-card avatar-color-${(index % 6) + 1}`;
-        li.setAttribute('role', 'listitem');
-        li.setAttribute('aria-label', `Jugador: ${name}`);
+            UI.playerList.innerHTML = '';
+            state.players.forEach((name, index) => {
+                const li = document.createElement('li');
+                li.className = `player-card avatar-color-${(index % 6) + 1}`;
+                li.setAttribute('role', 'listitem');
+                li.setAttribute('aria-label', `Jugador: ${name}`);
 
-        li.innerHTML = `
+                li.innerHTML = `
             <div class="card-img-container">
                 ${getSetupAvatarHTML(name)}
             </div>
@@ -1158,87 +1261,154 @@ function renderPlayerList() {
             <div class="active-glow-star" aria-hidden="true">â­</div>
         `;
 
-        li.querySelector('.remove-player-btn').addEventListener('click', () => {
-            removePlayer(name);
-            renderPresetPlayers(); // Actualizar chips al eliminar
-        });
-        UI.playerList.appendChild(li);
-    });
-}
+                li.querySelector('.remove-player-btn').addEventListener('click', () => {
+                    removePlayer(name);
+                    renderPresetPlayers(); // Actualizar chips al eliminar
+                });
+                UI.playerList.appendChild(li);
+            });
+        }
 
 function checkMinPlayers() {
-    const isEnough = state.players.length >= state.minPlayers;
-    const isIndicative = state.players.length >= 2;
+            const isEnough = state.players.length >= state.minPlayers;
+            const isIndicative = state.players.length >= 2;
 
-    UI.startGameBtn.disabled = !isEnough;
+            UI.startGameBtn.disabled = !isEnough;
 
-    if (isIndicative) {
-        UI.startGameBtn.classList.add('can-start');
-    } else {
-        UI.startGameBtn.classList.remove('can-start');
+            if (isIndicative) {
+                UI.startGameBtn.classList.add('can-start');
+            } else {
+                UI.startGameBtn.classList.remove('can-start');
+            }
+        }
+
+function renderGlobalScores() {
+    const list = document.getElementById('global-ranking-list');
+    if (!list) return;
+
+    // Convertir objeto de ranking a array y ordenar por puntos (DESC)
+    const rankingArray = Object.entries(state.globalRanking).map(([name, stats]) => ({
+        name,
+        ...stats
+    })).sort((a, b) => (b.points || 0) - (a.points || 0));
+
+    list.innerHTML = rankingArray.map((player, index) => {
+        const slug = player.name.toLowerCase().replace(/\s+/g, '');
+        const imagePath = `assets/players/${slug}.png`;
+        const fallbackEmoji = player.avatar || 'ðŸ‘¤';
+
+        return `
+            <div class="global-ranking-item">
+                <div class="ranking-avatar-block">
+                    <div class="ranking-avatar-frame" active-color="${(index % 6) + 1}">
+                        <img src="${imagePath}" alt="${player.name}" onerror="this.outerHTML='<div class=\\'avatar-fallback-container ranking-fallback\\'><span class=\\'avatar-fallback-emoji\\'>${fallbackEmoji}</span></div>'">
+                    </div>
+                    <div class="ranking-player-name-container">
+                        <span class="ranking-player-name">${escapeHTML(player.name)}</span>
+                        <span class="ranking-player-title">${PLAYER_TITLES[player.name.toUpperCase()] || 'El Viajero'}</span>
+                    </div>
+                </div>
+
+                <div class="ranking-stats-grid">
+                    <div class="stat-box" data-stat="puesto">
+                        <span class="stat-label">PUESTO</span>
+                        <div class="stat-icon-container">
+                            <img src="assets/IMG/UI/rmarcadores/icon_podio.png" class="stat-icon" alt="Podio">
+                        </div>
+                        <span class="stat-value">#${index + 1}</span>
+                    </div>
+
+                    <div class="stat-box" data-stat="partidas">
+                        <span class="stat-label">JUGADAS</span>
+                        <div class="stat-icon-container">
+                            <img src="assets/IMG/UI/rmarcadores/icon_cartas.png" class="stat-icon" alt="Cartas">
+                        </div>
+                        <span class="stat-value">${player.played || 0}</span>
+                    </div>
+
+                    <div class="stat-box" data-stat="puntos">
+                        <span class="stat-label">PUNTOS</span>
+                        <div class="stat-icon-container">
+                            <img src="assets/IMG/UI/rmarcadores/icon_orbe.png" class="stat-icon" alt="Orbe">
+                        </div>
+                        <span class="stat-value">${player.points || 0}</span>
+                    </div>
+
+                    <div class="stat-box" data-stat="ganadas">
+                        <span class="stat-label">GANADAS</span>
+                        <div class="stat-icon-container">
+                            <img src="assets/IMG/UI/voting_score/btn_corona.png" class="stat-icon" alt="Corona">
+                        </div>
+                        <span class="stat-value">${player.wins || 0}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    if (rankingArray.length === 0) {
+        list.innerHTML = '<div class="ranking-empty-msg" style="color:#d4af37; text-align:center; padding:2rem; font-weight:bold; width:100%; font-size: 1.1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">El orbe de cristal aún no muestra leyendas... <br> ¡Comienza una partida para forjar tu destino!</div>';
     }
 }
-
-// â”€â”€ InicializaciÃ³n y Eventos Globales (Fase 0) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar historial con la pantalla de inicio
-    navigationHistory = [{ id: 'screen-main-menu', data: {} }];
+            // Inicializar historial con la pantalla de inicio
+            navigationHistory = [{ id: 'screen-main-menu', data: {} }];
 
-    // Listeners de navegaciÃ³n global
-    const btnBack = document.getElementById('btn-global-back');
-    const btnHome = document.getElementById('btn-global-home');
+            // Listeners de navegación global
+            const btnBack = document.getElementById('btn-global-back');
+            const btnHome = document.getElementById('btn-global-home');
 
-    if (btnBack) btnBack.addEventListener('click', goBack);
-    if (btnHome) btnHome.addEventListener('click', () => navigateTo('main-menu'));
-});
+            if (btnBack) btnBack.addEventListener('click', goBack);
+            if (btnHome) btnHome.addEventListener('click', () => navigateTo('main-menu'));
+        });
 
-// Utilidad XSS
-function escapeHTML(str) {
-    return str.replace(/[&<>'"]/g,
-        tag => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            "'": '&#39;',
-            '"': '&quot;'
-        }[tag])
-    );
-}
-
-function createStardust(x, y) {
-    const container = document.getElementById('app-container') || document.body;
-    
-    // Si usamos app-container (position:relative), requerimos coords relativas:
-    let containerRect = { left: 0, top: 0 };
-    if (container.id === 'app-container') {
-        containerRect = container.getBoundingClientRect();
+    // Utilidad XSS
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g,
+            tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag])
+        );
     }
-    
-    // Coordenadas locales al contenedor
-    const localX = x - containerRect.left;
-    const localY = y - containerRect.top;
 
-    for (let i = 0; i < 8; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'stardust-particle';
-        const size = Math.random() * 4 + 2;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.left = `${localX}px`;
-        particle.style.top = `${localY}px`;
+    function createStardust(x, y) {
+        const container = document.getElementById('app-container') || document.body;
 
-        const destinationX = (Math.random() - 0.5) * 100;
-        const destinationY = (Math.random() - 0.5) * 100;
+        // Si usamos app-container (position:relative), requerimos coords relativas:
+        let containerRect = { left: 0, top: 0 };
+        if (container.id === 'app-container') {
+            containerRect = container.getBoundingClientRect();
+        }
 
-        particle.animate([
-            { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-            { transform: `translate(${destinationX}px, ${destinationY}px) scale(0)`, opacity: 0 }
-        ], {
-            duration: 800 + Math.random() * 400,
-            easing: 'cubic-bezier(0, .9, .57, 1)',
-            delay: Math.random() * 100
-        }).onfinish = () => particle.remove();
+        // Coordenadas locales al contenedor
+        const localX = x - containerRect.left;
+        const localY = y - containerRect.top;
 
-        container.appendChild(particle);
+        for (let i = 0; i < 8; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'stardust-particle';
+            const size = Math.random() * 4 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${localX}px`;
+            particle.style.top = `${localY}px`;
+
+            const destinationX = (Math.random() - 0.5) * 100;
+            const destinationY = (Math.random() - 0.5) * 100;
+
+            particle.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { transform: `translate(${destinationX}px, ${destinationY}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 800 + Math.random() * 400,
+                easing: 'cubic-bezier(0, .9, .57, 1)',
+                delay: Math.random() * 100
+            }).onfinish = () => particle.remove();
+
+            container.appendChild(particle);
+        }
     }
-}

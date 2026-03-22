@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dixit vs Impostor - Game Master</title>
+    <!-- FIX HTML: Eliminada la referencia fantasma/doble a style-final.css si la hubiera -->
+    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;800&family=Macondo&family=Raleway:wght@400;700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
+        rel="stylesheet">
+    
+    <!-- PWA Config -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1b263b">
+    <link rel="apple-touch-icon" href="assets/IMG/UI/menu/logo_dixit.png">
+</head>
+
+    <!-- NavegaciÃƒÂ³n Global (Fuera del contenedor para evitar clips en mÃƒÂ³vil) -->
+    <nav id="global-nav" class="global-nav">
+        <button id="btn-global-back" class="btn-nav btn-nav-back" title="AtrÃƒÂ¡s"></button>
+        <button id="btn-global-home" class="btn-nav btn-nav-home" title="MenÃƒÂº Principal"></button>
+    </nav>
+
+    <div id="app-container">
+        <!-- Las pantallas se cargarÃƒÂ¡n dinÃƒÂ¡micamente aquÃƒÂ­ -->
+
+        <main id="main-content">
+            <div id="static-content">
+                <!-- PANTALLA MENÃƒÅ¡ PRINCIPAL -->
+                <section id="screen-main-menu" class="screen main-menu-screen active">
+                    <img src="assets/IMG/UI/menu/logo_dixit.png" alt="Dixit VS Impostor" class="main-logo"
+                        onerror="this.style.display='none'">
+
+                    <div class="main-menu-actions">
+                        <button id="btn-menu-new" class="btn-book">NUEVA PARTIDA</button>
+                        <div class="secondary-actions">
+                            <button id="btn-menu-scores" class="btn-organic btn-stone">MARCADORES</button>
+                            <button id="btn-menu-rules" class="btn-organic btn-petal">REGLAS</button>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- El botÃƒÂ³n de ajustes se mueve aquÃƒÂ­ para ser global -->
+                <button id="btn-menu-settings" class="btn-settings" title="Ajustes"></button>
+
+                <!-- PANTALLA SETUP -->
+                <section id="screen-setup" class="screen">
+
+                    <!-- ZONA 1: HEADER FIJO (siempre visible) -->
+                    <div class="setup-header">
+                        <h2 class="glow-text small">Nueva Partida</h2>
+                    </div>
+
+                    <div class="preset-section vortex-container">
+
+                        <div id="preset-players-grid" class="preset-grid magic-vortex">
+                            <!-- Chips generados por app.js -->
+                        </div>
+                    </div>
+
+                    <!-- ZONA 2B: PERGAMINO CENTRAL FIJO (con scroll solo en lista de jug. nuevos) -->
+                    <div class="setup-scroll-body layout-compact">
+                        <div class="setup-parchment compact-card">
+
+                            <div class="player-input-divider">
+                                <span>O INVOCA UNO NUEVO</span>
+                            </div>
+
+                            <div class="player-input-container">
+                                <input type="text" id="player-name" placeholder="Ã‚Â¿QuiÃƒÂ©n se une al sueÃƒÂ±o?" autocomplete="off"
+                                    class="dreamy-input">
+                                <button id="add-player" class="btn-lacre" aria-label="Invocar Jugador"></button>
+                            </div>
+
+                            <!-- Lista de jugadores con scroll SOLO aquÃƒÂ­ -->
+                            <div class="player-list-wrapper">
+                                <ul id="player-list">
+                                    <!-- Jugadores generados por app.js -->
+                                </ul>
+                                <div class="scroll-fade-overlay"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ZONA 2C: SELECCION DE TIEMPO OBLIGATORIA -->
+                    <div class="setup-time-selector">
+                        <p class="time-selector-label">&#x23F1; Tiempo por ronda</p>
+                        <div class="time-options">
+                            <button class="btn-time-option" id="time-opt-60" data-time="60">1:00</button>
+                            <button class="btn-time-option" id="time-opt-90" data-time="90">1:30</button>
+                            <button class="btn-time-option" id="time-opt-120" data-time="120">2:00</button>
+                        </div>
+                    </div>
+
+
+                    <!-- ZONA 3: FOOTER FIJO CON BOTÃƒâ€œN (siempre visible) -->
+                    <div class="setup-footer">
+                        <button id="btn-start-game" class="btn-primary" disabled>Comenzar Partida</button>
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- Contenedor para InyecciÃƒÂ³n DinÃƒÂ¡mica SPA -->
+            <div id="dynamic-content"></div>
+        </main>
+    </div>
+
+    <!-- Modal de ConfirmaciÃƒÂ³n Personalizado -->
+    <div id="modal-container" class="hidden">
+        <div class="modal glass-card">
+            <p id="modal-message">Ã‚Â¿EstÃƒÂ¡s seguro?</p>
+            <div class="modal-actions">
+                <button id="modal-btn-confirm" class="btn-primary">Confirmar</button>
+                <button id="modal-btn-cancel" class="btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Global -->
+    <audio id="bg-music" src="music/Clockwork%20Garden%20Carnival.mp3" loop preload="auto"></audio>
+
+    <script src="app.js?v=5"></script>
+    <script>
+        // Registro de Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker Registrado!', reg))
+                    .catch(err => console.error('Error al registrar SW', err));
+            });
+        }
+    </script>
+</body>
+
+</html>
+

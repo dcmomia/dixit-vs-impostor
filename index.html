@@ -5,19 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dixit vs Impostor - Game Master</title>
-    <!-- FIX HTML: Eliminada la referencia fantasma/doble a style-final.css si la hubiera -->
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=38">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;800&family=Macondo&family=Raleway:wght@400;700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
         rel="stylesheet">
-    
+
     <!-- PWA Config -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1b263b">
     <link rel="apple-touch-icon" href="assets/IMG/UI/menu/logo_dixit.png">
 </head>
+
+<body>
 
     <!-- NavegaciÃ³n Global (Fuera del contenedor para evitar clips en mÃ³vil) -->
     <nav id="global-nav" class="global-nav">
@@ -63,7 +64,7 @@
                         </div>
                     </div>
 
-                    <!-- ZONA 2B: PERGAMINO CENTRAL FIJO (con scroll solo en lista de jug. nuevos) -->
+                    <!-- ZONA 2: PERGAMINO CENTRAL FIJO (con scroll solo en lista de jug. nuevos) -->
                     <div class="setup-scroll-body layout-compact">
                         <div class="setup-parchment compact-card">
 
@@ -72,10 +73,12 @@
                             </div>
 
                             <div class="player-input-container">
-                                <input type="text" id="player-name" placeholder="Â¿QuiÃ©n se une al sueÃ±o?" autocomplete="off"
-                                    class="dreamy-input">
+                                <input type="text" id="player-name" placeholder="¿Quién se une al sueño?"
+                                    autocomplete="off" class="dreamy-input">
                                 <button id="add-player" class="btn-lacre" aria-label="Invocar Jugador"></button>
                             </div>
+
+                            <!-- Espacio liberado visualmente (Timer fue a screen-timer) -->
 
                             <!-- Lista de jugadores con scroll SOLO aquÃ­ -->
                             <div class="player-list-wrapper">
@@ -88,11 +91,24 @@
                         </div>
                     </div>
 
-                    <!-- ZONA 3: FOOTER FIJO CON BOTÃ“N (siempre visible) -->
+                    <!-- ZONA 3: FOOTER FIJO ORIGINAL (recuperamos su layout original) -->
                     <div class="setup-footer">
                         <button id="btn-start-game" class="btn-primary" disabled>Comenzar Partida</button>
                     </div>
 
+                </section>
+
+                <!-- PANTALLA MARCADORES GLOBALES (RANKING) -->
+                <section id="screen-global-scores" class="screen">
+                    <div class="global-header">
+                        <img src="assets/IMG/UI/rmarcadores/btn_marcadores_globales.png" alt="Marcadores Globales" class="img-header-global">
+                    </div>
+
+                    <div class="global-scroll-body">
+                        <div id="global-ranking-list" class="global-ranking-list">
+                            <!-- Inyectado dinámicamente por app.js -->
+                        </div>
+                    </div>
                 </section>
             </div>
 
@@ -115,7 +131,7 @@
     <!-- Audio Global -->
     <audio id="bg-music" src="music/Clockwork%20Garden%20Carnival.mp3" loop preload="auto"></audio>
 
-    <script src="app.js?v=5"></script>
+    <script src="app.js?v=38"></script>
     <script>
         // Registro de Service Worker para PWA
         if ('serviceWorker' in navigator) {
@@ -126,6 +142,7 @@
             });
         }
     </script>
+
 </body>
 
 </html>

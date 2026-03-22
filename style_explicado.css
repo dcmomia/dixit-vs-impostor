@@ -1,0 +1,139 @@
+/* 
+   style_explicado.css - El diseño visual de Dixit vs Impostor
+   Este archivo controla colores, formas, animaciones y cómo se adapta a móviles.
+*/
+
+:root {
+    /* --- PALETA DE COLORES (Tokens de diseño) --- */
+    --cristal-noche: #0d1321; /* Azul casi negro para fondos profundos. */
+    --cristal-noche-glass: rgba(13, 19, 33, 0.7); /* Mismo azul pero con transparencia (70%). Impacto: Crea el efecto de cristal. */
+    --oro-viejo: #c5a869; /* Color dorado mate para bordes y títulos. */
+    --oro-viejo-dim: rgba(197, 168, 105, 0.4); /* Dorado transparente (40%). Impacto: Bordes sutiles que no "gritan". */
+    --magia-activa: #ffd700; /* Oro brillante para elementos seleccionados. Aumentar el brillo (ej: #ffffff) los haría destacar más. */
+    --magia-activa-glow: rgba(255, 215, 0, 0.6); /* El resplandor que rodea al oro brillante. */
+    --texto-base: #f8f9fa; /* Blanco roto para leer sin cansar la vista. */
+
+    /* --- TIPOGRAFÍAS --- */
+    --font-serif: 'Macondo', cursive; /* Fuente mística para títulos. Cambiarla rompería el estilo "fantasía". */
+    --font-ui: 'Raleway', sans-serif; /* Fuente limpia para botones y textos largos. Aumenta la legibilidad. */
+
+    /* --- SOMBRAS --- */
+    --shadow-premium: 0 8px 32px rgba(0, 0, 0, 0.6); 
+    /* Sombra profunda. Aumentar el '32px' haría que los elementos parezcan "flotar" más alto sobre el fondo. */
+}
+
+/* --- REGLAS GLOBALES --- */
+* {
+    margin: 0; padding: 0; box-sizing: border-box; /* Resetea el espacio de todos los elementos para que no haya márgenes raros. */
+    font-family: var(--font-ui); /* Aplica la fuente limpia por defecto. */
+}
+
+html, body {
+    width: 100%; height: 100%; /* Asegura que la app ocupe TODA la pantalla. */
+    background: var(--cristal-noche); /* Fondo oscuro base. */
+}
+
+/* --- ESTRUCTURA RESPONSIVA (Móvil vs Escritorio) --- */
+#app-container {
+    width: 100%; min-height: 100svh; /* Ocupa el 100% en móviles. */
+    display: flex; flex-direction: column; /* Alinea los elementos uno debajo de otro. */
+}
+
+@media (min-width: 600px) { /* Si la pantalla mide más de 600px (Escritorio): */
+    #app-container {
+        max-width: 550px; /* Limita el ancho para que no se vea gigante y estirado. */
+        margin: 0 auto; /* Lo centra horizontalmente. */
+        box-shadow: 0 0 100px rgba(0, 0, 0, 0.5); /* Le da un aura de profundidad. */
+    }
+}
+
+/* --- SISTEMA DE PANTALLAS (SPA) --- */
+.screen {
+    display: none !important; /* Por defecto, todas las pantallas están ocultas. */
+}
+
+.screen.active {
+    display: flex !important; /* Solo se muestra la pantalla que tenga la clase .active. */
+    flex-direction: column;
+}
+
+/* --- TÍTULOS CON BRILLO (GLOW) --- */
+.glow-text {
+    font-size: 2.8rem; /* Tamaño grande. Aumentar a 3.5rem haría títulos gigantes. */
+    color: var(--oro-viejo); /* Color dorado. */
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.8); /* Sombra para dar relieve. */
+    letter-spacing: 1px; /* Espacio entre letras. */
+}
+
+/* --- BOTONES CON FORMA DE LIBRO (Menú Principal) --- */
+.btn-book {
+    width: 320px; height: 175px; /* Tamaño del botón libro. */
+    background-image: url('assets/IMG/UI/menu/btn_nueva_partida.png'); /* Usa una imagen en lugar de color. */
+    background-size: contain; background-repeat: no-repeat;
+    transition: all 0.4s ease; /* Hace que el movimiento al pasar el ratón sea suave. */
+}
+
+.btn-book:hover {
+    transform: scale(1.05) translateY(-5px); 
+    /* Al pasar el ratón: crece un 5% y sube 5 píxeles. Impacto: Da sensación de interactividad. */
+    filter: brightness(1.2); /* Se ilumina un poco más. */
+}
+
+/* --- EFECTO DE CRISTAL (Glassmorphism) --- */
+.glass-card {
+    background: var(--cristal-noche-glass); /* Fondo oscuro transparente. */
+    -webkit-backdrop-filter: blur(12px); 
+    backdrop-filter: blur(12px); /* Desenfoca lo que hay detrás. Impacto: Crea el efecto premium de vidrio esmerilado. */
+    border: 2px solid var(--oro-viejo-dim); /* Borde dorado suave. */
+}
+
+/* --- ANIMACIONES (Magia) --- */
+@keyframes pulse_glow {
+    0% { transform: scale(1); box-shadow: 0 0 0px var(--magia-activa-glow); }
+    50% { transform: scale(1.02); box-shadow: 0 0 25px var(--magia-activa-glow); } /* El latido místico. */
+    100% { transform: scale(1); box-shadow: 0 0 0px var(--magia-activa-glow); }
+}
+
+.btn-primary:not(:disabled) {
+    animation: pulse_glow 2s infinite ease-in-out; 
+    /* El botón parpadea suavemente cada 2 segundos para llamar la atención del jugador. */
+}
+
+/* --- TARJETAS DE JUGADOR (Setup) --- */
+.player-card {
+    height: 125px; /* Altura de la tarjeta. */
+    border-radius: 20px; /* Bordes redondeados. */
+    border: 1.5px solid var(--oro-viejo-dim);
+    transition: transform 0.3s ease;
+}
+
+.player-card:hover {
+    transform: translateY(-5px); /* Sube la tarjeta al tocarla. Impacto: Indica que es seleccionable. */
+}
+
+/* --- REVELACIÓN DE CARTA 3D --- */
+.reveal-card-scene {
+    perspective: 1000px; /* Prepara el espacio para el efecto 3D. */
+}
+
+.reveal-card {
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d; /* Permite que la cara trasera y delantera existan en 3D. */
+}
+
+.reveal-card.is-flipped {
+    transform: rotateY(180deg); /* Gira la carta como si fuera física. Aumentar el tiempo (0.8s) la haría más lenta y dramática. */
+}
+
+/* --- MODO PANICO (Tensión Visual) --- */
+.shamanic-glyph {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--magia-activa);
+    animation: textPanic 0.5s infinite alternate; /* La palabra secreta vibra en la fase de pánico. */
+}
+
+@keyframes textPanic {
+    from { transform: scale(1); filter: blur(0); }
+    to { transform: scale(1.1); filter: blur(2px); } /* El desenfoque simula nerviosismo. */
+}
