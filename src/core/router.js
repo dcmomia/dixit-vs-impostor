@@ -116,8 +116,8 @@ export function showScreen(screenId, data = {}) {
         const playerRole = state.roles[data.index];
         const isImpostor = playerRole.isImpostor;
         const slug = player.toLowerCase().replace(/\s+/g, '');
-        const frontImgPath = `src/screens/reveal/assets/cards/inocente/${slug}.png`;
-        const backImgPath = isImpostor ? `src/screens/reveal/assets/cards/impostor/${slug}_impostor.png` : frontImgPath;
+        const frontImgPath = `assets/IMG/reveal/cards/inocente/${slug}.png`;
+        const backImgPath = isImpostor ? `assets/IMG/reveal/cards/impostor/${slug}_impostor.png` : frontImgPath;
         const fallbackEmoji = state.playerAvatars[player] || '👤';
 
         // Escaping was tricky directly so I'll trust it's fine for simple strings or we inline escapeHTML
