@@ -2835,17 +2835,14 @@ body:has(#screen-setup.active) #app-container {
 
 /*  Escena 3D  */
 .reveal-card-scene {
-    width: 100%;
-    max-width: 260px;
-    /* Reducido para ganar espacio */
-    aspect-ratio: 2 / 3;
+    width: 280px; /* Dimensiones fijas para anclaje absoluto rigido */
+    height: 420px;
     perspective: 1200px;
-    flex: 0 1 auto;
-    /* Que no crezca agresivamente */
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: auto 0 1.5rem;
+    margin: 1.5rem auto; /* Centrado vertical real */
+    position: relative; /* Contexto de seguridad */
 }
 
 .reveal-card {
@@ -2864,11 +2861,15 @@ body:has(#screen-setup.active) #app-container {
 /*  Caras de la carta  */
 .reveal-card__face {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     border-radius: 16px;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    overflow: visible; /* Permitir que el marco sobresalga si es decorativo */
 }
 
 /* Cara frontal (inocente) */
@@ -2896,12 +2897,15 @@ body:has(#screen-setup.active) #app-container {
 /* Marco decorativo de la carta (Inocente o Impostor) */
 .card-frame {
     position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
     pointer-events: none;
     z-index: 50; /* Por encima de todo */
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
-    inset: 0; /* Cobertura total por defecto */
 }
 
 .card-frame--inocente {
