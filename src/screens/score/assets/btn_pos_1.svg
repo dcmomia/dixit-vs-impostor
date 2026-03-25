@@ -1,0 +1,60 @@
+<svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="goldMetal-goldFiligree" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff2b7"></stop>
+      <stop offset="34%" stop-color="#d5a845"></stop>
+      <stop offset="72%" stop-color="#9a6e1f"></stop>
+      <stop offset="100%" stop-color="#f7d77c"></stop>
+    </linearGradient>
+    <radialGradient id="goldCore-goldFiligree" cx="36%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fff1b4"></stop>
+      <stop offset="60%" stop-color="#d4a244"></stop>
+      <stop offset="100%" stop-color="#9f7221"></stop>
+    </radialGradient>
+  </defs>
+  <!-- Filigree pattern -->
+  <g opacity="0.95">
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(0 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(9.47 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(18.95 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(28.42 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(37.89 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(47.37 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(56.84 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(66.32 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(75.79 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(85.26 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(94.74 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(104.21 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(113.68 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(123.16 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(132.63 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(142.11 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(151.58 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(161.05 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(170.53 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(180 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(189.47 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(198.95 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(208.42 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(217.89 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(227.37 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(236.84 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(246.32 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(255.79 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(265.26 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(274.74 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(284.21 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(293.68 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(303.16 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(312.63 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(322.11 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(331.58 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(341.05 160 160)"></rect>
+    <rect x="153" y="22" width="14" height="14" rx="3" fill="#c69228" transform="rotate(350.53 160 160)"></rect>
+  </g>
+  <circle cx="160" cy="160" r="122" fill="url(#goldMetal-goldFiligree)" stroke="#805e15" stroke-width="6"></circle>
+  <circle cx="160" cy="160" r="96" fill="#2f2315" stroke="#d2a33d" stroke-width="6"></circle>
+  <circle cx="160" cy="160" r="84" fill="none" stroke="#efc96f" stroke-width="4" stroke-dasharray="2 8" opacity="0.85"></circle>
+  <circle cx="160" cy="160" r="76" fill="url(#goldCore-goldFiligree)" stroke="#d6aa4d" stroke-width="7"></circle>
+</svg>

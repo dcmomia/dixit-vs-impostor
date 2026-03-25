@@ -9,7 +9,7 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "assets/IMG/UI/menu/logo_dixit.png",
+      "src": "src/screens/main-menu/assets/logo_dixit.png",
       "sizes": "192x192 512x512",
       "type": "image/png",
       "purpose": "any maskable"

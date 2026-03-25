@@ -1,5 +1,16 @@
 # Changelog - Dixit vs Impostor
 
+## [1.3.0] - 2026-03-24
+### Added
+- **Arquitectura SPA Modular**: Migración completa a módulos ES6 (`src/screens/`, `src/core/`).
+- **Soporte Android Nativo**: Integración de **Capacitor**, configuración de `package.json` y plataforma Android.
+- **Auditoría de Assets**: Script de validación masiva (`validate-assets.js`) y parcheo de rutas CSS.
+
+### Fixed
+- **Bug Crítico de Slugs**: Corregida la regex `/s+/g` que eliminaba la letra 's' en nombres de jugadores (Santi -> Anti).
+- **Restauración de Fondos**: Recuperados los fondos de marcadores, temporizador y categorías tras el refactor.
+- **Gradle Sync**: Solucionado el error de `capacitor.settings.gradle` mediante la pre-generación de la carpeta `www`.
+
 ## [1.2.2] - 2026-03-22
 ### Changed
 - Ajustes en pantalla de pánico: aumento del 15% del icono de tiempo (`btn_hora.png`), elevación de su posición y descenso de la ubicación de la palabra secreta.

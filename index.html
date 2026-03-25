@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dixit vs Impostor - Game Master</title>
-    <link rel="stylesheet" href="style.css?v=39">
+    <link rel="stylesheet" href="src/style.css?v=40">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -15,7 +15,7 @@
     <!-- PWA Config -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1b263b">
-    <link rel="apple-touch-icon" href="assets/IMG/UI/menu/logo_dixit.png">
+    <link rel="apple-touch-icon" href="src/screens/main-menu/assets/logo_dixit.png">
 </head>
 
 <body>
@@ -33,17 +33,109 @@
             <div id="static-content">
                 <!-- PANTALLA MENÃš PRINCIPAL -->
                 <section id="screen-main-menu" class="screen main-menu-screen active">
-                    <img src="assets/IMG/UI/menu/logo_dixit.png" alt="Dixit VS Impostor" class="main-logo"
-                        onerror="this.style.display='none'">
+                    <!-- CAPAS DE FONDO DINAMICAS -->
+                    <div class="menu-background-layer"></div>
+                    <div class="menu-vortex"></div>
+                    <div class="astronaut-orbit">
+                        <div class="astronaut-clipper">
+                            <img src="src/screens/main-menu/assets/santi_astronauta.png" class="santi-astronaut" alt="Santi">
+                        </div>
+                    </div>
+
+                    <div class="main-banner-container">
+                        <img src="src/screens/main-menu/assets/img_libro.png" alt="Libro" class="banner-side-img libro-img">
+                        <div class="logo-pack-container main-logo-v2">
+                            <img src="src/screens/main-menu/assets/dixit_logo.png" alt="Dixit" class="logo-dixit-part">
+                            <img src="src/screens/main-menu/assets/vs_impostor_logo.png" alt="VS Impostor" class="logo-vs-part">
+                        </div>
+                        <img src="src/screens/main-menu/assets/img_bufon.png" alt="Bufon" class="banner-side-img bufon-img">
+                    </div>
 
                     <div class="main-menu-actions">
-                        <button id="btn-menu-new" class="btn-book">NUEVA PARTIDA</button>
-                        <div class="secondary-actions">
+                        <div class="btn-float-wrap">
+                            <button id="btn-menu-new" class="btn-book">NUEVA PARTIDA</button>
+                        </div>
+                        <div class="btn-float-wrap">
                             <button id="btn-menu-scores" class="btn-organic btn-stone">MARCADORES</button>
+                        </div>
+                        <div class="btn-float-wrap">
+                            <button id="btn-menu-characters" class="btn-organic btn-characters">JUGADORES</button>
+                        </div>
+                        <div class="btn-float-wrap">
                             <button id="btn-menu-rules" class="btn-organic btn-petal">REGLAS</button>
                         </div>
                     </div>
 
+                </section>
+
+                <!-- SECCIÓN PERSONAJES (NUEVA) -->
+                <section id="screen-characters" class="screen">
+                    <div class="menu-bg-container">
+                        <img src="assets/IMG/personajes/fondo_personajes.png" class="menu-bg" alt="Fondo">
+                    </div>
+                    
+                    <div class="characters-content-wrapper">
+                        <header class="characters-header">
+                            <button id="btn-characters-back" class="btn-back-mystic">
+                                <span class="arrow">«</span> MENU
+                            </button>
+                        </header>
+
+                        <div class="character-carousel-container">
+                            <button id="btn-char-prev" class="btn-nav-char">«</button>
+                            
+                            <div class="card-vertical-stack">
+                                <h1 id="character-name-display">NOMBRE JUGADOR</h1>
+                                <div class="card-3d-wrapper" id="char-card-flip">
+                                <div class="card-3d-inner">
+                                    <div class="card-3d-front">
+                                        <div class="card-frame">
+                                            <img id="main-char-img" src="" alt="Personaje">
+                                            <div class="role-badge-overlay" id="current-role-label">INOCENTE</div>
+                                        </div>
+                                    </div>
+                                    <div class="card-3d-back">
+                                        <div class="card-back-parchment">
+                                            <h3>CARTA DE DESTINO</h3>
+                                            <div class="separator-line"></div>
+                                            <p id="char-description-text">Cargando crónica del personaje...</p>
+                                            <p class="tap-hint-blink">- Pulsa para volver -</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="btn-char-next" class="btn-nav-char">»</button>
+                    </div>
+
+                        <div class="role-selector-tray">
+                            <div class="role-thumb-container active" data-role="INOCENTE">
+                                <div class="thumb-frame">
+                                    <img src="" class="role-thumb-img-node" alt="Inocente">
+                                </div>
+                                <span class="role-name">INOCENTE</span>
+                            </div>
+                            <div class="role-thumb-container" data-role="IMPOSTOR">
+                                <div class="thumb-frame">
+                                    <img src="" class="role-thumb-img-node" alt="Impostor">
+                                </div>
+                                <span class="role-name">IMPOSTOR</span>
+                            </div>
+                            <div class="role-thumb-container" data-role="TURNO">
+                                <div class="thumb-frame">
+                                    <img src="" class="role-thumb-img-node" alt="Turno">
+                                </div>
+                                <span class="role-name">TURNO</span>
+                            </div>
+                            <div class="role-thumb-container" data-role="VICTORIA">
+                                <div class="thumb-frame">
+                                    <img src="" class="role-thumb-img-node" alt="Victoria">
+                                </div>
+                                <span class="role-name">VICTORIA</span>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- El botÃ³n de ajustes se mueve aquÃ­ para ser global -->
@@ -101,7 +193,7 @@
                 <!-- PANTALLA MARCADORES GLOBALES (RANKING) -->
                 <section id="screen-global-scores" class="screen">
                     <div class="global-header">
-                        <img src="assets/IMG/UI/rmarcadores/btn_marcadores_globales.png" alt="Marcadores Globales" class="img-header-global">
+                        <img src="src/screens/global-scores/assets/btn_marcadores_globales.png" alt="Marcadores Globales" class="img-header-global">
                     </div>
 
                     <div class="global-scroll-body">
@@ -129,9 +221,9 @@
     </div>
 
     <!-- Audio Global -->
-    <audio id="bg-music" src="music/Clockwork%20Garden%20Carnival.mp3" loop preload="auto"></audio>
+    <audio id="bg-music" src="music/bg_music.mp3" loop preload="auto"></audio>
 
-    <script src="app.js?v=39"></script>
+    <script type="module" src="src/app.js"></script>
     <script>
         // Registro de Service Worker para PWA
         if ('serviceWorker' in navigator) {

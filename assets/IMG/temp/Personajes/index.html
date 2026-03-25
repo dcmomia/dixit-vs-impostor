@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selección de Rol</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+    
+    .contenedor {
+      text-align: center;
+      width: 450px;
+      border: 2px solid red;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    .zona-central {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+    
+    /* Botones flecha */
+    button {
+      font-size: 30px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: red;
+    }
+    
+    /* Roles inferiores */
+    .roles-inferiores {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    
+    .img-rol {
+      width: 90px;
+      height: 90px;
+      cursor: pointer;
+      border: 1px solid black;
+      object-fit: cover;
+    }
+
+    /* Animación de la carta 3D */
+    .carta-contenedor {
+      perspective: 1000px;
+      width: 220px;
+      height: 320px;
+      cursor: pointer;
+    }
+    
+    .carta {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    
+    .carta.volteada {
+      transform: rotateY(180deg);
+    }
+    
+    .cara-frontal, .cara-trasera {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      backface-visibility: hidden;
+      border: 1px solid black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    
+    .cara-frontal img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .cara-trasera {
+      transform: rotateY(180deg);
+      background: #f0f0f0;
+      padding: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="contenedor">
+    <h1 id="nombre-jugador">NOMBRE JUGADOR</h1>
+
+    <div class="zona-central">
+      <button id="btn-izq">⬅</button>
+      
+      <div class="carta-contenedor" onclick="voltearCarta()">
+        <div class="carta" id="carta-animada">
+          <div class="cara-frontal">
+            <img id="img-main" src="https://via.placeholder.com/220x320/ffcccc/000000?text=IMG+MAIN" alt="Principal">
+          </div>
+          <div class="cara-trasera">
+            <p id="desc-main">Esta es la descripción del rol principal. Pulsa para volver.</p>
+          </div>
+        </div>
+      </div>
+
+      <button id="btn-der">➡</button>
+    </div>
+
+    <div class="roles-inferiores">
+      <img src="https://via.placeholder.com/90/ccffcc/000000?text=Turno" class="img-rol" data-desc="Descripción al empezar el turno..." onclick="intercambiar(this)">
+      <img src="https://via.placeholder.com/90/ccccff/000000?text=Impostor" class="img-rol" data-desc="Descripción si es el impostor..." onclick="intercambiar(this)">
+      <img src="https://via.placeholder.com/90/ffffcc/000000?text=Victoria" class="img-rol" data-desc="Descripción de la victoria..." onclick="intercambiar(this)">
+    </div>
+  </div>
+
+  <script>
+    // Gira la carta al hacer clic en ella
+    function voltearCarta() {
+      document.getElementById('carta-animada').classList.toggle('volteada');
+    }
+
+    // Intercambia imagen y texto entre la miniatura pulsada y la carta central
+    function intercambiar(elementoClicado) {
+      const imgMain = document.getElementById('img-main');
+      const descMain = document.getElementById('desc-main');
+
+      // 1. Guardar estado actual de la principal
+      const srcTemporal = imgMain.src;
+      const descTemporal = descMain.innerText;
+      
+      // 2. Pasar datos de la miniatura a la principal
+      imgMain.src = elementoClicado.src;
+      descMain.innerText = elementoClicado.getAttribute('data-desc');
+
+      // 3. Pasar los datos guardados a la miniatura
+      elementoClicado.src = srcTemporal;
+      elementoClicado.setAttribute('data-desc', descTemporal);
+    }
+
+    // Lógica visual para las flechas (para futura conexión con base de datos)
+    document.getElementById('btn-izq').addEventListener('click', () => {
+      console.log('Cambiar al jugador anterior');
+    });
+    
+    document.getElementById('btn-der').addEventListener('click', () => {
+      console.log('Cambiar al jugador siguiente');
+    });
+  </script>
+
+</body>
+</html>

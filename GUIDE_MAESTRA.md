@@ -23,23 +23,23 @@ Elementos persistentes o compartidos entre pantallas.
 
 | Elemento | Archivo / Asset | Descripción |
 | :--- | :--- | :--- |
-| **Botón Atrás** | `assets/IMG/UI/global/btn_atras.png` | En `global-nav`. Historial de navegación. |
-| **Botón Inicio** | `assets/IMG/UI/global/btn_inicio.png` | En `global-nav`. Retorno al Menú Principal. |
-| **Ajustes / Audio** | `assets/IMG/UI/global/btn_ajustes.png` | Control global de volumen/mute. |
+| **Botón Atrás** | `src/core/assets/global/btn_atras.png` | En `global-nav`. Historial de navegación. |
+| **Botón Inicio** | `src/core/assets/global/btn_inicio.png` | En `global-nav`. Retorno al Menú Principal. |
+| **Ajustes / Audio** | `src/core/assets/global/btn_ajustes.png` | Control global de volumen/mute. |
 | **Música Global** | `music/Clockwork Garden Carnival.mp3` | Ambiente sonoro principal. |
-| **Avatares** | `assets/players/[slug].png` | Retratos personalizados (Grid 3 col en Setup). |
+| **Avatares** | `src/core/assets/players/[slug].png` | Retratos personalizados (Grid 3 col en Setup). |
 
 ---
 
 ## 🏠 1. Menú Principal (`screen-main-menu`)
 Portal de entrada con atmósfera onírica y branding central.
 - **Funcionalidad**: Punto de acceso a Nueva Partida, Marcadores y Reglas.
-- **Fondo:** `assets/IMG/UI/menu/bg_main.jpg` (Gradientes radiales profundos).
-- **Logotipo:** `assets/IMG/UI/menu/logo_dixit.png` (Animación *pulse-pure* y *drift*).
+- **Fondo:** `src/screens/main-menu/assets/bg_main.jpg` (Gradientes radiales profundos).
+- **Logotipo:** `src/screens/main-menu/assets/logo_dixit.png` (Animación *pulse-pure* y *drift*).
 - **Interactivos:**
-    - **Botón Nueva Partida:** `assets/IMG/UI/menu/btn_nueva_partida.png` (Estilo libro antiguo).
-    - **Botón Marcadores:** `assets/IMG/UI/menu/btn-menu-scores.png` (Piedra rúnica con texto "MARCADORES").
-    - **Botón Reglas:** `assets/IMG/UI/menu/btn_reglas.png` (Pétalo místico con texto "REGLAS").
+    - **Botón Nueva Partida:** `src/screens/main-menu/assets/btn_nueva_partida.png` (Estilo libro antiguo).
+    - **Botón Marcadores:** `src/screens/main-menu/assets/btn-menu-scores.png` (Piedra rúnica con texto "MARCADORES").
+    - **Botón Reglas:** `src/screens/main-menu/assets/btn_reglas.png` (Pétalo místico con texto "REGLAS").
 
 ---
 
@@ -48,21 +48,21 @@ Gestión de jugadores con transparencia total para revelar el fondo dinámico.
 - **Funcionalidad**: Gestión de participantes. Mínimo 3 jugadores.
     - **Chips Rápido**: Selección de jugadores recurrentes (DC, JAVI, ELI, etc.).
     - **Invocación Nueva**: Añadir mediante input estilo pergamino y sello de lacre rojo.
-- **Fondo:** `assets/IMG/UI/setup/bg_eleccion_jugadores.png` (Estrellas rotando).
-- **Cabecera:** `assets/IMG/UI/setup/btn_jugadores.png`.
+- **Fondo:** `src/screens/setup/assets/bg_eleccion_jugadores.png` (Estrellas rotando).
+- **Cabecera:** `src/screens/setup/assets/btn_jugadores.png`.
 - **Lista de Jugadores:** Grid con cartas de marcos dorados y botón eliminar (Sello de lacre con aspa).
-- **Botón Comenzar:** `assets/IMG/UI/setup/btn_comenzarpartida.png` (Animación de pulso dorado).
+- **Botón Comenzar:** `src/screens/setup/assets/btn_comenzarpartida.png` (Animación de pulso dorado).
 
 ---
 
 ## 🎲 3. Selección de Categorías (`screen-categories`)
 Asignación de la temática del mundo onírico (Conceptos, Películas, Lugares, etc.).
 - **Funcionalidad**: Carga dinámica desde `data/words.json`. Opción de sorteo aleatorio 🎲.
-- **Fondo:** `assets/IMG/UI/categories/bg_categories.jpg` (Vista de horizonte místico).
+- **Fondo:** `src/screens/categories/assets/bg_categories.jpg` (Vista de horizonte místico).
 - **Cartas de Categoría (351x500):**
     - Activos: `cat_conceptos.png`, `cat_peliculas.png`, `cat_lugares.png`, `cat_refranes.png`, `cat_acciones.png`.
     - Diseño: Resplandor Dual Azul-Rosa y efecto de **Flotación Mágica**.
-- **Botón Sorteo:** `assets/IMG/UI/categories/btn_sorteo.png`.
+- **Botón Sorteo:** `src/screens/categories/assets/btn_sorteo.png`.
 
 ---
 
@@ -70,13 +70,13 @@ Asignación de la temática del mundo onírico (Conceptos, Películas, Lugares, 
 Fase de secreto absoluto con tecnología de volteo 3D y marcos dinámicos.
 - **Funcionalidad**: Fase individual. "Hold" para ver rol (Protección visual).
 - **Fondos Dinámicos (Atmósfera):**
-    - **Inocentes:** `assets/IMG/UI/reveal/bg_tension.jpg` (Textura clara).
-    - **Modo Impostor:** `assets/IMG/UI/reveal/bg_tension_dark.png` (Oscuridad siniestra al mantener pulsado).
+    - **Inocentes:** `src/screens/reveal/assets/bg_tension.jpg` (Textura clara).
+    - **Modo Impostor:** `src/screens/reveal/assets/bg_tension_dark.png` (Oscuridad siniestra al mantener pulsado).
 - **Sistema de Cartas:**
-    - **Anverso**: `assets/IMG/Inocente/[slug].png` + `marco_inocente.png`.
+    - **Anverso**: `src/screens/reveal/assets/cards/inocente/[slug].png` + `marco_inocente.png`.
     - **Reverso (Giro)**: Palabra Secreta o avatar + `marco_impostor.png` (Rojizo/agresivo).
-- **Botón Hold:** `assets/IMG/UI/reveal/btn_mostrarrol.png` (MANTÉN PULSADO).
-- **Botón Listo:** `assets/IMG/UI/reveal/btn_listo.png` (Pasar al siguiente jugador).
+- **Botón Hold:** `src/screens/reveal/assets/btn_mostrarrol.png` (MANTÉN PULSADO).
+- **Botón Listo:** `src/screens/reveal/assets/btn_listo.png` (Pasar al siguiente jugador).
 
 ---
 
@@ -86,9 +86,9 @@ Fase de defensa y selección de cartas físicas.
     - **Designación**: Anuncia el primer orador (Cualquiera puede empezar, incluido Impostor).
     - **Widget del Tiempo**: Orbe central de `190x190px` con fondo `btn_time.png`.
     - **Ajustes en vivo**: Botones rápidos (1m, 1.5m, 2m) y controles +/- 15s (`btn_edittime.png`).
-- **Fondo:** `assets/IMG/UI/tension/bg_eligetucarta.png`.
+- **Fondo:** `src/screens/panic/assets/bg_eligetucarta.png`.
 - **Imagen Protagonista:** `[slug]_start.png` (55vh) con resplandor azul parpadeante (`blueGlowPulse`).
-- **Botón Acción:** `assets/IMG/UI/tension/btn_cartasalamesa.png`.
+- **Botón Acción:** `src/screens/panic/assets/btn_cartasalamesa.png`.
 
 ---
 
@@ -97,7 +97,7 @@ Fase de tensión máxima donde todos conocen la palabra.
 - **Funcionalidad**: Pánico de 5s para improvisación del Impostor. Tras el 0, se mantiene para debate.
 - **Botón Piedra**: `btn_piedrareveal.png` con aura giratoria `btn_luz_reveal.png`.
 - **Fase Revelada**: Fondo `bg_palabrailuminada.png`. Palabra y Cuenta Atrás en fuente `.shamanic-glyph` / `.panic-number-text` (Amarillo Místico).
-- **Botón Final**: `assets/IMG/UI/tension/btn_votar.png` (Brillo `angelicButtonGlow`).
+- **Botón Final**: `src/screens/panic/assets/btn_votar.png` (Brillo `angelicButtonGlow`).
 
 ---
 
@@ -118,7 +118,7 @@ Fase de tensión máxima donde todos conocen la palabra.
 | **UI** | `btn_jugadores.png`, `btm_mas.png`, `btn_comenzarpartida.png`, `btn_mostrarrol.png`, `btn_listo.png`, `btn_cartasalamesa.png`, `btn_piedrareveal.png`, `btn_luz_reveal.png`, `btn_votar.png` | Botones temáticos |
 | **UI** | `reveal/marco_inocente.png`, `reveal/marco_impostor.png` | Marcos de identidad secreta |
 | **UI** | `btn_time.png`, `btn_edittime.png` | Elementos de temporizador (Marzo 15) |
-| **Otros** | `assets/players/[slug].png` | Assets variables |
+| **Otros** | `src/core/assets/players/[slug].png` | Assets variables |
 
 ---
 

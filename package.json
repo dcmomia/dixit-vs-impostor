@@ -1,0 +1,27 @@
+{
+  "name": "dixit-vs-impostor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "if exist www rd /s /q www && mkdir www && xcopy index.html www /y && xcopy src www\\src /s /e /i /y && xcopy assets www\\assets /s /e /i /y && xcopy data www\\data /s /e /i /y && xcopy music www\\music /s /e /i /y && if exist favicon.ico xcopy favicon.ico www /y"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dcmomia/dixit-vs-impostor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/dcmomia/dixit-vs-impostor/issues"
+  },
+  "homepage": "https://github.com/dcmomia/dixit-vs-impostor#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.2.0",
+    "@capacitor/cli": "^8.2.0",
+    "@capacitor/core": "^8.2.0"
+  }
+}

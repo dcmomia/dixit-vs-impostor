@@ -1,0 +1,15 @@
+{
+  "bg_marcadores.png": "src/screens/score/assets/bg_marcadores.png",
+  "bg_eligetucarta.png": "src/screens/panic/assets/bg_eligetucarta.png",
+  "bg_palabrailuminada.png": "src/screens/panic/assets/bg_palabrailuminada.png",
+  "btn_edittime.png": "src/screens/panic/assets/btn_edittime.png",
+  "btn_piedrareveal.png": "src/screens/panic/assets/btn_piedrareveal.png",
+  "btn_time.png": "src/screens/panic/assets/btn_time.png",
+  "btn_votar.png": "src/screens/panic/assets/btn_votar.png",
+  "bg_reveal.png": "src/screens/score/assets/bg_reveal.png",
+  "btn_circle.png": "src/screens/score/assets/btn_circle.png",
+  "btn_confirmar_votos.png": "src/screens/score/assets/btn_confirmar_votos.png",
+  "btn_finalizar.png": "src/screens/score/assets/btn_finalizar.png",
+  "btn_nueva_ronda.png": "src/screens/score/assets/btn_nueva_ronda.png",
+  "btn_reset.png": "src/screens/score/assets/btn_reset.png"
+}

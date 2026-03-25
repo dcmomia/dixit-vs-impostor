@@ -19,3 +19,11 @@ Thumbs.db
 MASTER_CONTEXT.md
 ISSUES_LOG.md
 CLAUDE.md
+
+# Capacitor / Build
+www/
+android/
+ios/
+dist/
+.gradle/
+capacitor-cordova-android/
