@@ -2891,7 +2891,10 @@ body:has(#screen-setup.active) #app-container {
     display: block;
     margin: 0;
     border-radius: 16px;
-    /* Redondeamos las puntas de la imagen */
+    position: relative;
+    z-index: 1; /* Bajo el marco */
+    -webkit-transform: translateZ(0); /* Punto de partida Z */
+    transform: translateZ(0);
 }
 
 /* Marco decorativo de la carta (Inocente o Impostor) */
@@ -2902,7 +2905,9 @@ body:has(#screen-setup.active) #app-container {
     width: 100% !important;
     height: 100% !important;
     pointer-events: none;
-    z-index: 50; /* Por encima de todo */
+    z-index: 100 !important; /* Prioridad absoluta */
+    -webkit-transform: translateZ(20px); /* Forzar elevacion en el eje Z para Android */
+    transform: translateZ(20px);
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
