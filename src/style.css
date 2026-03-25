@@ -5602,21 +5602,26 @@ body:has(#screen-setup.active) #app-container {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    justify-content: space-between !important;
-    gap: 5px;
+    justify-content: center !important; /* CENTRADO REAL */
+    gap: 25px; /* Espacio simÃƒÂ©trico entre flechas y carta */
     flex: 1;
     overflow: hidden;
 }
 
 .btn-nav-char {
+    width: 60px; /* Ancho fijo para simetrÃƒÂa */
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: none;
-    color: rgba(0, 212, 255, 0.7);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 3.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
     text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
-    padding: 10px;
+    padding: 0;
     -webkit-user-select: none;
     user-select: none;
 }
