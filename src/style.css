@@ -2905,13 +2905,13 @@ body:has(#screen-setup.active) #app-container {
 }
 
 .card-frame--inocente {
-    background-image: url('assets/IMG/reveal/marco_inocente.png');
+    background-image: url('../assets/IMG/reveal/marco_inocente.png');
     /* Conforma el borde exterior de la carta expandindose un poco si es necesario */
     margin: -1px; 
 }
 
 .card-frame--impostor {
-    background-image: url('assets/IMG/reveal/marco_impostor.png');
+    background-image: url('../assets/IMG/reveal/marco_impostor.png');
 }
 
 /* Fallback cuando no hay imagen */
