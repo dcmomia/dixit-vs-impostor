@@ -93,4 +93,5 @@ Para el desarrollo continuo, se han activado habilidades especializadas:
 *   2026-03-25: [Ajuste de Fondo Android] - Implementación de `object-fit: cover` con etiqueta `<img>` y metatag `viewport-fit=cover` para garantizar cobertura total de pantalla en WebViews nativas (Android/iOS).
 *   2026-03-25: [Consistencia Visual] - Unificación de márgenes (`margin: 0`) en todos los botones del menú principal para evitar inconsistencias de espaciado y resaltados no deseados en el inspector de elementos.
 *   2026-03-25: [Nueva Pantalla] - Pantalla de Personajes: Implementación de carrusel interactivo con efecto flip 3D, selector dinámico de roles (Inocente, Impostor, Turno, Victoria) y catálogo de 11 aventureros. Sincronización completa con Capacitor/Android.
+*   2026-03-25: [UI/UX] - Pantalla de Personajes: Elevación de la "Bandeja de Roles" (25px) con diseño flotante y personalización cromática de etiquetas (Blanco para Inocentes, Rojo Intenso para Impostor). Integración de fondo personalizado `fondo_personajes.png` con 100% de nitidez.
 *   Fin de Registro - 2026-03-25*
