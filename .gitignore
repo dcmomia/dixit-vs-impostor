@@ -15,11 +15,6 @@ Thumbs.db
 .temp/
 .tmp/
 
-# Archivos propios del framework de agente
-MASTER_CONTEXT.md
-ISSUES_LOG.md
-CLAUDE.md
-
 # Capacitor / Build
 www/
 android/
