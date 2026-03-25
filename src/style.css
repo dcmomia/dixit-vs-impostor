@@ -2361,7 +2361,7 @@ body:has(#screen-setup.active) #app-container {
     max-width: 400px;
     margin: 0 auto;
     position: relative;
-    margin-top: 15vh; /* Bajado drÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡sticamente para centrar el portal */
+    margin-top: 8vh; /* Elevado segun peticion del usuario */
     padding: 1rem;
     gap: 0.6rem;
     box-sizing: border-box;
@@ -2369,7 +2369,7 @@ body:has(#screen-setup.active) #app-container {
 
 @media (max-height: 750px) {
     .main-menu-actions {
-        margin-top: 6vh;
+        margin-top: 2vh;
         gap: 0.4rem;
     }
     .btn-book { height: 130px !important; }
