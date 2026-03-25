@@ -2868,8 +2868,10 @@ body:has(#screen-setup.active) #app-container {
     border-radius: 16px;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    overflow: visible; /* Permitir que el marco sobresalga si es decorativo */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    overflow: visible; 
+    /* CRUCIAL: Necesario para que translateZ de los hijos funcione en 3D */
+    transform-style: preserve-3d;
 }
 
 /* Cara frontal (inocente) */
@@ -2892,25 +2894,31 @@ body:has(#screen-setup.active) #app-container {
     margin: 0;
     border-radius: 16px;
     position: relative;
-    z-index: 1; /* Bajo el marco */
-    -webkit-transform: translateZ(0); /* Punto de partida Z */
-    transform: translateZ(0);
+    z-index: 5;
+    /* Punto de partida en el fondo del stack 3D */
+    -webkit-transform: translateZ(1px);
+    transform: translateZ(1px);
 }
 
 /* Marco decorativo de la carta (Inocente o Impostor) */
 .card-frame {
     position: absolute;
+.card-frame {
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100% !important;
-    height: 100% !important;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
-    z-index: 100 !important; /* Prioridad absoluta */
-    -webkit-transform: translateZ(20px); /* Forzar elevacion en el eje Z para Android */
-    transform: translateZ(20px);
+    z-index: 50; 
+    /* Elevado fisicamente sobre la imagen (translateZ > imgZ) */
+    -webkit-transform: translateZ(15px);
+    transform: translateZ(15px);
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
+    /* Asegurar que no hay margenes extraños */
+    box-sizing: border-box;
 }
 
 .card-frame--inocente {
@@ -2945,13 +2953,14 @@ body:has(#screen-setup.active) #app-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(10, 6, 30, 0.82);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    background: rgba(10, 6, 30, 0.85);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     border-radius: 16px;
-    z-index: 200 !important; /* Por encima del marco (z-index 100) */
-    -webkit-transform: translateZ(40px); /* Flotación superior en el eje Z */
-    transform: translateZ(40px);
+    z-index: 150;
+    /* La capa mas alta de todas para que nada la tape */
+    -webkit-transform: translateZ(35px);
+    transform: translateZ(35px);
     animation: overlayFadeIn 0.2s ease-out;
     pointer-events: none;
 }
