@@ -1,5 +1,19 @@
 # Changelog - Dixit vs Impostor
 
+## [1.4.0] - 2026-03-30
+### Added
+- **Menú Principal**: Incorporación del "Reloj de Arena" (`reloj_arena.png`) con animación de órbita antihoraria y trayectoria desincronizada.
+- **Pantalla Turno**: Animación de ascenso y resplandor azul palpitante para el asset `cartas.png`, sincronizada con la aparición del botón de acción.
+
+### Changed
+- **Estética de Objetos**: Actualizado el resplandor de bioluminiscencia de los objetos flotantes de azul a blanco intenso para mayor misticismo.
+- **Botón Nueva Ronda**: Ajuste de dimensiones del botón `#btn-next-round` para coincidir exactamente con los píxeles del asset visual, eliminando áreas de clic fantasma.
+- **Logo Principal**: Añadido resplandor interior azul al logotipo "VS Impostor" para mejorar su profundidad sobre el fondo.
+
+### Fixed
+- **Colisión de Animaciones**: Implementación de un sistema de **Anillos Orbitales de Exclusión** en el menú principal; confinando a Santi a la periferia y al Reloj al núcleo para evitar solapamientos visuales compartiendo el vórtice central.
+- **Transiciones Premium**: Suavizado de cambios de pantalla mediante Fade-In y micro-desenfoque global.
+
 ## [1.3.2] - 2026-03-29
 ### Added
 - **Backup de Assets**: Creación de `_source_assets_backup` para mover archivos fuente de gran tamaño (.kra y PNGs >9MB) fuera del flujo de compilación nativo.

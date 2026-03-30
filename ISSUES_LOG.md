@@ -36,3 +36,10 @@
     1. Creación de `_source_assets_backup` para mover archivos fuente e imágenes no referenciadas.
     2. Sincronización de Capacitor tras limpieza de carpetas de construcción.
 - **Prevención**: No incluir archivos de diseño (`.kra`) o assets >1MB dentro de `src` o `assets` sin optimización previa.
+
+## [2026-03-30] Colisión de Animaciones en Menú Principal (Santi vs Reloj)
+
+- **Problema**: Al añadir el `reloj_arena.png` con un patrón de movimiento similar al de `santi_astronauta.png`, ambos objetos terminaban solapándose visualmente ("clipping" o uno encima del otro) al compartir el mismo espacio central del vórtice.
+- **Causa**: Ambos empleaban keyframes (`santiChaosX`, `santiChaosY`) que abarcaban todo el ancho y alto del contenedor central de forma aleatoria, sin restricciones de "zona de exclusión" mutua.
+- **Solución**: Implementación de un sistema de **Anillos Orbitales Concéntricos**. Se redefinieron los rangos de traslación en el eje X para que Santi orbitara en la periferia externa (`range: -50vw to 15vw`) y el Reloj se confinara al núcleo interno (`range: 35vw to 65vw`). Al no intersectar sus dominios espaciales de traslación, pueden girar en sentidos opuestos sin colisionar nunca.
+- **Prevención**: Para múltiples elementos flotantes animados dinámicamente con transformaciones infinitas, definir "canales" o "bandas" de movimiento exclusivas en el espacio 2D para evitar solapamientos fortuitos.

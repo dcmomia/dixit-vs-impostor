@@ -21,15 +21,21 @@ export function showTimerScreen(UI) {
     };
 
     const starterImage = getStarterImagePath(startPlayer);
+    const slug = startPlayer.toLowerCase().replace(/\s+/g, '');
+    const objImagePath = `src/screens/timer/assets/starter/${slug}_obj.png`;
+
+    // Intentamos cargar el objeto dinámico. Si no existe, el evento onerror lo elimina del DOM.
+    const floatingObjectHTML = `<img src="${objImagePath}" class="floating-hero-obj" alt="Objeto del personaje" onerror="this.remove()">`;
 
     UI.dynamicContent.innerHTML = `
         <section id="screen-timer" class="screen active">
             <header>
-                <h2 class="glow-text small">Empieza el turno</h2>
+                <img src="src/screens/timer/assets/title_empieza_turno.png" alt="Empieza el turno" class="timer-title-img">
             </header>
             
             <div class="starter-hero-panel">
                 <img src="${starterImage}" alt="Empieza el turno: ${startPlayer}" class="starter-full-image">
+                ${floatingObjectHTML}
             </div>
             
             <div class="timer-widget">
@@ -41,7 +47,10 @@ export function showTimerScreen(UI) {
                 <button id="btn-time-add" class="btn-preset btn-preset--side btn-preset--right">+15s</button>
             </div>
 
-            <div class="bottom-action-container">
+            <div class="bottom-action-container timer-active">
+                <div class="floating-cards-wrapper">
+                    <img src="src/screens/timer/assets/starter/cartas.png" alt="Cartas" class="floating-cards">
+                </div>
                 <button id="btn-all-ready" class="btn-parchment-action" aria-label="¡Cartas en la mesa!"></button>
             </div>
         </section>
@@ -52,14 +61,24 @@ export function showTimerScreen(UI) {
     const updateDisplay = () => {
         if (timeLeft < 0) timeLeft = 0;
         display.textContent = formatTime(timeLeft);
+        
+        const timerWidget = document.querySelector('.timer-widget');
+        const bottomContainer = document.querySelector('.bottom-action-container');
+
         if (timeLeft <= 10 && timeLeft > 0) {
             display.style.color = "var(--accent)";
             display.style.transform = "scale(1.1)";
             setTimeout(() => display.style.transform = "scale(1)", 200);
+            if(timerWidget) timerWidget.classList.remove('timer-finished');
+            if(bottomContainer) bottomContainer.classList.add('timer-active');
         } else if (timeLeft === 0) {
             display.style.color = "var(--primary)";
+            if(timerWidget) timerWidget.classList.add('timer-finished');
+            if(bottomContainer) bottomContainer.classList.remove('timer-active');
         } else {
             display.style.color = "var(--text)";
+            if(timerWidget) timerWidget.classList.remove('timer-finished');
+            if(bottomContainer) bottomContainer.classList.add('timer-active');
         }
     };
 
@@ -73,6 +92,7 @@ export function showTimerScreen(UI) {
 
     document.getElementById('btn-time-add').onclick = () => { timeLeft += 15; updateDisplay(); };
     document.getElementById('btn-time-sub').onclick = () => { timeLeft -= 15; updateDisplay(); };
+    document.querySelector('.countdown-orb').onclick = () => { timeLeft = 0; updateDisplay(); };
 
     document.getElementById('btn-all-ready').onclick = () => {
         if (currentTimerInterval) clearInterval(currentTimerInterval);
