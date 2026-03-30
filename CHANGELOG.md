@@ -1,5 +1,24 @@
 # Changelog - Dixit vs Impostor
 
+## [1.3.2] - 2026-03-29
+### Added
+- **Backup de Assets**: Creación de `_source_assets_backup` para mover archivos fuente de gran tamaño (.kra y PNGs >9MB) fuera del flujo de compilación nativo.
+
+### Changed
+- **UI/UX Pánico (Debate)**: Restauración de la cuenta atrás visual (5-1) como recurso dramático, pero con control de navegación 100% manual para el narrador (fin del avance automático).
+- **Maquetación Pánico**: Elevación dinámica de la "Palabra Secreta" mediante `position: absolute` y ajuste del orbe al **57%** de altura para centrado perfecto en el tótem circular.
+- **Banda de Legibilidad**: Añadido degradado oscuro inferior en la pantalla de pánico para garantizar contraste en instrucciones de final de debate.
+- **Footer Marcadores**: Redimensionamiento del botón "NUEVA RONDA" (+20%, máximo 480px) y anclaje al borde inferior absoluto para ergonomía móvil.
+
+### Fixed
+- **Gradle Space Error**: Solucionado el error de instalación interna agotada en Android Studio mediante la purga de 300MB de assets redundantes en la carpeta `src`.
+
+## [1.3.1] - 2026-03-26
+### Changed
+- **Footer UI/UX**: Rediseño de profundidad en los marcadores. El botón "Nueva Ronda" es ahora mucho más grande e interactúa físicamente como un "totem mecánico" asomando desde detrás de la barra de acciones.
+- **Transparencia Reparada**: Eliminación del filtro `opacity: 0.6` en los controles de puntuación para que mantengan colores vívidos en reposo, implementando un efecto de pulsación (`scale`) al seleccionarlos.
+- **Base Responsive**: Ajustes en márgenes negativos para evitar recortes del asset visual (`barra_marcadores.png`) en dispositivos móviles/tabletas, y cambio a ubicaciones porcentuales paramétricas.
+
 ## [1.3.0] - 2026-03-24
 ### Added
 - **Arquitectura SPA Modular**: Migración completa a módulos ES6 (`src/screens/`, `src/core/`).

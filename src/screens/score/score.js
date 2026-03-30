@@ -49,68 +49,67 @@ export function showScoreScreen() {
         const isFirst = index === 0;
         const isImpostor = !!(state.roles.find(r => r.name === name && r.isImpostor));
         
-        let extraIcons = "";
-        if (isFirst) extraIcons += `<img src="src/screens/score/assets/btn_corona.png" class="astral-crown-badge" alt="Corona">`;
-        if (isImpostor) extraIcons += `<img src="src/screens/score/assets/btn_daga.png" class="astral-dagger-badge" alt="Daga">`;
-
         if (isImpostor) {
+            rankClass = "astral-rank-impostor";
             borderClass = "astral-item-impostor";
         }
 
+        // Mapeo a la nueva medalla CSS volumtrica
+        let medalClass = "medal-base";
+        if (rankClass === "astral-rank-1") medalClass = "medal-gold";
+        else if (rankClass === "astral-rank-2") medalClass = "medal-silver";
+        else if (rankClass === "astral-rank-3" && !isLast) medalClass = "medal-bronze";
+        else if (rankClass === "astral-rank-last") medalClass = "medal-hell";
+        else if (rankClass === "astral-rank-impostor") medalClass = "medal-impostor";
+
+        const displayRank = index + 1;
+
+        const leftSlot = `<div class="astral-rank-medal ${medalClass}">
+                            <span class="medal-number">${displayRank}</span>
+                       </div>
+                       <div class="astral-avatar-wrapper">
+                            ${getAvatarHTML(name, 'astral-avatar')}
+                       </div>`;
+
         return `
                     <div class="astral-score-item ${borderClass}">
-                        <div class="astral-rank-number ${rankClass}">
-                            ${extraIcons}
-                            ${(rankClass === "astral-rank-1")
-                                ? `<img src="src/screens/score/assets/btn_pos_1.svg" class="astral-rank-img" alt="1">
-                                   <span class="rank-number-overlay rank-1-blue">1</span>`
-                                : (rankClass === "astral-rank-2")
-                                    ? `<img src="src/screens/score/assets/btn_pos_2.svg" class="astral-rank-img" alt="2">
-                                       <span class="rank-number-overlay rank-2-silver">2</span>`
-                                    : (rankClass === "astral-rank-3" && !isLast)
-                                        ? `<img src="src/screens/score/assets/btn_pos_3.svg" class="astral-rank-img" alt="3">
-                                           <span class="rank-number-overlay rank-3-bronze">3</span>`
-                                        : (rankClass === "astral-rank-last")
-                                            ? `<img src="src/screens/score/assets/btn_pos_last.svg" class="astral-rank-img" alt="Último">
-                                               <span class="rank-number-overlay rank-last-ruby">${index + 1}</span>`
-                                        : (rankClass === "astral-rank-base")
-                                            ? `<img src="src/screens/score/assets/btn_pos_cualquiera.svg" class="astral-rank-img" alt="Medalla">
-                                               <span class="rank-number-overlay">${index + 1}</span>`
-                                            : (index + 1)}
-                        </div>
-                        
-                        <div class="astral-avatar-wrapper">
-                            ${getAvatarHTML(name, 'astral-avatar')}
-                        </div>
+                        ${leftSlot}
                         
                         <div class="astral-player-info">
                             <span class="astral-player-name">${escapeHTML(name)}</span>
                             <span class="astral-player-role">${roleText}</span>
                         </div>
                         
-                        <div class="astral-delta-pts ${delta > 0 ? 'delta-positive' : ''}" 
-                             data-reason="${escapeHTML(state.roundReasons[name] || '')}" 
-                             title="Click para ver razón">
-                            ${deltaText}
-                        </div>
-                        
                         <div class="astral-score-controls">
-                            <button class="btn-score-mod astral-mod" data-action="minus" data-player="${escapeHTML(name)}">-</button>
-                            
-                            <div class="astral-total-pts">
-                                <span id="score-val-${slugId}">${state.scores[name] || 0}</span>
+                            <div class="astral-controls-row">
+                                <button class="btn-score-mod astral-mod minus" data-action="minus" data-player="${escapeHTML(name)}">−</button>
+                                
+                                <div class="astral-score-center">
+                                    <div class="astral-delta-pts ${delta > 0 ? 'delta-positive' : ''}" 
+                                         data-reason="${escapeHTML(state.roundReasons[name] || '')}" 
+                                         title="Click para ver razón">
+                                        ${deltaText}
+                                    </div>
+                                    <div class="astral-total-pts">
+                                        <span id="score-val-${slugId}">${state.scores[name] || 0}</span>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn-score-mod astral-mod plus" data-action="plus" data-player="${escapeHTML(name)}">+</button>
                             </div>
-                            
-                            <button class="btn-score-mod astral-mod" data-action="plus" data-player="${escapeHTML(name)}">+</button>
                         </div>
                     </div>
                 `}).join('')}
             </div>
 
             <div class="astral-footer-actions">
-                <button id="btn-exit-game" class="btn-astral-action" aria-label="Finalizar Partida"><span>FINALIZAR PARTIDA</span></button>
                 <button id="btn-next-round" class="btn-astral-action primary-astral" aria-label="Nueva Ronda"><span>NUEVA RONDA</span></button>
-                <button id="btn-reset-scores" class="btn-astral-action" aria-label="Resetear Puntos"><span>RESETEAR MARCADORES</span></button>
+                <img src="assets/IMG/temp/MARCADORES/barra_marcadores.png" alt="Barra" class="score-bottom-bar__img">
+                <div class="footer-buttons-layer">
+                    <button id="btn-exit-game" class="btn-astral-action" aria-label="Finalizar Partida"><span>FINALIZAR PARTIDA</span></button>
+                    <button id="btn-reset-scores" class="btn-astral-action" aria-label="Resetear Puntos"><span>RESETEAR MARCADORES</span></button>
+                    <img src="assets/IMG/temp/MARCADORES/placas_accion.png" alt="Placas de acción" class="footer-action-plates">
+                </div>
             </div>
         </section>
     `;

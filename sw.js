@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dixit-impostor-v39';
+const CACHE_NAME = 'dixit-impostor-v40';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -20,34 +20,29 @@ self.addEventListener('install', event => {
     );
 });
 
-// Cache First Strategy
+// Network First Strategy (Red primero, si falla va al Caché)
 self.addEventListener('fetch', event => {
-    // Solo manejamos peticiones GET
     if (event.request.method !== 'GET') return;
 
     event.respondWith(
-        caches.match(event.request)
-        .then(cachedResponse => {
-            if (cachedResponse) {
-                return cachedResponse; // Devolvemos de cache primero
+        fetch(event.request).then(networkResponse => {
+            if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+                return networkResponse;
             }
             
-            // Si no estÃƒÂ¡ en cachÃƒÂ©, lo pedimos a la red
-            return fetch(event.request).then(networkResponse => {
-                // Solo guardamos si vale la pena (no es opaco, no hay error)
-                if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-                    return networkResponse;
+            let responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then(cache => {
+                cache.put(event.request, responseToCache);
+            });
+            
+            return networkResponse;
+        }).catch(() => {
+            // Si falla la red, buscamos en cache
+            return caches.match(event.request).then(cachedResponse => {
+                if (cachedResponse) {
+                    return cachedResponse;
                 }
-                
-                // Clonamos porque se consume al guardar o leer
-                let responseToCache = networkResponse.clone();
-                caches.open(CACHE_NAME)
-                  .then(cache => {
-                      cache.put(event.request, responseToCache);
-                  });
-                return networkResponse;
-            }).catch(() => {
-                // Fallback de offline
+                // Fallback final
                 return caches.match('./index.html');
             });
         })

@@ -30,9 +30,14 @@ export function updateGlobalNav(screenId) {
     if (settingsBtn) settingsBtn.style.display = 'block';
 }
 
+let currentRenderedScreenId = null;
+
 export function navigateTo(screenId, data = {}, recordHistory = true) {
     clearTimer();
     clearPanicTimer();
+
+    const isSameScreen = (currentRenderedScreenId === screenId);
+    currentRenderedScreenId = screenId;
 
     if (recordHistory) {
         const last = navigationHistory[navigationHistory.length - 1];
@@ -53,7 +58,13 @@ export function navigateTo(screenId, data = {}, recordHistory = true) {
         if (UI.dynamicContent) UI.dynamicContent.innerHTML = '';
 
         const target = document.getElementById(targetId);
-        if (target) target.classList.add('active');
+        if (target) {
+            target.classList.add('active');
+            if (!isSameScreen) {
+                target.classList.add('anim-enter');
+                setTimeout(() => target.classList.remove('anim-enter'), 500);
+            }
+        }
 
         if (screenId === 'screen-setup') {
             renderPresetPlayers();
@@ -86,6 +97,12 @@ export function navigateTo(screenId, data = {}, recordHistory = true) {
         });
         showScreen(screenId, data);
         if (screenId === 'screen-categories') renderCategories();
+
+        if (!isSameScreen && UI.dynamicContent && UI.dynamicContent.firstElementChild) {
+            const target = UI.dynamicContent.firstElementChild;
+            target.classList.add('anim-enter');
+            setTimeout(() => target.classList.remove('anim-enter'), 500);
+        }
     }
 }
 
@@ -135,22 +152,27 @@ export function showScreen(screenId, data = {}) {
                             <div class="card-fallback" id="card-front-fallback" style="display:none">
                                 <span class="card-fallback-emoji">${fallbackEmoji}</span>
                             </div>
-                            <div class="card-frame card-frame--inocente"></div>
                         </div>
                         <div class="reveal-card__face reveal-card__back">
                             <img src="${backImgPath}" alt="Reverso" class="card-img" onerror="this.style.display='none';">
                             ${isImpostor ? '' : `
                                 <div class="reveal-word-overlay">
+                                    <img class="reveal-overlay-bg" src="src/screens/reveal/assets/Gemini_Generated_Image_sxic9esxic9esxic.png" alt="">
                                     <span class="reveal-word-text">${playerRole.word}</span>
                                 </div>
                             `}
-                            <div class="card-frame ${isImpostor ? 'card-frame--impostor' : 'card-frame--inocente'}"></div>
                         </div>
                     </div>
+                    ${isImpostor ? `
+                        <div class="impostor-subtitle-banner">
+                            <img src="src/screens/reveal/assets/grafico_impostor_reveal.png" alt="Eres el Impostor" class="impostor-subtitle-img">
+                        </div>
+                    ` : ''}
                 </div>
                 <div class="reveal-actions">
                     <div class="reveal-btn-container">
-                        <button id="btn-reveal" class="btn-dreamy btn-dreamy--hold btn-hold-dimmed" aria-label="Mantén pulsado"></button>
+                        <div class="reveal-hold-hint">PULSAR</div>
+                        <button id="btn-reveal" class="btn-dreamy btn-dreamy--hold" aria-label="Mantén pulsado"></button>
                     </div>
                     <button id="btn-next-player" class="btn-dreamy btn-dreamy--ready btn-locked" aria-label="Listo"></button>
                 </div>

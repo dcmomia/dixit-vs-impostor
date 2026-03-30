@@ -100,7 +100,7 @@ function setupEventListeners() {
         createLiquidRipple(e, UI.btnMenuCharacters);
         initCharactersScreen();
         navigateTo('screen-characters');
-        
+
         // Forzar visibilidad por si el router tiene algun delay o conflicto
         const screen = document.getElementById('screen-characters');
         if (screen) screen.classList.add('active');
@@ -129,13 +129,13 @@ function setupEventListeners() {
         thumb.addEventListener('click', () => {
             const newRole = thumb.dataset.role;
             state.currentRole = newRole;
-            
+
             UI.roleThumbs.forEach(t => t.classList.remove('active'));
             thumb.classList.add('active');
-            
+
             UI.currentRoleLabel.innerText = newRole;
             UI.charCardFlip.classList.remove('is-flipped');
-            
+
             // Actualizar imagen al cambiar de rol
             updateCharacterDisplay();
         });
@@ -187,7 +187,7 @@ function initCharactersScreen() {
 
     state.currentCharacterIndex = 0;
     state.currentRole = 'INOCENTE';
-    
+
     // Resetear thumbs de roles
     UI.roleThumbs.forEach(t => {
         t.classList.remove('active');
@@ -202,23 +202,41 @@ function initCharactersScreen() {
 function updateCharacterDisplay() {
     const char = state.characters[state.currentCharacterIndex];
     UI.characterNameDisplay.innerText = char.name;
-    
-    // Rutas base para los rostros reales (Inocente e Impostor)
+
+    // Rutas base para los rostros reales (Inocente e Impostor) y nueva ruta de Turno
     const inocentePath = `src/screens/reveal/assets/cards/inocente/${char.slug}.png`;
     const impostorPath = `src/screens/reveal/assets/cards/impostor/${char.slug}_impostor.png`;
+    const turnoPath = `src/screens/timer/assets/starter/${char.slug}_start.png`;
 
     // Asignar imagen principal según el rol seleccionado
-    UI.mainCharImg.src = (state.currentRole === 'IMPOSTOR') ? impostorPath : inocentePath;
+    if (state.currentRole === 'IMPOSTOR') {
+        UI.mainCharImg.src = impostorPath;
+    } else if (state.currentRole === 'TURNO') {
+        UI.mainCharImg.src = turnoPath;
+    } else {
+        UI.mainCharImg.src = inocentePath;
+    }
+
     UI.charDescriptionText.innerText = char.desc;
     UI.currentRoleLabel.innerText = state.currentRole;
-    
+
+    // Control dinámico de la clase del marco (Card-3d-Front)
+    const cardFront = UI.charCardFlip.querySelector('.card-3d-front');
+    if (cardFront) {
+        if (state.currentRole === 'TURNO') {
+            cardFront.classList.add('card-bg-timer');
+        } else {
+            cardFront.classList.remove('card-bg-timer');
+        }
+    }
+
     // Cambiar color del badge segun el rol
     if (state.currentRole === 'IMPOSTOR') {
         UI.currentRoleLabel.classList.add('is-impostor');
     } else {
         UI.currentRoleLabel.classList.remove('is-impostor');
     }
-    
+
     // Animación suave de entrada
     UI.mainCharImg.style.opacity = '0';
     UI.mainCharImg.style.transform = 'scale(0.95)';
@@ -232,8 +250,24 @@ function updateCharacterDisplay() {
         const img = thumb.querySelector('.role-thumb-img-node');
         if (img) {
             const role = thumb.dataset.role;
-            // Mostramos la cara de impostor en el selector de impostor, y la normal en el resto
-            img.src = (role === 'IMPOSTOR') ? impostorPath : inocentePath;
+            // Mostramos la cara según su rol específico
+            if (role === 'IMPOSTOR') {
+                img.src = impostorPath;
+            } else if (role === 'TURNO') {
+                img.src = turnoPath;
+            } else {
+                img.src = inocentePath;
+            }
+        }
+        
+        // Asignar el fondo a los thumb-frames coherente con su rol específico
+        const frame = thumb.querySelector('.thumb-frame');
+        if (frame) {
+            if (thumb.dataset.role === 'TURNO') {
+                frame.classList.add('card-bg-timer');
+            } else {
+                frame.classList.remove('card-bg-timer');
+            }
         }
     });
 }

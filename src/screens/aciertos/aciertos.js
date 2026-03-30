@@ -25,7 +25,7 @@ export function showAciertosScreen() {
             </div>
 
             <div class="aciertos-footer">
-                <button id="btn-confirm-aciertos" class="btn-confirm-votos-action">
+                <button id="btn-confirm-aciertos" class="btn-confirm-votos-action btn-antighost-gate">
                     <img src="src/screens/score/assets/btn_confirmar_votos.png" alt="Confirmar">
                 </button>
             </div>
@@ -40,7 +40,15 @@ export function showAciertosScreen() {
         };
     });
 
-    document.getElementById('btn-confirm-aciertos').onclick = () => {
+    const confirmBtn = document.getElementById('btn-confirm-aciertos');
+    
+    // Gating system: Desbloquear el botón solo tras un breve delay de seguridad
+    // Esto previene que el toque residual de la pantalla de pánico se propague aquí.
+    setTimeout(() => {
+        if (confirmBtn) confirmBtn.classList.remove('btn-antighost-gate');
+    }, 550);
+
+    confirmBtn.onclick = () => {
         const selectedCards = document.querySelectorAll('.vote-avatar-card.is-selected');
         const correctVoters = [];
         selectedCards.forEach(card => {

@@ -1,6 +1,33 @@
 import { state } from '../../core/state.js';
 import { navigateTo } from '../../core/router.js';
 
+/**
+ * Ajusta el tamaño de fuente de la palabra secreta midiendo el espacio real.
+ * Reduce el tamaño píxel a píxel hasta que el texto quepa en una sola línea.
+ */
+function adjustRevealWordFont() {
+    const textEl = document.querySelector('.reveal-word-text');
+    const container = document.querySelector('.reveal-word-overlay');
+    if (!textEl || !container) return;
+
+    // Empezamos desde un tamaño máximo (aprox 3.2rem)
+    let fontSize = 52; 
+    textEl.style.fontSize = fontSize + 'px';
+
+    // Límites de seguridad ampliados: 95% del ancho y 80% del alto carta
+    const maxWidth = container.clientWidth * 0.95;
+    const maxHeight = container.clientHeight * 0.8;
+
+    // Si el bloque de texto desborda por ancho (una palabra larga) o por alto (muchas líneas)
+    // bajamos el tamaño hasta que encaje. Mínimo 14px para legibilidad.
+    let iterations = 0;
+    while ((textEl.scrollWidth > maxWidth || textEl.scrollHeight > maxHeight) && fontSize > 14 && iterations < 100) {
+        fontSize -= 1;
+        textEl.style.fontSize = fontSize + 'px';
+        iterations++;
+    }
+}
+
 export function setupRevealLogic(playerName, index) {
     const btnHold = document.getElementById('btn-reveal');
     const btnNext = document.getElementById('btn-next-player');
@@ -10,26 +37,25 @@ export function setupRevealLogic(playerName, index) {
     let hasRevealed = false;
     let revealTimeout = null;
 
+    // Ajustar fuente al cargar (usamos un pequeño delay para asegurar que el DOM y fuentes estén listos)
+    setTimeout(adjustRevealWordFont, 0);
+
     const reveal = () => {
         card.classList.add('is-flipped');
-        
+
         if (playerRole.isImpostor) {
-            // Cancelar cualquier timeout previo
             if (revealTimeout) clearTimeout(revealTimeout);
-            
-            // Retrasar el cambio de fondo para que ocurra al final del giro (0.65s en CSS)
+
             revealTimeout = setTimeout(() => {
                 const screen = document.getElementById('screen-reveal');
-                // Solo aplicar si la carta sigue girada (usuario mantiene pulsado)
                 if (screen && card.classList.contains('is-flipped')) {
                     screen.classList.add('impostor-reveal-active');
                 }
-            }, 600);
+            }, 50); // Sincronizando con el inicio del giro
         }
     };
 
     const hide = () => {
-        // Limpiar el timeout si el usuario suelta antes de tiempo
         if (revealTimeout) {
             clearTimeout(revealTimeout);
             revealTimeout = null;
@@ -44,6 +70,10 @@ export function setupRevealLogic(playerName, index) {
         if (!hasRevealed) {
             hasRevealed = true;
             btnNext.classList.remove('btn-locked');
+            btnNext.classList.add('heartbeat');
+            
+            const hintBox = document.querySelector('.reveal-hold-hint');
+            if (hintBox) hintBox.style.visibility = 'hidden';
         }
     };
 
